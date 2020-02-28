@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="info_height">50dp</dimen>
+    <dimen name="infoTextSize">8sp</dimen>
+    <dimen name="ipInfoTextSize">10sp</dimen>
+</resources>

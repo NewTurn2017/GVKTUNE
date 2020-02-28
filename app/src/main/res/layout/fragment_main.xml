@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".view.MainFragment">
+
+    <com.manojbhadane.QButton
+        android:id="@+id/btn_calib"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        android:text="CALIBRATION"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:qb_backgroundColor="@android:color/holo_blue_bright"
+        app:qb_radius="50"
+        app:qb_strokeColor="@android:color/holo_blue_dark"
+        app:qb_strokeWidth="5" />
+
+    <com.manojbhadane.QButton
+        android:id="@+id/btn_reverb"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        android:text="REVERBRATION TIME"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:qb_backgroundColor="@android:color/holo_blue_bright"
+        app:qb_radius="50"
+        app:qb_strokeColor="@android:color/holo_blue_dark"
+        app:qb_strokeWidth="5" />
+
+    <com.manojbhadane.QButton
+        android:id="@+id/btn_model"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        android:text="SPEAKER MODEL"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:qb_backgroundColor="@android:color/holo_blue_bright"
+        app:qb_radius="50"
+        app:qb_strokeColor="@android:color/holo_blue_dark"
+        app:qb_strokeWidth="5" />
+
+    <com.manojbhadane.QButton
+        android:id="@+id/btn_tune"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        android:text="AUTO TUNING"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:qb_backgroundColor="@android:color/holo_blue_bright"
+        app:qb_radius="50"
+        app:qb_strokeColor="@android:color/holo_blue_dark"
+        app:qb_strokeWidth="5" />
+
+</LinearLayout>

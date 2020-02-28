@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="5dp"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layout_border"
+        android:orientation="horizontal">
+
+
+
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_Connect"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="접속"
+            android:textColor="@android:color/white"
+            app:qb_backgroundColor="@android:color/holo_purple"
+            app:qb_radius="40"
+            app:qb_strokeColor="@android:color/holo_purple"
+            app:qb_strokeWidth="5" />
+
+
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_DisConnect"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="해제"
+            android:textColor="@android:color/white"
+            app:qb_backgroundColor="@android:color/holo_purple"
+            app:qb_radius="40"
+            app:qb_strokeColor="@android:color/holo_purple"
+            app:qb_strokeWidth="5" />
+
+
+        <RadioGroup
+            android:id="@+id/rg_channel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_select_ch1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="CH1" />
+
+            <RadioButton
+                android:id="@+id/rb_select_ch2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="CH2" />
+
+            <RadioButton
+                android:id="@+id/rb_select_all"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="All" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/layout_border"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_spk1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/spk1_off" />
+
+        <ImageButton
+            android:id="@+id/btn_spk2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/spk2_off" />
+
+        <ImageButton
+            android:id="@+id/btn_spk3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/spk3_off" />
+
+        <ImageButton
+            android:id="@+id/btn_spk4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/spk4_off" />
+
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_main"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1.5"
+            android:drawableLeft="@drawable/ic_arrow_back"
+            android:text="Main Menu"
+            android:textColor="@android:color/white"
+            app:qb_backgroundColor="@android:color/holo_purple"
+            app:qb_radius="100"
+            app:qb_strokeColor="@android:color/holo_purple"
+            app:qb_strokeWidth="5" />
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            app:srcCompat="@drawable/gvlogo" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextClock
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:format12Hour="hh:mm:ss a"
+                android:gravity="center"
+                android:textColor="#173172"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="(주)지브이코리아"
+                android:textColor="#173172"
+                android:textStyle="bold"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/layout_border" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/info_height"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+
+        <ScrollView
+            android:id="@+id/scrollView_info"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            android:layout_weight="3"
+            android:background="@drawable/layout_border_text"
+            android:padding="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_received"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="1dp"
+                    android:textSize="@dimen/infoTextSize"
+                    android:textStyle="bold"
+                    android:verticalScrollbarPosition="right" />
+            </LinearLayout>
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/tv_ip_info"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@drawable/layout_border_text"
+            android:gravity="center"
+            android:textSize="@dimen/ipInfoTextSize" />
+
+    </LinearLayout>
+</LinearLayout>
