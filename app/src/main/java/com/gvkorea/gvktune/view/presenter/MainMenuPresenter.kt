@@ -17,6 +17,10 @@ class MainMenuPresenter(val view: MainFragment, val mainActivity: MainActivity) 
     fun selectFunction(function: String) {
         if (isSocketAlive()) {
             when(function) {
+                "rta" -> {
+                    mainActivity.replace(R.id.fragment_container, view.rtaFragment)
+                    nowFragment = view.rtaFragment
+                }
                 "calib" -> {
                     mainActivity.replace(R.id.fragment_container, view.calibFragment)
                     nowFragment = view.calibFragment
