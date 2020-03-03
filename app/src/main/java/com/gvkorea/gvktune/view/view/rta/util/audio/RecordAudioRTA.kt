@@ -7,12 +7,10 @@ import android.media.MediaRecorder
 import android.os.AsyncTask
 import android.util.Log
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.gvkorea.gvktune.util.fft.RealDoubleFFT
-import com.gvkorea.gvktune.view.view.rta.RtaFragment
 import java.text.DecimalFormat
 import kotlin.math.log10
 import kotlin.math.roundToInt
@@ -122,97 +120,97 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
         for (i in 1 until toTransformAvg.size) {
 
             if (i == INDEX_20HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_25HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_32HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_40HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_50HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_63HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_80HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_100HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_125HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_160HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_200HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_250HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_315HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_400HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_500HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_630HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_800HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_1000HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_1250HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_1600HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_2000HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_2500HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_3150HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_4000HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_5000HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_6300HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_8000HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_10000HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_12500HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_16000HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             } else if (i == INDEX_20000HZ) {
-                freq_value_31(i, toTransformAvg, arrayNum)
+                freq_value(i, toTransformAvg, arrayNum)
                 arrayNum++
             }
 
@@ -251,7 +249,6 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
                     freq29Sum.add(rmsValues31[28])
                     freq30Sum.add(rmsValues31[29])
                     freq31Sum.add(rmsValues31[30])
-//                    counter2++
                 }
                 if (avgStart && !isMeasure) {
 
@@ -302,8 +299,8 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
                 }
                 toTransFormCount++
 
-            } else {
-
+            }
+            else {
                 for (i in rmsValues31.indices) {
                     valSum[i] /= averageCount.toDouble()
                     lineValues.add(Entry(i.toFloat(), valSum[i].toFloat()))
@@ -312,6 +309,7 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
                 lineDataSet.setDrawValues(true)
                 lineDataSet.valueTextColor = Color.RED
                 lineDataSet.valueTextSize = 8.0f
+                lineDataSet.mode = LineDataSet.Mode.LINEAR
                 lineChart.data.notifyDataChanged()
                 lineChart.notifyDataSetChanged()
                 lineChart.invalidate()
@@ -322,9 +320,9 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
         } else {
 
             lineDataSet = LineDataSet(lineValues, "RMS")
-            lineDataSet.setDrawIcons(false)
-            lineDataSet.setGradientColor(Color.GREEN, Color.RED)
-            lineDataSet.setDrawValues(false)
+            lineDataSet.setDrawFilled(false)
+            lineDataSet.setDrawCircles(false)
+
             lineDataSet.formLineWidth = 1f
             val data = LineData(lineDataSet)
             // set data
@@ -334,17 +332,13 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
 
     }
 
-    private fun roundUpdouble(doubleValue: Double): Double {
-        return Math.round(doubleValue * 100.0) / 100.0
-    }
 
-
-    fun freq_value_31(i: Int, toTransform: DoubleArray, arrayNum: Int) {
-        val dbfsFinal = freqAverageCalcForOneOctave_31(i, toTransform)
+    fun freq_value(i: Int, toTransform: DoubleArray, arrayNum: Int) {
+        val dbfsFinal = freqAverageCalc(i, toTransform)
         rmsValues31[arrayNum] = dbfsFinal
     }
 
-    private fun freqAverageCalcForOneOctave_31(i: Int, toTransform: DoubleArray): Double {
+    private fun freqAverageCalc(i: Int, toTransform: DoubleArray): Double {
         var dbfs = 0.0
         var dbfsFinal = 0.0
 
@@ -359,6 +353,7 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
             dbfsFinal = dbfsAvg(dbfs)
         } else if (i == INDEX_40HZ) {
             dbfs += toTransfromTodbfs(toTransform, i)
+            dbfsFinal = dbfsAvg(dbfs)
         } else if (i == INDEX_50HZ) {
             dbfs += toTransfromTodbfs(toTransform, i)
             dbfsFinal = dbfsAvg(dbfs)
@@ -466,7 +461,7 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
         var isStartedAudio = false
         var isMeasure = false
         var avgStart = false
-        var averageCount = 1
+        var averageCount = 5
 
         var freq1Sum = ArrayList<Double>()
         var freq2Sum = ArrayList<Double>()

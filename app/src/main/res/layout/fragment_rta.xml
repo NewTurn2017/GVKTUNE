@@ -120,6 +120,8 @@
                     android:orientation="horizontal"
                     android:splitMotionEvents="false">
 
+
+
                     <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper
                         android:id="@+id/sb_source_wp"
                         android:layout_width="match_parent"

@@ -46,11 +46,11 @@ class MainMenuPresenter(val view: MainFragment, val mainActivity: MainActivity) 
 
     fun isSocketAlive(): Boolean {
 
-        if (spk1Client != null || spk2Client != null || spk3Client != null || spk4Client != null || otherClient.size > 0
-        ) {
-            return true
-        }
-        return false
+//        if (spk1Client != null || spk2Client != null || spk3Client != null || spk4Client != null || otherClient.size > 0
+//        ) {
+//            return true
+//        }
+        return true
     }
 
     private fun msg(msg: String) {
