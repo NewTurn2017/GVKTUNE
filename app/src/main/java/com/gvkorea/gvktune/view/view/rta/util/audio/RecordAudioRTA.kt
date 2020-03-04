@@ -30,6 +30,7 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
     private var lineDataSet = LineDataSet(lineValues, null)
 
     private var rmsValues31 = DoubleArray(31)
+    private var rmsValues = DoubleArray(blockSize)
 
     ////block size = 8192
 
@@ -286,10 +287,7 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
                     avgStart = false
                     isMeasure = false
                 }
-
-
             }
-
         }
 
         if (lineChart.data != null && lineChart.data.dataSetCount > 0) {
@@ -306,7 +304,7 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
                     lineValues.add(Entry(i.toFloat(), valSum[i].toFloat()))
                 }
                 lineDataSet.values = lineValues
-                lineDataSet.setDrawValues(true)
+                lineDataSet.setDrawValues(false)
                 lineDataSet.valueTextColor = Color.RED
                 lineDataSet.valueTextSize = 8.0f
                 lineDataSet.mode = LineDataSet.Mode.LINEAR
@@ -343,7 +341,7 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
         var dbfsFinal = 0.0
 
         if (i == INDEX_20HZ) {
-            dbfs = toTransfromTodbfs(toTransform, i)
+            dbfs += toTransfromTodbfs(toTransform, i)
             dbfsFinal = dbfsAvg(dbfs)
         } else if (i == INDEX_25HZ) {
             dbfs += toTransfromTodbfs(toTransform, i)
@@ -461,7 +459,7 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
         var isStartedAudio = false
         var isMeasure = false
         var avgStart = false
-        var averageCount = 5
+        var averageCount = 1
 
         var freq1Sum = ArrayList<Double>()
         var freq2Sum = ArrayList<Double>()
