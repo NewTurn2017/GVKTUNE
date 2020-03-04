@@ -57,7 +57,7 @@ class RtaFragment : Fragment() {
         handler.postDelayed({
             isStartedAudio = true
             mChart.clear()
-            recordAudio_rta = RecordAudioRTA(mChart)
+            recordAudio_rta = RecordAudioRTA(this, mChart)
             recordAudio_rta.execute()
         }, 100)
     }

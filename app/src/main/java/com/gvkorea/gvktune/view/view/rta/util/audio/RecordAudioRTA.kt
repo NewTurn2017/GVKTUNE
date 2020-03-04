@@ -1,36 +1,32 @@
 package com.gvkorea.gvktune.view.view.rta.util.audio
 
-import android.graphics.Color
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.os.AsyncTask
 import android.util.Log
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.gvkorea.gvktune.util.fft.RealDoubleFFT
+import com.gvkorea.gvktune.view.view.rta.RtaFragment
+import com.gvkorea.gvktune.view.view.rta.util.Maximum
+import kotlinx.android.synthetic.main.fragment_rta.*
+import java.lang.Math.*
 import java.text.DecimalFormat
+import kotlin.math.*
+import kotlin.math.abs
 import kotlin.math.log10
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
-class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Unit>() {
+class RecordAudioRTA(val view: RtaFragment, val lineChart: LineChart) : AsyncTask<Unit, ShortArray, Unit>() {
 
-    private var valSum = DoubleArray(31)
-    private var toTransFormCount = 0
     private val frequency = 44100
     private val channelConfiguration = AudioFormat.CHANNEL_IN_MONO
     private val audioEncoding = AudioFormat.ENCODING_PCM_16BIT
-    private val blockSize = 8192
-    private val transformer = RealDoubleFFT(blockSize)
-    private var toTransformAvg = DoubleArray(blockSize)
-    private var lineValues = ArrayList<Entry>()
-    private var lineDataSet = LineDataSet(lineValues, null)
-
-    private var rmsValues31 = DoubleArray(31)
-    private var rmsValues = DoubleArray(blockSize)
+    private val blockSize_buffer = 4096
+    private val blockSize_fft = 8192
+    lateinit var transformer : RealDoubleFFT
+    var bufferReadResult = 0
 
     ////block size = 8192
 
@@ -66,6 +62,8 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
     private val INDEX_16000HZ = 5944
     private val INDEX_20000HZ = 7430
 
+    lateinit var audioRecord: AudioRecord
+
 
     override fun doInBackground(vararg p0: Unit?): Unit? {
         try {
@@ -74,261 +72,110 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
                 channelConfiguration, audioEncoding
             )
 
-            val audioRecord = AudioRecord(
+            audioRecord = AudioRecord(
                 MediaRecorder.AudioSource.VOICE_RECOGNITION, frequency,
                 channelConfiguration, audioEncoding, bufferSize
             )
 
-            val buffer = ShortArray(blockSize)
-            val toTransform = DoubleArray(blockSize)
-
-
+            val buffer = ShortArray(blockSize_buffer)
             audioRecord.startRecording()
 
             while (isStartedAudio) {
-                val bufferReadResult = audioRecord.read(buffer, 0, blockSize)
+                bufferReadResult = audioRecord.read(buffer, 0, blockSize_buffer)
 
-                var i = 0
-                while (i < blockSize && i < bufferReadResult) {
-                    toTransform[i] = buffer[i].toDouble() / java.lang.Short.MAX_VALUE // 32,768
-                    i++
-                }
-                transformer.ft(toTransform)
-                publishProgress(toTransform)
-//                counter1++
+                publishProgress(buffer)
             }
             audioRecord.stop()
-            audioRecord.release()
         } catch (t: Throwable) {
             Log.e("AudioRecord", "Recording Failed")
         }
         return null
     }
 
-    override fun onProgressUpdate(vararg values: DoubleArray) {
+    override fun onProgressUpdate(vararg toTransform: ShortArray) {
 
-        lineValues = ArrayList()
-        for (i in 0 until blockSize) {
-            if (values[0][i] < 0) {
-                toTransformAvg[i] = -values[0][i]
-            } else {
-                toTransformAvg[i] = values[0][i]
-            }
+        var maximum: Double = 0.0
+        var variance: Double = 0.0
+        var plot = DoubleArray(blockSize_fft)
+        transformer = RealDoubleFFT(blockSize_fft)
+
+        for (i in 0 until bufferReadResult){
+            plot[i * 2] = toTransform[0][i].toDouble()
+            plot[i * 2 + 1] = 0.0
         }
 
-        var arrayNum = 0
+        maximum = max(plot, 0, plot.size).value
 
-        for (i in 1 until toTransformAvg.size) {
+        plot = normalize(plot)
 
-            if (i == INDEX_20HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_25HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_32HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_40HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_50HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_63HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_80HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_100HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_125HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_160HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_200HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_250HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_315HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_400HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_500HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_630HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_800HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_1000HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_1250HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_1600HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_2000HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_2500HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_3150HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_4000HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_5000HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_6300HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_8000HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_10000HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_12500HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_16000HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            } else if (i == INDEX_20000HZ) {
-                freq_value(i, toTransformAvg, arrayNum)
-                arrayNum++
-            }
+        variance = calculateVariance(plot)
 
-            if (arrayNum == 31) {
+        if (AUTODETECCION){
+            if(validos[1]!=0){ // Si han aprecido armonicos
+                if((maximum>=800)&&(variance>0.04)){
 
-                if (avgStart && isMeasure) {
+                    isStartedAudio = false;
+                    view.btn_audioStart.text = "ON";
+                    this.cancel(true)
 
-                    freq1Sum.add(rmsValues31[0])
-                    freq2Sum.add(rmsValues31[1])
-                    freq3Sum.add(rmsValues31[2])
-                    freq4Sum.add(rmsValues31[3])
-                    freq5Sum.add(rmsValues31[4])
-                    freq6Sum.add(rmsValues31[5])
-                    freq7Sum.add(rmsValues31[6])
-                    freq8Sum.add(rmsValues31[7])
-                    freq9Sum.add(rmsValues31[8])
-                    freq10Sum.add(rmsValues31[9])
-                    freq11Sum.add(rmsValues31[10])
-                    freq12Sum.add(rmsValues31[11])
-                    freq13Sum.add(rmsValues31[12])
-                    freq14Sum.add(rmsValues31[13])
-                    freq15Sum.add(rmsValues31[14])
-                    freq16Sum.add(rmsValues31[15])
-                    freq17Sum.add(rmsValues31[16])
-                    freq18Sum.add(rmsValues31[17])
-                    freq19Sum.add(rmsValues31[18])
-                    freq20Sum.add(rmsValues31[19])
-                    freq21Sum.add(rmsValues31[20])
-                    freq22Sum.add(rmsValues31[21])
-                    freq23Sum.add(rmsValues31[22])
-                    freq24Sum.add(rmsValues31[23])
-                    freq25Sum.add(rmsValues31[24])
-                    freq26Sum.add(rmsValues31[25])
-                    freq27Sum.add(rmsValues31[26])
-                    freq28Sum.add(rmsValues31[27])
-                    freq29Sum.add(rmsValues31[28])
-                    freq30Sum.add(rmsValues31[29])
-                    freq31Sum.add(rmsValues31[30])
-                }
-                if (avgStart && !isMeasure) {
-
-                    freqSum.add(doubleToString(freq1Sum.average()))
-                    freqSum.add(doubleToString(freq2Sum.average()))
-                    freqSum.add(doubleToString(freq3Sum.average()))
-                    freqSum.add(doubleToString(freq4Sum.average()))
-                    freqSum.add(doubleToString(freq5Sum.average()))
-                    freqSum.add(doubleToString(freq6Sum.average()))
-                    freqSum.add(doubleToString(freq7Sum.average()))
-                    freqSum.add(doubleToString(freq8Sum.average()))
-                    freqSum.add(doubleToString(freq9Sum.average()))
-                    freqSum.add(doubleToString(freq10Sum.average()))
-                    freqSum.add(doubleToString(freq11Sum.average()))
-                    freqSum.add(doubleToString(freq12Sum.average()))
-                    freqSum.add(doubleToString(freq13Sum.average()))
-                    freqSum.add(doubleToString(freq14Sum.average()))
-                    freqSum.add(doubleToString(freq15Sum.average()))
-                    freqSum.add(doubleToString(freq16Sum.average()))
-                    freqSum.add(doubleToString(freq17Sum.average()))
-                    freqSum.add(doubleToString(freq18Sum.average()))
-                    freqSum.add(doubleToString(freq19Sum.average()))
-                    freqSum.add(doubleToString(freq20Sum.average()))
-                    freqSum.add(doubleToString(freq21Sum.average()))
-                    freqSum.add(doubleToString(freq22Sum.average()))
-                    freqSum.add(doubleToString(freq23Sum.average()))
-                    freqSum.add(doubleToString(freq24Sum.average()))
-                    freqSum.add(doubleToString(freq25Sum.average()))
-                    freqSum.add(doubleToString(freq26Sum.average()))
-                    freqSum.add(doubleToString(freq27Sum.average()))
-                    freqSum.add(doubleToString(freq28Sum.average()))
-                    freqSum.add(doubleToString(freq29Sum.average()))
-                    freqSum.add(doubleToString(freq30Sum.average()))
-                    freqSum.add(doubleToString(freq31Sum.average()))
-                    avgStart = false
-                    isMeasure = false
                 }
             }
         }
 
-        if (lineChart.data != null && lineChart.data.dataSetCount > 0) {
-            if (toTransFormCount < averageCount) {
-                for (i in rmsValues31.indices) {
-                    valSum[i] += rmsValues31[i]
-                }
-                toTransFormCount++
-
-            }
-            else {
-                for (i in rmsValues31.indices) {
-                    valSum[i] /= averageCount.toDouble()
-                    lineValues.add(Entry(i.toFloat(), valSum[i].toFloat()))
-                }
-                lineDataSet.values = lineValues
-                lineDataSet.setDrawValues(false)
-                lineDataSet.valueTextColor = Color.RED
-                lineDataSet.valueTextSize = 8.0f
-                lineDataSet.mode = LineDataSet.Mode.LINEAR
-                lineChart.data.notifyDataChanged()
-                lineChart.notifyDataSetChanged()
-                lineChart.invalidate()
-                toTransFormCount = 0
-                valSum = DoubleArray(31)
-            }
-
-        } else {
-
-            lineDataSet = LineDataSet(lineValues, "RMS")
-            lineDataSet.setDrawFilled(false)
-            lineDataSet.setDrawCircles(false)
-
-            lineDataSet.formLineWidth = 1f
-            val data = LineData(lineDataSet)
-            // set data
-           lineChart.data = data
-           lineChart.invalidate()
-        }
+        // 여기서 부터 이어서
 
     }
+
+    private fun calculateVariance(plot: DoubleArray): Double {
+        val N = plot.size
+        val mean = calculateMean(plot)
+        var variance = 0.0
+        for (k in 0 until N) {
+            variance += (plot[k] - mean).pow(2.0)
+        }
+        variance /= (N - 1)
+        return variance
+
+    }
+
+    private fun calculateMean(plot: DoubleArray): Double {
+        val N: Int = plot.size
+        var mean = 0.0
+        for (k in 0 until N) {
+            mean += plot[k]
+        }
+        mean /= N
+        return mean
+
+    }
+
+    private fun normalize(plot: DoubleArray): DoubleArray {
+
+        var max = 0.0
+
+        for (i in plot.indices) {
+            if(abs(plot[i]) > max) {
+                max = abs(plot[i])
+            }
+        }
+        for (i in plot.indices){
+            plot[i] = plot[i] / max
+        }
+        return plot
+    }
+
+    fun max(x: DoubleArray, first: Int, end: Int): Maximum {
+        val mMaxsimum = Maximum()
+        for (i in first until end){
+            if(abs(x[i]) >= mMaxsimum.value) {
+                mMaxsimum.value = abs(x[i])
+                mMaxsimum.pos = i
+            }
+        }
+        return mMaxsimum
+    }
+
+
 
 
     fun freq_value(i: Int, toTransform: DoubleArray, arrayNum: Int) {
@@ -439,7 +286,7 @@ class RecordAudioRTA(val lineChart: LineChart) : AsyncTask<Unit, DoubleArray, Un
 
     private fun toTransfromTodbfs(toTransform: DoubleArray, i: Int): Double {
 
-        return Math.pow(
+        return pow(
             10.0,
             ((20.0 * log10(toTransform[i]) + 50.5) * 100.0).roundToInt() / 100.0 / 10
         ) // calib 수정
