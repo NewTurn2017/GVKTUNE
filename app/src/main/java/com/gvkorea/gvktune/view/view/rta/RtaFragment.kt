@@ -11,16 +11,12 @@ import com.gvkorea.gvktune.R
 import com.gvkorea.gvktune.view.view.rta.listener.SourceCheckChangeListener
 import com.gvkorea.gvktune.view.view.rta.listener.SourceSeekBarChangeListener
 import com.gvkorea.gvktune.view.view.rta.presenter.NoisePresenter
-import com.gvkorea.gvktune.view.view.rta.util.audio.RecordAudioRTA
-import com.gvkorea.gvktune.view.view.rta.util.audio.RecordAudioRTA.Companion.isStartedAudio
-import com.gvkorea.gvktune.view.view.rta.util.chart.ChartLayoutLineChartForRTA
 import kotlinx.android.synthetic.main.fragment_rta.*
 
 
 class RtaFragment : Fragment() {
 
     lateinit var presenter: NoisePresenter
-    lateinit var recordAudio_rta: RecordAudioRTA
     val handler = Handler()
 
     override fun onCreateView(
@@ -35,46 +31,15 @@ class RtaFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         presenter = NoisePresenter(this)
         initListener()
-        initchartLayout()
     }
 
-    private fun initchartLayout() {
-        val chartLayout = ChartLayoutLineChartForRTA(mChart)
-        chartLayout.initLineChartLayout(110f, 0f)
-    }
 
     private fun initListener() {
         rg_SorceSelect.setOnCheckedChangeListener(SourceCheckChangeListener(presenter))
         sb_source_gain.setOnSeekBarChangeListener(SourceSeekBarChangeListener(presenter))
     }
 
-    override fun onStart() {
-        super.onStart()
-        recordAudio_recordStart()
-    }
 
-    private fun recordAudio_recordStart() {
-        handler.postDelayed({
-            isStartedAudio = true
-            mChart.clear()
-            recordAudio_rta = RecordAudioRTA(mChart)
-            recordAudio_rta.execute()
-        }, 100)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        if (isStartedAudio){
-            recordAudio_recordStop()
-        }
-    }
-
-    private fun recordAudio_recordStop() {
-        if (isStartedAudio) {
-            isStartedAudio = false
-            recordAudio_rta.cancel(true)
-        }
-    }
 
     companion object {
         var currentNoise = 0
