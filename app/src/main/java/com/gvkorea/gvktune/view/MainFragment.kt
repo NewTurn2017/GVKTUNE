@@ -13,7 +13,6 @@ import com.gvkorea.gvktune.view.view.autotuning.TuneFragment
 import com.gvkorea.gvktune.view.view.calib.CalibFragment
 import com.gvkorea.gvktune.view.presenter.MainMenuPresenter
 import com.gvkorea.gvktune.view.view.reverb.ReverbFragment
-import com.gvkorea.gvktune.view.view.rta.RtaFragment
 import com.gvkorea.gvktune.view.view.spkmodel.ModelFragment
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -22,7 +21,6 @@ class MainFragment(val mainActivity: MainActivity) : Fragment() {
 
     lateinit var presenter: MainMenuPresenter
 
-    val rtaFragment: RtaFragment by lazy { RtaFragment() }
     val calibFragment: CalibFragment by lazy { CalibFragment() }
     val reverbFragment: ReverbFragment by lazy { ReverbFragment() }
     val modelFragment: ModelFragment by lazy { ModelFragment() }
@@ -44,10 +42,10 @@ class MainFragment(val mainActivity: MainActivity) : Fragment() {
     }
 
     private fun initListener() {
-        btn_rta.setOnClickListener(MainButtonListener(presenter))
         btn_calib.setOnClickListener(MainButtonListener(presenter))
         btn_reverb.setOnClickListener(MainButtonListener(presenter))
         btn_model.setOnClickListener(MainButtonListener(presenter))
         btn_tune.setOnClickListener(MainButtonListener(presenter))
+        btn_spectrum.setOnClickListener(MainButtonListener(presenter))
     }
 }

@@ -1,5 +1,6 @@
 package com.gvkorea.gvktune.view.presenter
 
+import android.content.Intent
 import android.widget.Toast
 import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.MainActivity.Companion.nowFragment
@@ -11,15 +12,15 @@ import com.gvkorea.gvktune.MainActivity.Companion.spk4Client
 import com.gvkorea.gvktune.R
 import com.gvkorea.gvktune.util.replace
 import com.gvkorea.gvktune.view.MainFragment
+import com.gvkorea.gvktune.view.activity.AnalyzerActivity
 
 class MainMenuPresenter(val view: MainFragment, val mainActivity: MainActivity) {
 
     fun selectFunction(function: String) {
         if (isSocketAlive()) {
             when(function) {
-                "rta" -> {
-                    mainActivity.replace(R.id.fragment_container, view.rtaFragment)
-                    nowFragment = view.rtaFragment
+                "spectrum" -> {
+                    view.startActivity(Intent(view.context, AnalyzerActivity::class.java))
                 }
                 "calib" -> {
                     mainActivity.replace(R.id.fragment_container, view.calibFragment)
