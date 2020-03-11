@@ -347,7 +347,7 @@ class STFT {
             Arrays.fill(sAOC, 0.0);
             nAnalysed = 0;
             for (int i = 0; i < outLen; i++) {
-                spectrumAmpOutDB[i] = 10.0 * log10(spectrumAmpOut[i]) + 115.4; //calibration
+                spectrumAmpOutDB[i] = 10.0 * log10(spectrumAmpOut[i]) + 115.4 + 14.9 ; //calibration
             }
         }
         return spectrumAmpOut;

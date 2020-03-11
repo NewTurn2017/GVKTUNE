@@ -53,7 +53,7 @@ public class AnalyzerGraphic extends View {
 
 //    static final double minDB = -144f;    // hard lower bound for dB
 //    static final double maxDB = 12f;      // hard upper bound for dB
-    static final double minDB = 0f;    // hard lower bound for dB
+    static final double minDB = -40f;    // hard lower bound for dB
     static final double maxDB = 120f;      // hard upper bound for dB
 
     private int canvasWidth, canvasHeight;   // size of my canvas
