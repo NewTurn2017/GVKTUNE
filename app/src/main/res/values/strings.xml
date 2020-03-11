@@ -83,6 +83,15 @@
     <string name="button_spectrum_spectrogram_mode">1D::2D</string>
     <string name="button_recording">Mon::Rec</string>
 
+    <string name="average_prompt">Choose a average</string>
+    <string-array name="average_arrays">
+        <item>NONE</item>
+        <item>5</item>
+        <item>10</item>
+        <item>50</item>
+        <item>100</item>
+    </string-array>
+
     <!-- permission dialog -->
     <string name="permission_explanation_title">Permission denied</string>
     <string name="permission_explanation_recorder">This app analyze the sound heard by *this* device. A permission of using microphone is required.</string>

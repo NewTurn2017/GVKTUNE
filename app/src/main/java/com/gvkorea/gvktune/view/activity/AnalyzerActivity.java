@@ -35,6 +35,8 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,8 +78,15 @@ public class AnalyzerActivity extends AppCompatActivity
     private boolean isLockViewRange = false;
     volatile boolean bSaveWav = false;
 
+    TextView tv_table;
     Button btn_graph;
     LineChart chart;
+    LinearLayout lay_Spectrum, lay_Graph;
+    Handler handler = new Handler();
+
+    Spinner sp_average;
+    ArrayList<Double> chartValues;
+    ChartLayoutLineChart chartlayout;
 
     CalibrationLoad calibLoad = new CalibrationLoad();  // data for calibration of spectrum
 
@@ -119,6 +128,8 @@ public class AnalyzerActivity extends AppCompatActivity
 
 
     private void initListener() {
+
+        tv_table = findViewById(R.id.tv_table);
         btn_graph = findViewById(R.id.btn_graph);
         btn_graph.setOnClickListener(new OnClickListener() {
             @Override
@@ -127,27 +138,81 @@ public class AnalyzerActivity extends AppCompatActivity
             }
         });
         chart = findViewById(R.id.lineChart);
+        lay_Spectrum = findViewById(R.id.lay_spectrum);
+        lay_Graph = findViewById(R.id.lay_graph);
+
+        sp_average = findViewById(R.id.sp_average);
+        sp_average.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String value = String.valueOf(parent.getItemIdAtPosition(position));
+                if(value.equals("0")) {
+                    chartValues = samplingThread.stft.rmsAvg;
+                    chartlayout.initGraph(chartValues);
+                }else if(value.equals("1")) {
+                    updateChart(5, value);
+
+                }else if(value.equals("2")) {
+                    updateChart(10, value);
+                }else if(value.equals("3")) {
+                    updateChart(50, value);
+                }else if(value.equals("4")) {
+                    updateChart(100, value);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void updateChart(int range, String value){
+        samplingThread.stft.getMovingAverage(samplingThread.stft.rmsAvg, range);
+        chartValues = samplingThread.stft.movingAvg;
+        chartlayout.initGraphWithRaw(samplingThread.stft.rmsAvg, chartValues, value);
+        tv_table.setText(samplingThread.stft.tv_tableValues);
     }
 
     Boolean isGraph = false;
     private void showGraph() {
         if(!isGraph){
-            btn_graph.setText(R.string.spectrum);
-            samplingThread.setPause(true);
-            analyzerViews.graphView.spectrogramPlot.setPause(true);
-            analyzerViews.graphView.setVisibility(View.GONE);
+            samplingThread.stft.measure(true);
+            samplingThread.stft.rmsSum = new ArrayList<>();
+            Toast.makeText(getApplicationContext(), "그래프 평균 중...", Toast.LENGTH_SHORT).show();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    samplingThread.stft.measure(false);
+                    Toast.makeText(getApplicationContext(), "총 데이터 ..."+ samplingThread.stft.rmsSum.size()+ "개", Toast.LENGTH_SHORT).show();
 
-            isGraph = true;
-            ChartLayoutLineChart chartlayout = new ChartLayoutLineChart(this, chart);
-            chartlayout.initLineChartLayout$app_debug(120f, 20f);
-            chartlayout.initGraph(rmsValues);
+                }
+            }, 1000);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    lay_Spectrum.setVisibility(View.GONE);
+                    lay_Graph.setVisibility(View.VISIBLE);
+                    btn_graph.setText(R.string.spectrum);
+                    samplingThread.setPause(true);
+                    analyzerViews.graphView.spectrogramPlot.setPause(true);
+                    isGraph = true;
+                    chartlayout = new ChartLayoutLineChart(getApplicationContext(), chart);
+                    chartlayout.initLineChartLayout$app_debug(100f, -20f);
+                    chartlayout.initGraph(samplingThread.stft.rmsAvg);
+                }
+            }, 1500);
+
 
 
         }else{
+            lay_Spectrum.setVisibility(View.VISIBLE);
+            lay_Graph.setVisibility(View.GONE);
             btn_graph.setText(R.string.btn_graph);
             samplingThread.setPause(false);
             analyzerViews.graphView.spectrogramPlot.setPause(false);
-            analyzerViews.graphView.setVisibility(View.VISIBLE);
             isGraph = false;
         }
 

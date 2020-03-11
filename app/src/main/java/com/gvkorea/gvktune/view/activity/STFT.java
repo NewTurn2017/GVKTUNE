@@ -16,12 +16,14 @@
 package com.gvkorea.gvktune.view.activity;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.gvkorea.gvktune.util.fft.RealDoubleFFT;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.DoubleSummaryStatistics;
+import java.util.List;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
@@ -49,27 +51,36 @@ class STFT {
     private int fftLen;
     private int hopLen;                           // control overlap of FFTs = (1 - lopLen/fftLen)*100%
     private int spectrumAmpPt;
-//    private double[][] spectrumAmpOutArray;
+    //    private double[][] spectrumAmpOutArray;
 //    private int spectrumAmpOutArrayPt = 0;        // Pointer for spectrumAmpOutArray
     private int nAnalysed = 0;
     private RealDoubleFFT spectrumAmpFFT;
     private boolean boolAWeighting = false;
     private double cumRMS = 0;
-    private int    cntRMS = 0;
+    private int cntRMS = 0;
     private double outRMS = 0;
 
     private double[] dBAFactor;    // multiply to power spectrum to get A-weighting
     private double[] micGain;
 
-    private double sqr(double x) { return x*x; }
-  
+    ArrayList<double[]> rmsSum;
+    Boolean isAvgStarted = false;
+    Boolean isMeasure = false;
+    ArrayList<Double> rmsAvg;
+    ArrayList<Double> movingAvg;
+    String tv_tableValues = "";
+
+    private double sqr(double x) {
+        return x * x;
+    }
+
     // Generate multiplier for A-weighting
     private void initDBAFactor(int fftlen, double sampleRate) {
-        dBAFactor = new double[fftlen/2+1];
-        for (int i = 0; i < fftlen/2+1; i++) {
-            double f = (double)i/fftlen * sampleRate;
-            double r = sqr(12200)*sqr(sqr(f)) / ((f*f+sqr(20.6)) * sqrt((f*f+sqr(107.7)) * (f*f+sqr(737.9))) * (f*f+sqr(12200)));
-            dBAFactor[i] = r*r*1.58489319246111;  // 1.58489319246111 = 10^(1/5)
+        dBAFactor = new double[fftlen / 2 + 1];
+        for (int i = 0; i < fftlen / 2 + 1; i++) {
+            double f = (double) i / fftlen * sampleRate;
+            double r = sqr(12200) * sqr(sqr(f)) / ((f * f + sqr(20.6)) * sqrt((f * f + sqr(107.7)) * (f * f + sqr(737.9))) * (f * f + sqr(12200)));
+            dBAFactor[i] = r * r * 1.58489319246111;  // 1.58489319246111 = 10^(1/5)
         }
     }
 
@@ -77,52 +88,52 @@ class STFT {
         wnd = new double[fftlen];
         switch (wndName) {
             case "Bartlett":
-                for (int i=0; i<wnd.length; i++) {  // Bartlett
-                    wnd[i] = asin(sin(PI*i/wnd.length))/PI*2;
+                for (int i = 0; i < wnd.length; i++) {  // Bartlett
+                    wnd[i] = asin(sin(PI * i / wnd.length)) / PI * 2;
                 }
                 break;
             case "Hanning":
-                for (int i=0; i<wnd.length; i++) {  // Hanning, hw=1
-                    wnd[i] = 0.5*(1-cos(2*PI*i/(wnd.length-1.))) *2;
+                for (int i = 0; i < wnd.length; i++) {  // Hanning, hw=1
+                    wnd[i] = 0.5 * (1 - cos(2 * PI * i / (wnd.length - 1.))) * 2;
                 }
                 break;
             case "Blackman":
-                for (int i=0; i<wnd.length; i++) {  // Blackman, hw=2
-                    wnd[i] = 0.42-0.5*cos(2*PI*i/(wnd.length-1))+0.08*cos(4*PI*i/(wnd.length-1));
+                for (int i = 0; i < wnd.length; i++) {  // Blackman, hw=2
+                    wnd[i] = 0.42 - 0.5 * cos(2 * PI * i / (wnd.length - 1)) + 0.08 * cos(4 * PI * i / (wnd.length - 1));
                 }
                 break;
             case "Blackman Harris":
-                for (int i=0; i<wnd.length; i++) {  // Blackman_Harris, hw=3
-                    wnd[i] = (0.35875-0.48829*cos(2*PI*i/(wnd.length-1))+0.14128*cos(4*PI*i/(wnd.length-1))-0.01168*cos(6*PI*i/(wnd.length-1))) *2;
+                for (int i = 0; i < wnd.length; i++) {  // Blackman_Harris, hw=3
+                    wnd[i] = (0.35875 - 0.48829 * cos(2 * PI * i / (wnd.length - 1)) + 0.14128 * cos(4 * PI * i / (wnd.length - 1)) - 0.01168 * cos(6 * PI * i / (wnd.length - 1))) * 2;
                 }
                 break;
             case "Kaiser, a=2.0": {
                 double a = 2.0;
                 double dn = besselCal.i0(PI * a);
-                for (int i=0; i<wnd.length; i++) {  // Kaiser, a=2.0
-                    wnd[i] = besselCal.i0(PI*a*sqrt(1-(2.0*i/(wnd.length-1)-1.0)*(2.0*i/(wnd.length-1)-1.0))) / dn;
+                for (int i = 0; i < wnd.length; i++) {  // Kaiser, a=2.0
+                    wnd[i] = besselCal.i0(PI * a * sqrt(1 - (2.0 * i / (wnd.length - 1) - 1.0) * (2.0 * i / (wnd.length - 1) - 1.0))) / dn;
                 }
                 break;
             }
             case "Kaiser, a=3.0": {
                 double a = 3.0;
                 double dn = besselCal.i0(PI * a);
-                for (int i=0; i<wnd.length; i++) {  // Kaiser, a=3.0
-                    wnd[i] = besselCal.i0(PI*a*sqrt(1-(2.0*i/(wnd.length-1)-1.0)*(2.0*i/(wnd.length-1)-1.0))) / dn;
+                for (int i = 0; i < wnd.length; i++) {  // Kaiser, a=3.0
+                    wnd[i] = besselCal.i0(PI * a * sqrt(1 - (2.0 * i / (wnd.length - 1) - 1.0) * (2.0 * i / (wnd.length - 1) - 1.0))) / dn;
                 }
                 break;
             }
             case "Kaiser, a=4.0": {
                 double a = 4.0;
                 double dn = besselCal.i0(PI * a);
-                for (int i=0; i<wnd.length; i++) {  // Kaiser, a=4.0
-                    wnd[i] = besselCal.i0(PI*a*sqrt(1-(2.0*i/(wnd.length-1)-1.0)*(2.0*i/(wnd.length-1)-1.0))) / dn;
+                for (int i = 0; i < wnd.length; i++) {  // Kaiser, a=4.0
+                    wnd[i] = besselCal.i0(PI * a * sqrt(1 - (2.0 * i / (wnd.length - 1) - 1.0) * (2.0 * i / (wnd.length - 1) - 1.0))) / dn;
                 }
                 break;
             }
             // 7 more window functions (by james34602, https://github.com/bewantbe/audio-analyzer-for-android/issues/14 )
             case "Flat-top": {
-                for (int i=0; i<wnd.length; i++) {
+                for (int i = 0; i < wnd.length; i++) {
                     double f = 2 * PI * i / (wnd.length - 1);
                     wnd[i] = 1 - 1.93 * cos(f) + 1.29 * cos(2 * f) - 0.388 * cos(3 * f) + 0.028 * cos(4 * f);
                 }
@@ -133,8 +144,7 @@ class STFT {
                 double a1 = 0.487396;
                 double a2 = 0.144232;
                 double a3 = 0.012604;
-                for (int i=0; i<wnd.length; i++)
-                {
+                for (int i = 0; i < wnd.length; i++) {
                     double scale = PI * i / (wnd.length - 1);
                     wnd[i] = a0 - a1 * cos(2.0 * scale) + a2 * cos(4.0 * scale) - a3 * cos(6.0 * scale);
                 }
@@ -143,8 +153,8 @@ class STFT {
             case "Gaussian, b=3.0": {
                 double Beta = 3.0;
                 double Arg;
-                for (int i=0; i<wnd.length; i++) {
-                    Arg = (Beta * (1.0 - ((double)i / (double)wnd.length) * 2.0));
+                for (int i = 0; i < wnd.length; i++) {
+                    Arg = (Beta * (1.0 - ((double) i / (double) wnd.length) * 2.0));
                     wnd[i] = exp(-0.5 * (Arg * Arg));
                 }
                 break;
@@ -152,8 +162,8 @@ class STFT {
             case "Gaussian, b=5.0": {
                 double Beta = 5.0;
                 double Arg;
-                for (int i=0; i<wnd.length; i++) {
-                    Arg = (Beta * (1.0 - ((double)i / (double)wnd.length) * 2.0));
+                for (int i = 0; i < wnd.length; i++) {
+                    Arg = (Beta * (1.0 - ((double) i / (double) wnd.length) * 2.0));
                     wnd[i] = exp(-0.5 * (Arg * Arg));
                 }
                 break;
@@ -161,8 +171,8 @@ class STFT {
             case "Gaussian, b=6.0": {
                 double Beta = 6.0;
                 double Arg;
-                for (int i=0; i<wnd.length; i++) {
-                    Arg = (Beta * (1.0 - ((double)i / (double)wnd.length) * 2.0));
+                for (int i = 0; i < wnd.length; i++) {
+                    Arg = (Beta * (1.0 - ((double) i / (double) wnd.length) * 2.0));
                     wnd[i] = exp(-0.5 * (Arg * Arg));
                 }
                 break;
@@ -170,8 +180,8 @@ class STFT {
             case "Gaussian, b=7.0": {
                 double Beta = 7.0;
                 double Arg;
-                for (int i=0; i<wnd.length; i++) {
-                    Arg = (Beta * (1.0 - ((double)i / (double)wnd.length) * 2.0));
+                for (int i = 0; i < wnd.length; i++) {
+                    Arg = (Beta * (1.0 - ((double) i / (double) wnd.length) * 2.0));
                     wnd[i] = exp(-0.5 * (Arg * Arg));
                 }
                 break;
@@ -179,27 +189,27 @@ class STFT {
             case "Gaussian, b=8.0": {
                 double Beta = 8.0;
                 double Arg;
-                for (int i=0; i<wnd.length; i++) {
-                    Arg = (Beta * (1.0 - ((double)i / (double)wnd.length) * 2.0));
+                for (int i = 0; i < wnd.length; i++) {
+                    Arg = (Beta * (1.0 - ((double) i / (double) wnd.length) * 2.0));
                     wnd[i] = exp(-0.5 * (Arg * Arg));
                 }
                 break;
             }
             default:
-                for (int i=0; i<wnd.length; i++) {
+                for (int i = 0; i < wnd.length; i++) {
                     wnd[i] = 1;
                 }
                 break;
         }
         double normalizeFactor = 0;
-        for (int i=0; i<wnd.length; i++) {
+        for (int i = 0; i < wnd.length; i++) {
             normalizeFactor += wnd[i];
         }
         normalizeFactor = wnd.length / normalizeFactor;
         wndEnergyFactor = 0;
-        for (int i=0; i<wnd.length; i++) {
+        for (int i = 0; i < wnd.length; i++) {
             wnd[i] *= normalizeFactor;
-            wndEnergyFactor += wnd[i]*wnd[i];
+            wndEnergyFactor += wnd[i] * wnd[i];
         }
         wndEnergyFactor = wnd.length / wndEnergyFactor;
     }
@@ -216,20 +226,20 @@ class STFT {
         if (minFeedSize <= 0) {
             throw new IllegalArgumentException("STFT::init(): should minFeedSize >= 1.");
         }
-        if (((-fftlen)&fftlen) != fftlen) {
+        if (((-fftlen) & fftlen) != fftlen) {
             // error: fftlen should be power of 2
             throw new IllegalArgumentException("STFT::init(): Currently, only power of 2 are supported in fftlen");
         }
         this.sampleRate = sampleRate;
         fftLen = fftlen;
         hopLen = _hopLen;                          // 50% overlap by default
-        spectrumAmpOutCum= new double[fftlen/2+1];
-        spectrumAmpOutTmp= new double[fftlen/2+1];
-        spectrumAmpOut   = new double[fftlen/2+1];
-        spectrumAmpOutDB = new double[fftlen/2+1];
-        spectrumAmpIn    = new double[fftlen];
+        spectrumAmpOutCum = new double[fftlen / 2 + 1];
+        spectrumAmpOutTmp = new double[fftlen / 2 + 1];
+        spectrumAmpOut = new double[fftlen / 2 + 1];
+        spectrumAmpOutDB = new double[fftlen / 2 + 1];
+        spectrumAmpIn = new double[fftlen];
         spectrumAmpInTmp = new double[fftlen];
-        spectrumAmpFFT   = new RealDoubleFFT(spectrumAmpIn.length);
+        spectrumAmpFFT = new RealDoubleFFT(spectrumAmpIn.length);
 //        spectrumAmpOutArray = new double[(int)ceil((double)minFeedSize / (fftlen/2))][]; // /2 since half overlap
 //        for (int i = 0; i < spectrumAmpOutArray.length; i++) {
 //            spectrumAmpOutArray[i] = new double[fftlen/2+1];
@@ -249,7 +259,7 @@ class STFT {
             }
             Log.w("STFT:", "calib loaded. micGain.length = " + micGain.length);
             for (int i = 0; i < micGain.length; i++) {
-                micGain[i] = pow(10, analyzerParam.micGainDB[i] / 10.0)+115.4;
+                micGain[i] = pow(10, analyzerParam.micGainDB[i] / 10.0) + 115.4;
             }
         } else {
             Log.w("STFT:", "no calib");
@@ -257,7 +267,7 @@ class STFT {
     }
 
     public void feedData(short[] ds) {
-      feedData(ds, ds.length);
+        feedData(ds, ds.length);
     }
 
     void feedData(short[] ds, int dsLen) {
@@ -272,13 +282,13 @@ class STFT {
             while (spectrumAmpPt < 0 && dsPt < dsLen) {  // skip data when hopLen > fftLen
                 double s = ds[dsPt++] / 32768.0;
                 spectrumAmpPt++;
-                cumRMS += s*s;
+                cumRMS += s * s;
                 cntRMS++;
             }
             while (spectrumAmpPt < inLen && dsPt < dsLen) {
                 double s = ds[dsPt++] / 32768.0;
                 spectrumAmpIn[spectrumAmpPt++] = s;
-                cumRMS += s*s;
+                cumRMS += s * s;
                 cntRMS++;
             }
             if (spectrumAmpPt == inLen) {    // enough data for one FFT
@@ -305,13 +315,13 @@ class STFT {
     // Convert complex amplitudes to absolute amplitudes.
     private void fftToAmp(double[] dataOut, double[] data) {
         // data.length should be a even number
-        double scaler = 2.0*2.0 / (data.length * data.length);  // *2 since there are positive and negative frequency part
-        dataOut[0] = data[0]*data[0] * scaler / 4.0;
+        double scaler = 2.0 * 2.0 / (data.length * data.length);  // *2 since there are positive and negative frequency part
+        dataOut[0] = data[0] * data[0] * scaler / 4.0;
         int j = 1;
         for (int i = 1; i < data.length - 1; i += 2, j++) {
-            dataOut[j] = (data[i]*data[i] + data[i+1]*data[i+1]) * scaler;
+            dataOut[j] = (data[i] * data[i] + data[i + 1] * data[i + 1]) * scaler;
         }
-        dataOut[j] = data[data.length-1]*data[data.length-1] * scaler / 4.0;
+        dataOut[j] = data[data.length - 1] * data[data.length - 1] * scaler / 4.0;
     }
 
     final double[] getSpectrumAmp() {
@@ -337,7 +347,7 @@ class STFT {
             Arrays.fill(sAOC, 0.0);
             nAnalysed = 0;
             for (int i = 0; i < outLen; i++) {
-                spectrumAmpOutDB[i] = 10.0 * log10(spectrumAmpOut[i]) + 115.4;
+                spectrumAmpOutDB[i] = 10.0 * log10(spectrumAmpOut[i]) + 115.4; //calibration
             }
         }
         return spectrumAmpOut;
@@ -349,7 +359,7 @@ class STFT {
     }
 
     double getRMS() {
-        if (cntRMS > 8000/30) {
+        if (cntRMS > 8000 / 30) {
             outRMS = sqrt(cumRMS / cntRMS * 2.0);  // "* 2.0" normalize to sine wave.
             cumRMS = 0;
             cntRMS = 0;
@@ -366,118 +376,173 @@ class STFT {
         return sqrt(s * wndEnergyFactor);
     }
 
-    ArrayList<Double> getRMSValues() {
+    void getRMSValues() {
         getSpectrumAmpDB();
-       ArrayList<Double> rmsValues = new ArrayList<>(31);
-        for (int i = 1; i < spectrumAmpOut.length; i++){
-            if(i == 4) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 5) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 6) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 8) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 10) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 12) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 15) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 19) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 23) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 30) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 37) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 46) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 59) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 74) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 93) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 117) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 149) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 186) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 232) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 297) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 372) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 465) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 583) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 743) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 929) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 1170) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 1486) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 1858) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 2322) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 2972) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
-            if(i == 3715) {
-                rmsValues.add(spectrumAmpOutDB[i]);
-            }
+//        ArrayList<Double> rmsValues = new ArrayList<>();
+//        System.arraycopy();
+//        for (int i = 1; i < spectrumAmpOut.length; i++) {
+//            if (i == 4) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 5) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 6) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 8) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 10) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 12) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 15) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 19) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 23) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 30) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 37) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 46) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 59) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 74) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 93) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 117) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 149) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 186) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 232) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 297) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 372) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 465) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 583) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 743) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 929) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 1170) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 1486) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 1858) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 2322) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 2972) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//            if (i == 3715) {
+//                rmsValues.add(spectrumAmpOutDB[i]);
+//            }
+//
+//
+//        }
+//        for (int i = 0; i < spectrumAmpOut.length; i++) {
+//            rmsValues.set(i, Math.round(rmsValues.get(i) * 10) / 10.0);
+//        }
 
-
+        if (isAvgStarted && isMeasure) {
+            rmsSum.add(spectrumAmpOutDB);
+        }
+        if (isAvgStarted && !isMeasure) {
+            averageList(rmsSum);
+            isAvgStarted = false;
+            isMeasure = false;
 
         }
-        for(int i=0; i < rmsValues.size(); i++){
-            rmsValues.set(i, Math.round(rmsValues.get(i) * 10) / 10.0);
-        }
+    }
 
-        return rmsValues;
+    void measure(Boolean isStarted) {
+        if (isStarted) {
+            rmsAvg = new ArrayList<>(spectrumAmpOutDB.length);
+            isAvgStarted = true;
+            isMeasure = true;
+        } else {
+            isAvgStarted = true;
+            isMeasure = false;
+        }
+    }
+
+    private void averageList(ArrayList<double[]> rmsSum) {
+        double[] rmsCal = new double[spectrumAmpOutDB.length];
+        Arrays.fill(rmsCal, 0.0);
+        for (int i = 0; i < rmsCal.length; i++) {
+            for (int j = 0; j < rmsSum.size(); j++) {
+                rmsCal[i] += rmsSum.get(j)[i];
+            }
+            rmsAvg.add(rmsCal[i] / rmsSum.size());
+        }
+    }
+
+    void getMovingAverage(ArrayList<Double> data, int range) {
+        ArrayList<Double> result = new ArrayList<>();
+        int N = data.size();
+        double partialSum = 0;
+        for (int i = 0; i < range - 1; ++i) {
+            partialSum += data.get(i);
+        }
+        for (int i = range - 1; i < N; ++i) {
+            partialSum += data.get(i);
+            result.add(partialSum / range);
+            partialSum -= data.get(i - range + 1);
+        }
+        movingAvg = result;
+        tv_tableValues = "";
+        updateTable(movingAvg);
+    }
+
+    private void updateTable(ArrayList<Double> movingAvg) {
+        int[] table30Array = new int[]{3, 4, 5, 7, 9, 11, 15, 19, 24, 30, 39, 49, 63, 80, 102, 129
+                , 165, 209, 266, 338, 430, 546, 694, 882, 1121, 1425, 1810, 2300, 2923, 3715};
+        for (int i = 0; i < table30Array.length; i++) {
+            String str = Math.round(table30Array[i] * 5.383301 * 100.0) / 100.0 + " hz: " + Math.round(movingAvg.get(table30Array[i]) * 100.0) / 100.0 + " dB\n";
+            tv_tableValues += str;
+        }
     }
 
 
-
     int nElemSpectrumAmp() {
-      return nAnalysed;
+        return nAnalysed;
     }
 
     double maxAmpFreq = Double.NaN, maxAmpDB = Double.NaN;
@@ -485,11 +550,11 @@ class STFT {
     void calculatePeak() {
         getSpectrumAmpDB();
         // Find and show peak amplitude
-        maxAmpDB  = 20 * log10(0.125/32768);
+        maxAmpDB = 20 * log10(0.125 / 32768);
         maxAmpFreq = 0;
         for (int i = 1; i < spectrumAmpOutDB.length; i++) {  // skip the direct current term
             if (spectrumAmpOutDB[i] > maxAmpDB) {
-                maxAmpDB  = spectrumAmpOutDB[i];
+                maxAmpDB = spectrumAmpOutDB[i];
                 maxAmpFreq = i;
             }
         }
@@ -501,19 +566,19 @@ class STFT {
         // a - b + c = x1
         //         c = x2
         // a + b + c = x3
-        if (sampleRate / fftLen < maxAmpFreq && maxAmpFreq < sampleRate/2 - sampleRate / fftLen) {
-            int id = (int)(round(maxAmpFreq/sampleRate*fftLen));
-            double x1 = spectrumAmpOutDB[id-1];
+        if (sampleRate / fftLen < maxAmpFreq && maxAmpFreq < sampleRate / 2 - sampleRate / fftLen) {
+            int id = (int) (round(maxAmpFreq / sampleRate * fftLen));
+            double x1 = spectrumAmpOutDB[id - 1];
             double x2 = spectrumAmpOutDB[id];
-            double x3 = spectrumAmpOutDB[id+1];
+            double x3 = spectrumAmpOutDB[id + 1];
             double c = x2;
-            double a = (x3+x1)/2 - x2;
-            double b = (x3-x1)/2;
+            double a = (x3 + x1) / 2 - x2;
+            double b = (x3 - x1) / 2;
             if (a < 0) {
-                double xPeak = -b/(2*a);
+                double xPeak = -b / (2 * a);
                 if (abs(xPeak) < 1) {
                     maxAmpFreq += xPeak * sampleRate / fftLen;
-                    maxAmpDB = (4*a*c - b*b)/(4*a);
+                    maxAmpDB = (4 * a * c - b * b) / (4 * a);
                 }
             }
         }

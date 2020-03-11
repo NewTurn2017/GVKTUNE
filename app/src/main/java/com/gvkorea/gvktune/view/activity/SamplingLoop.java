@@ -44,7 +44,7 @@ class SamplingLoop extends Thread {
     private final String TAG = "SamplingLoop";
     private volatile boolean isRunning = true;
     private volatile boolean isPaused1 = false;
-    private STFT stft;   // use with care
+    STFT stft;   // use with care
     private final AnalyzerParameters analyzerParam;
 
     private SineGenerator sineGen1;
@@ -296,7 +296,7 @@ class SamplingLoop extends Thread {
                 // get RMS
                 activity.dtRMS = stft.getRMS();
                 activity.dtRMSFromFT = stft.getRMSFromFT();
-                activity.rmsValues = stft.getRMSValues();
+                stft.getRMSValues();
             }
         }
         Log.i(TAG, "SamplingLoop::Run(): Actual sample rate: " + recorderMonitor.getSampleRate());
