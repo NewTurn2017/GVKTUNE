@@ -47,14 +47,14 @@ import java.util.ArrayList;
 
 /**
  * Audio "FFT" analyzer.
+ *
  * @author suhler@google.com (Stephen Uhler)
  */
 
 public class AnalyzerActivity extends AppCompatActivity
         implements OnLongClickListener, OnClickListener,
-        OnItemClickListener, AnalyzerGraphic.Ready
-{
-    private static final String TAG="AnalyzerActivity:";
+        OnItemClickListener, AnalyzerGraphic.Ready {
+    private static final String TAG = "AnalyzerActivity:";
 
     AnalyzerViews analyzerViews;
     SamplingLoop samplingThread = null;
@@ -75,7 +75,7 @@ public class AnalyzerActivity extends AppCompatActivity
     volatile boolean bSaveWav = false;
     Button btn_measure;
     TextView tv_table;
-    Button btn_graph, mesure;
+    Button btn_graph;
     LineChart chart;
     LinearLayout lay_Spectrum, lay_Graph;
     Handler handler = new Handler();
@@ -122,7 +122,6 @@ public class AnalyzerActivity extends AppCompatActivity
     }
 
 
-
     private void initListener() {
         btn_measure = findViewById(R.id.btn_measure);
         btn_measure.setOnClickListener(new OnClickListener() {
@@ -150,17 +149,17 @@ public class AnalyzerActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 String value = String.valueOf(parent.getItemIdAtPosition(position));
-                if(value.equals("0")) {
+                if (value.equals("0")) {
                     chartValues = samplingThread.stft.rmsAvg;
                     chartlayout.initGraph(chartValues);
-                }else if(value.equals("1")) {
+                } else if (value.equals("1")) {
                     updateChart(5, value);
 
-                }else if(value.equals("2")) {
+                } else if (value.equals("2")) {
                     updateChart(10, value);
-                }else if(value.equals("3")) {
+                } else if (value.equals("3")) {
                     updateChart(50, value);
-                }else if(value.equals("4")) {
+                } else if (value.equals("4")) {
                     updateChart(100, value);
                 }
             }
@@ -178,16 +177,16 @@ public class AnalyzerActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 String value = String.valueOf(parent.getItemIdAtPosition(position));
-                if(value.equals("0")) {
+                if (value.equals("0")) {
                     analyzerViews.smooth = 0;
-                }else if(value.equals("1")) {
+                } else if (value.equals("1")) {
                     analyzerViews.smooth = 5;
 
-                }else if(value.equals("2")) {
+                } else if (value.equals("2")) {
                     analyzerViews.smooth = 10;
-                }else if(value.equals("3")) {
+                } else if (value.equals("3")) {
                     analyzerViews.smooth = 50;
-                }else if(value.equals("4")) {
+                } else if (value.equals("4")) {
                     analyzerViews.smooth = 100;
                 }
             }
@@ -200,7 +199,7 @@ public class AnalyzerActivity extends AppCompatActivity
         sp_smooth.setSelection(4);
     }
 
-    private void updateChart(int range, String value){
+    private void updateChart(int range, String value) {
         samplingThread.stft.getMovingAverage(samplingThread.stft.rmsAvg, range);
         chartValues = samplingThread.stft.movingAvg;
         chartlayout.initGraphWithRaw(samplingThread.stft.rmsAvg, chartValues, value);
@@ -208,8 +207,9 @@ public class AnalyzerActivity extends AppCompatActivity
     }
 
     Boolean isGraph = false;
+
     private void showGraph() {
-        if(!isGraph){
+        if (!isGraph) {
             samplingThread.stft.measure(true);
             samplingThread.stft.rmsSum = new ArrayList<>();
             Toast.makeText(getApplicationContext(), "그래프 평균 중...", Toast.LENGTH_SHORT).show();
@@ -217,7 +217,7 @@ public class AnalyzerActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     samplingThread.stft.measure(false);
-                    Toast.makeText(getApplicationContext(), "총 데이터 ..."+ samplingThread.stft.rmsSum.size()+ "개", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "총 데이터 ..." + samplingThread.stft.rmsSum.size() + "개", Toast.LENGTH_SHORT).show();
 
                 }
             }, 1000);
@@ -237,8 +237,7 @@ public class AnalyzerActivity extends AppCompatActivity
             }, 1500);
 
 
-
-        }else{
+        } else {
             lay_Spectrum.setVisibility(View.VISIBLE);
             lay_Graph.setVisibility(View.GONE);
             btn_graph.setText(R.string.btn_graph);
@@ -250,32 +249,51 @@ public class AnalyzerActivity extends AppCompatActivity
     }
 
     private void showTable() {
-        analyzerViews.measure(true);
-        Toast.makeText(getApplicationContext(), "그래프 평균 중...", Toast.LENGTH_SHORT).show();
+        updateTableDoubleArray(analyzerViews.graphView.spectrumPlot.peakHold.v_peak);
+        analyzerViews.graphView.spectrumPlot.peakHold.drop_speed = 500;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                analyzerViews.measure(false);
-                Toast.makeText(getApplicationContext(), "총 데이터 ..."+ analyzerViews.rmsSum.size()+ "개", Toast.LENGTH_SHORT).show();
-
+                analyzerViews.graphView.spectrumPlot.peakHold.drop_speed = 0;
             }
-        }, 1000);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                tv_tableValues = "";
-                updateTable(analyzerViews.movingAvg);
-            }
-        }, 1500);
+        },2000);
+//        analyzerViews.measure(true);
+//        Toast.makeText(getApplicationContext(), "그래프 평균 중...", Toast.LENGTH_SHORT).show();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                analyzerViews.measure(false);
+//                Toast.makeText(getApplicationContext(), "총 데이터 ..."+ analyzerViews.rmsSum.size()+ "개", Toast.LENGTH_SHORT).show();
+//
+//            }
+//        }, 1000);
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                tv_tableValues = "";
+//                updateTable(analyzerViews.movingAvg);
+//            }
+//        }, 1500);
 
     }
+
     String tv_tableValues = "";
 
     private void updateTable(ArrayList<Double> movingAvg) {
 //        int[] table30Array = new int[]{3, 4, 5, 7, 9, 11, 15, 19, 24, 30, 39, 49, 63, 80, 102, 129
 //                , 165, 209, 266, 338, 430, 546, 694, 882, 1121, 1425, 1810, 2300, 2923, 3715};
-        for (int i = 1; i< movingAvg.size(); i++) {
+        for (int i = 1; i < movingAvg.size(); i++) {
             String str = Math.round(i * 5.383301 * 100.0) / 100.0 + " hz: " + Math.round(movingAvg.get(i) * 100.0) / 100.0 + " dB\n";
+            tv_tableValues += str;
+        }
+        tv_table.setText(tv_tableValues);
+    }
+
+    private void updateTableDoubleArray(double[] vPeak) {
+//        int[] table30Array = new int[]{3, 4, 5, 7, 9, 11, 15, 19, 24, 30, 39, 49, 63, 80, 102, 129
+//                , 165, 209, 266, 338, 430, 546, 694, 882, 1121, 1425, 1810, 2300, 2923, 3715};
+        for (int i = 1; i < vPeak.length; i++) {
+            String str = Math.round(i * 5.383301 * 100.0) / 100.0 + " hz: " + Math.round(vPeak[i] * 100.0) / 100.0 + " dB\n";
             tv_tableValues += str;
         }
         tv_table.setText(tv_tableValues);
@@ -323,10 +341,10 @@ public class AnalyzerActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         Log.d(TAG, "onSaveInstanceState()");
-        savedInstanceState.putDouble("dtRMS",       dtRMS);
+        savedInstanceState.putDouble("dtRMS", dtRMS);
         savedInstanceState.putDouble("dtRMSFromFT", dtRMSFromFT);
-        savedInstanceState.putDouble("maxAmpDB",    maxAmpDB);
-        savedInstanceState.putDouble("maxAmpFreq",  maxAmpFreq);
+        savedInstanceState.putDouble("maxAmpDB", maxAmpDB);
+        savedInstanceState.putDouble("maxAmpFreq", maxAmpFreq);
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -337,10 +355,10 @@ public class AnalyzerActivity extends AppCompatActivity
         // will be called after the onStart()
         super.onRestoreInstanceState(savedInstanceState);
 
-        dtRMS       = savedInstanceState.getDouble("dtRMS");
+        dtRMS = savedInstanceState.getDouble("dtRMS");
         dtRMSFromFT = savedInstanceState.getDouble("dtRMSFromFT");
-        maxAmpDB    = savedInstanceState.getDouble("maxAmpDB");
-        maxAmpFreq  = savedInstanceState.getDouble("maxAmpFreq");
+        maxAmpDB = savedInstanceState.getDouble("maxAmpDB");
+        maxAmpFreq = savedInstanceState.getDouble("maxAmpFreq");
     }
 
     @Override
@@ -386,9 +404,9 @@ public class AnalyzerActivity extends AppCompatActivity
         if (_calibLoad.freq == null || _calibLoad.freq.length == 0 || _analyzerParam == null) {
             return;
         }
-        double[] freqTick = new double[_analyzerParam.fftLen/2 + 1];
+        double[] freqTick = new double[_analyzerParam.fftLen / 2 + 1];
         for (int i = 0; i < freqTick.length; i++) {
-            freqTick[i] = (double)i / _analyzerParam.fftLen * _analyzerParam.sampleRate;
+            freqTick[i] = (double) i / _analyzerParam.fftLen * _analyzerParam.sampleRate;
         }
         _analyzerParam.micGainDB = AnalyzerUtil.interpLinear(_calibLoad.freq, _calibLoad.gain, freqTick);
         _analyzerParam.calibName = _calibLoad.name;
@@ -449,7 +467,7 @@ public class AnalyzerActivity extends AppCompatActivity
         String selectedItemTag = v.getTag().toString();
         // if tag() is "0" then do not update anything (it is a title)
         if (selectedItemTag.equals("0")) {
-            return ;
+            return;
         }
 
         // get the text and set it as the button text
@@ -466,7 +484,7 @@ public class AnalyzerActivity extends AppCompatActivity
         SharedPreferences.Editor editor = sharedPref.edit();
 
         // so change of sample rate do not change view range
-        if (! isLockViewRange) {
+        if (!isLockViewRange) {
             viewRangeArray = analyzerViews.graphView.getViewPhysicalRange();
             // if range is align at boundary, extend the range.
             Log.i(TAG, "set sampling rate:a " + viewRangeArray[0] + " ==? " + viewRangeArray[6]);
@@ -479,7 +497,7 @@ public class AnalyzerActivity extends AppCompatActivity
         switch (buttonId) {
             case R.id.button_sample_rate:
                 analyzerViews.popupMenuSampleRate.dismiss();
-                if (! isLockViewRange) {
+                if (!isLockViewRange) {
                     Log.i(TAG, "set sampling rate:b " + viewRangeArray[1] + " ==? " + viewRangeArray[6 + 1]);
                     if (viewRangeArray[1] == viewRangeArray[6 + 1]) {
                         viewRangeArray[1] = Integer.parseInt(selectedItemTag) / 2;
@@ -493,7 +511,7 @@ public class AnalyzerActivity extends AppCompatActivity
             case R.id.button_fftlen:
                 analyzerViews.popupMenuFFTLen.dismiss();
                 analyzerParam.fftLen = Integer.parseInt(selectedItemTag);
-                analyzerParam.hopLen = (int)(analyzerParam.fftLen*(1 - analyzerParam.overlapPercent/100) + 0.5);
+                analyzerParam.hopLen = (int) (analyzerParam.fftLen * (1 - analyzerParam.overlapPercent / 100) + 0.5);
                 b_need_restart_audio = true;
                 editor.putInt("button_fftlen", analyzerParam.fftLen);
                 fillFftCalibration(analyzerParam, calibLoad);
@@ -525,9 +543,9 @@ public class AnalyzerActivity extends AppCompatActivity
         // load preferences for buttons
         // list-buttons
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        analyzerParam.sampleRate   = sharedPref.getInt("button_sample_rate", 8000);
-        analyzerParam.fftLen       = sharedPref.getInt("button_fftlen",      8192);
-        analyzerParam.nFFTAverage  = sharedPref.getInt("button_average",        1);
+        analyzerParam.sampleRate = sharedPref.getInt("button_sample_rate", 8000);
+        analyzerParam.fftLen = sharedPref.getInt("button_fftlen", 8192);
+        analyzerParam.nFFTAverage = sharedPref.getInt("button_average", 1);
         // toggle-buttons
         analyzerParam.isAWeighting = sharedPref.getBoolean("dbA", false);
         if (analyzerParam.isAWeighting) {
@@ -541,13 +559,13 @@ public class AnalyzerActivity extends AppCompatActivity
         SelectorText st = (SelectorText) findViewById(R.id.freq_scaling_mode);
         st.setValue(axisMode);
 
-        Log.i(TAG, "loadPreferenceForView():"+
+        Log.i(TAG, "loadPreferenceForView():" +
                 "\n  sampleRate  = " + analyzerParam.sampleRate +
                 "\n  fftLen      = " + analyzerParam.fftLen +
                 "\n  nFFTAverage = " + analyzerParam.nFFTAverage);
         ((Button) findViewById(R.id.button_sample_rate)).setText(Integer.toString(analyzerParam.sampleRate));
-        ((Button) findViewById(R.id.button_fftlen     )).setText(Integer.toString(analyzerParam.fftLen));
-        ((Button) findViewById(R.id.button_average    )).setText(Integer.toString(analyzerParam.nFFTAverage));
+        ((Button) findViewById(R.id.button_fftlen)).setText(Integer.toString(analyzerParam.fftLen));
+        ((Button) findViewById(R.id.button_average)).setText(Integer.toString(analyzerParam.nFFTAverage));
     }
 
     private void LoadPreferences() {
@@ -566,11 +584,11 @@ public class AnalyzerActivity extends AppCompatActivity
         analyzerParam.spectrogramDuration = Double.parseDouble(sharedPref.getString("spectrogramDuration",
                 Double.toString(6.0)));
         analyzerParam.overlapPercent = Double.parseDouble(sharedPref.getString("fft_overlap_percent", "50.0"));
-        analyzerParam.hopLen = (int)(analyzerParam.fftLen*(1 - analyzerParam.overlapPercent/100) + 0.5);
+        analyzerParam.hopLen = (int) (analyzerParam.fftLen * (1 - analyzerParam.overlapPercent / 100) + 0.5);
 
         // Settings of graph view
         // spectrum
-        analyzerViews.graphView.setShowLines( sharedPref.getBoolean("showLines", false) );
+        analyzerViews.graphView.setShowLines(sharedPref.getBoolean("showLines", false));
         // set spectrum show range
         analyzerViews.graphView.setSpectrumDBLowerBound(
                 Float.parseFloat(sharedPref.getString("spectrumRange", Double.toString(AnalyzerGraphic.minDB)))
@@ -578,10 +596,10 @@ public class AnalyzerActivity extends AppCompatActivity
 
         // spectrogram
         analyzerViews.graphView.setSpectrogramModeShifting(sharedPref.getBoolean("spectrogramShifting", false));
-        analyzerViews.graphView.setShowTimeAxis           (sharedPref.getBoolean("spectrogramTimeAxis", true));
-        analyzerViews.graphView.setShowFreqAlongX         (sharedPref.getBoolean("spectrogramShowFreqAlongX", true));
-        analyzerViews.graphView.setSmoothRender           (sharedPref.getBoolean("spectrogramSmoothRender", false));
-        analyzerViews.graphView.setColorMap               (sharedPref.getString ("spectrogramColorMap", "Hot"));
+        analyzerViews.graphView.setShowTimeAxis(sharedPref.getBoolean("spectrogramTimeAxis", true));
+        analyzerViews.graphView.setShowFreqAlongX(sharedPref.getBoolean("spectrogramShowFreqAlongX", true));
+        analyzerViews.graphView.setSmoothRender(sharedPref.getBoolean("spectrogramSmoothRender", false));
+        analyzerViews.graphView.setColorMap(sharedPref.getString("spectrogramColorMap", "Hot"));
         // set spectrogram show range
         analyzerViews.graphView.setSpectrogramDBLowerBound(Float.parseFloat(
                 sharedPref.getString("spectrogramRange", Double.toString(analyzerViews.graphView.spectrogramPlot.spectrogramBMP.dBLowerBound))));
@@ -607,7 +625,7 @@ public class AnalyzerActivity extends AppCompatActivity
             // Set view range and stick to measure mode
             double[] rr = new double[AnalyzerGraphic.VIEW_RANGE_DATA_LENGTH];
             for (int i = 0; i < rr.length; i++) {
-                rr[i] = AnalyzerUtil.getDouble(sharedPref, "view_range_rr_" + i, 0.0/0.0);
+                rr[i] = AnalyzerUtil.getDouble(sharedPref, "view_range_rr_" + i, 0.0 / 0.0);
                 if (Double.isNaN(rr[i])) {  // not properly initialized
                     Log.w(TAG, "LoadPreferences(): rr is not properly initialized");
                     rr = null;
@@ -650,6 +668,7 @@ public class AnalyzerActivity extends AppCompatActivity
     /**
      * Gesture Listener for graphView (and possibly other views)
      * How to attach these events to the graphView?
+     *
      * @author xyy
      */
     private class AnalyzerGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -687,7 +706,7 @@ public class AnalyzerActivity extends AppCompatActivity
             }
             // Log.d(TAG, "  AnalyzerGestureListener::onFling: " + event1.toString()+event2.toString());
             // Fly the canvas in graphView when in scale mode
-            shiftingVelocity = Math.sqrt(velocityX*velocityX + velocityY*velocityY);
+            shiftingVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
             shiftingComponentX = velocityX / shiftingVelocity;
             shiftingComponentY = velocityY / shiftingVelocity;
             float DPRatio = getResources().getDisplayMetrics().density;
@@ -699,7 +718,7 @@ public class AnalyzerActivity extends AppCompatActivity
 
         Handler flyingMoveHandler = new Handler();
         long timeFlingStart;                     // Prevent from running forever
-        double flyDt = 1/20.;                     // delta t of refresh
+        double flyDt = 1 / 20.;                     // delta t of refresh
         double shiftingVelocity;                  // fling velocity
         double shiftingComponentX;                // fling direction x
         double shiftingComponentY;                // fling direction y
@@ -708,20 +727,20 @@ public class AnalyzerActivity extends AppCompatActivity
         Runnable flyingMoveRunnable = new Runnable() {
             @Override
             public void run() {
-                double shiftingVelocityNew = shiftingVelocity - flyAcceleration*flyDt;
+                double shiftingVelocityNew = shiftingVelocity - flyAcceleration * flyDt;
                 if (shiftingVelocityNew < 0) shiftingVelocityNew = 0;
                 // Number of pixels that should move in this time step
-                double shiftingPixel = (shiftingVelocityNew + shiftingVelocity)/2 * flyDt;
+                double shiftingPixel = (shiftingVelocityNew + shiftingVelocity) / 2 * flyDt;
                 shiftingVelocity = shiftingVelocityNew;
                 if (shiftingVelocity > 0f
                         && SystemClock.uptimeMillis() - timeFlingStart < 10000) {
                     // Log.i(TAG, "  fly pixels x=" + shiftingPixelX + " y=" + shiftingPixelY);
                     AnalyzerGraphic graphView = analyzerViews.graphView;
-                    graphView.setXShift(graphView.getXShift() - shiftingComponentX*shiftingPixel / graphView.getCanvasWidth() / graphView.getXZoom());
-                    graphView.setYShift(graphView.getYShift() - shiftingComponentY*shiftingPixel / graphView.getCanvasHeight() / graphView.getYZoom());
+                    graphView.setXShift(graphView.getXShift() - shiftingComponentX * shiftingPixel / graphView.getCanvasWidth() / graphView.getXZoom());
+                    graphView.setYShift(graphView.getYShift() - shiftingComponentY * shiftingPixel / graphView.getCanvasHeight() / graphView.getYZoom());
                     // Am I need to use runOnUiThread() ?
                     analyzerViews.invalidateGraphView();
-                    flyingMoveHandler.postDelayed(flyingMoveRunnable, (int)(1000*flyDt));
+                    flyingMoveHandler.postDelayed(flyingMoveRunnable, (int) (1000 * flyDt));
                 }
             }
         };
@@ -764,7 +783,7 @@ public class AnalyzerActivity extends AppCompatActivity
     }
 
     /**
-     *  Manage cursor for measurement
+     * Manage cursor for measurement
      */
     private void measureEvent(MotionEvent event) {
         switch (event.getPointerCount()) {
@@ -780,7 +799,7 @@ public class AnalyzerActivity extends AppCompatActivity
     }
 
     /**
-     *  Manage scroll and zoom
+     * Manage scroll and zoom
      */
     final private static double INIT = Double.MIN_VALUE;
     private boolean isPinching = false;
@@ -800,8 +819,8 @@ public class AnalyzerActivity extends AppCompatActivity
         // Log.i(TAG, "scaleEvent(): switch " + event.getAction());
         AnalyzerGraphic graphView = analyzerViews.graphView;
         switch (event.getPointerCount()) {
-            case 2 :
-                if (isPinching)  {
+            case 2:
+                if (isPinching) {
                     graphView.setShiftScale(event.getX(0), event.getY(0), event.getX(1), event.getY(1));
                 } else {
                     graphView.setShiftScaleBegin(event.getX(0), event.getY(0), event.getX(1), event.getY(1));
@@ -876,7 +895,7 @@ public class AnalyzerActivity extends AppCompatActivity
             double[] rangeDefault = analyzerViews.graphView.getViewPhysicalRange();
             Log.i(TAG, "restartSampling(): setViewRange: " + viewRangeArray[0] + " ~ " + viewRangeArray[1]);
             analyzerViews.graphView.setViewRange(viewRangeArray, rangeDefault);
-            if (! isLockViewRange) viewRangeArray = null;  // do not conserve
+            if (!isLockViewRange) viewRangeArray = null;  // do not conserve
         }
 
         // Set the view for incoming data
@@ -888,10 +907,10 @@ public class AnalyzerActivity extends AppCompatActivity
         graphInit.start();
 
         // Check and request permissions
-        if (! checkAndRequestPermissions())
+        if (!checkAndRequestPermissions())
             return;
 
-        if (! bSamplingPreparation)
+        if (!bSamplingPreparation)
             return;
 
         // Start sampling
@@ -974,7 +993,7 @@ public class AnalyzerActivity extends AppCompatActivity
             case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.w(TAG, "WRITE_EXTERNAL_STORAGE Permission granted by user.");
-                    if (! bSaveWav) {
+                    if (!bSaveWav) {
                         Log.w(TAG, "... bSaveWav == true");
                         runOnUiThread(new Runnable() {
                             @Override
@@ -998,8 +1017,9 @@ public class AnalyzerActivity extends AppCompatActivity
 
     /**
      * Process a click on one of our selectors.
-     * @param v   The view that was clicked
-     * @return    true if we need to update the graph
+     *
+     * @param v The view that was clicked
+     * @return true if we need to update the graph
      */
 
     public boolean processClick(View v) {
@@ -1068,9 +1088,10 @@ public class AnalyzerActivity extends AppCompatActivity
 
     /**
      * Visit all subviews of this view group and run command
-     * @param group   The parent view group
-     * @param cmd     The command to run for each view
-     * @param select  The tag value that must match. Null implies all views
+     *
+     * @param group  The parent view group
+     * @param cmd    The command to run for each view
+     * @param select The tag value that must match. Null implies all views
      */
 
     private void visit(ViewGroup group, Visit cmd, String select) {

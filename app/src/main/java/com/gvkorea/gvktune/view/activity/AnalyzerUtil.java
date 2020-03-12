@@ -368,7 +368,7 @@ class AnalyzerUtil {
         double[] v_peak = new double[0];
         double[] t_peak = new double[0];
         double t_hold = 2.0;
-        double drop_speed = 20.0;
+        double drop_speed = 0.0; // 20.0 default
 
         PeakHoldAndFall() {}
 

@@ -76,7 +76,7 @@ class AnalyzerViews {
     PopupWindow popupMenuSampleRate;
     PopupWindow popupMenuFFTLen;
     PopupWindow popupMenuAverage;
-    int smooth = 100;
+    int smooth = 500;
 
 
     boolean bWarnOverrun = true;

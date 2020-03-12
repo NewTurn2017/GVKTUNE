@@ -41,7 +41,7 @@ class SpectrumPlot {
     private float DPRatio;
 
     double cursorFreq, cursorDB;  // cursor location
-    private Plot2D plot2D;
+    Plot2D plot2D;
     ScreenPhysicalMapping axisX, axisY;
 
     SpectrumPlot(Context _context) {
@@ -116,7 +116,8 @@ class SpectrumPlot {
     }
 
     private double[] db_cache = null;
-    private AnalyzerUtil.PeakHoldAndFall peakHold = new AnalyzerUtil.PeakHoldAndFall();
+    AnalyzerUtil.PeakHoldAndFall peakHold = new AnalyzerUtil.PeakHoldAndFall();
+
     private long timeLastCall;
 
     // Plot the spectrum into the Canvas c
@@ -139,7 +140,7 @@ class SpectrumPlot {
         timeLastCall = timeNow;
 
         // Spectrum peak hold
-//        plot2D.plotLineBar(c, peakHold.v_peak, null, false, linePeakPaint, null);
+        plot2D.plotLineBar(c, peakHold.v_peak, null, false, linePeakPaint, null);
 
         // Spectrum line and bar
         plot2D.plotLineBar(c, db_cache, null, !showLines, linePaintLight, linePaint);
