@@ -44,7 +44,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.gvkorea.gvktune.R;
+import com.gvkorea.gvktune.view.activity.util.MovingAverage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -74,6 +76,8 @@ class AnalyzerViews {
     PopupWindow popupMenuSampleRate;
     PopupWindow popupMenuFFTLen;
     PopupWindow popupMenuAverage;
+    int smooth = 100;
+
 
     boolean bWarnOverrun = true;
 
@@ -138,16 +142,77 @@ class AnalyzerViews {
     }
 
     // Will be called by SamplingLoop (in another thread)
-    void update(final double[] spectrumDBcopy) {
-        graphView.saveSpectrum(spectrumDBcopy);
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // data will get out of synchronize here
-                invalidateGraphView();
-            }
-        });
+    ArrayList<double[]> rmsSum;
+    ArrayList<Double> movingAvg;
+    Boolean isAvgStarted = false;
+    Boolean isMeasure = false;
+
+    void measure(Boolean isStarted) {
+        if (isStarted) {
+            rmsSum = new ArrayList<>();
+            movingAvg = new ArrayList<>();
+            isAvgStarted = true;
+            isMeasure = true;
+        } else {
+            isAvgStarted = true;
+            isMeasure = false;
+        }
     }
+
+    void update(final double[] spectrumDBcopy) {
+
+
+        if(smooth == 0){
+            graphView.saveSpectrum(spectrumDBcopy);
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // data will get out of synchronize here
+                    invalidateGraphView();
+                }
+            });
+        }else{
+            MovingAverage ma = new MovingAverage(smooth);
+            double[] rms = new double[spectrumDBcopy.length];
+            Arrays.fill(rms, 0.0);
+            for (int i =0; i < rms.length; i++){
+                ma.newNum(spectrumDBcopy[i]);
+                rms[i] = ma.getAvg();
+            }
+            graphView.saveSpectrum(rms);
+            if (isAvgStarted && isMeasure) {
+                rmsSum.add(rms);
+            }
+            if (isAvgStarted && !isMeasure) {
+                averageList(rmsSum);
+                isAvgStarted = false;
+                isMeasure = false;
+
+            }
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // data will get out of synchronize here
+                    invalidateGraphView();
+                }
+            });
+        }
+
+    }
+
+    private void averageList(ArrayList<double[]> rmsSum) {
+        double[] rmsCal = new double[rmsSum.get(0).length];
+        Arrays.fill(rmsCal, 0.0);
+        for (int i = 0; i < rmsCal.length; i++) {
+            for (int j = 0; j < rmsSum.size(); j++) {
+                rmsCal[i] += rmsSum.get(j)[i];
+            }
+            movingAvg.add(rmsCal[i] / rmsSum.size());
+        }
+    }
+
+
 
     private double wavSecOld = 0;      // used to reduce frame rate
     void updateRec(double wavSec) {

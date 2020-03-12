@@ -139,7 +139,7 @@ class SpectrumPlot {
         timeLastCall = timeNow;
 
         // Spectrum peak hold
-        plot2D.plotLineBar(c, peakHold.v_peak, null, false, linePeakPaint, null);
+//        plot2D.plotLineBar(c, peakHold.v_peak, null, false, linePeakPaint, null);
 
         // Spectrum line and bar
         plot2D.plotLineBar(c, db_cache, null, !showLines, linePaintLight, linePaint);
@@ -180,6 +180,7 @@ class SpectrumPlot {
         plot2D.updateGridLabels();
         plot2D.drawGridLines(c, gridPaint);
         drawSpectrumOnCanvas(c, savedDBSpectrum);
+
         if (cursorFreq != 0) {
             plot2D.plotCrossline(c, cursorFreq, cursorDB, cursorPaint);
         }

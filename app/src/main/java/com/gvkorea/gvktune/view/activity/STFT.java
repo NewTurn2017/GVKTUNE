@@ -68,6 +68,7 @@ class STFT {
     Boolean isMeasure = false;
     ArrayList<Double> rmsAvg;
     ArrayList<Double> movingAvg;
+    double[] smooth;
     String tv_tableValues = "";
 
     private double sqr(double x) {
@@ -512,6 +513,24 @@ class STFT {
             }
             rmsAvg.add(rmsCal[i] / rmsSum.size());
         }
+    }
+
+    void getMovingAverageRealTime(double[] data, int range) {
+        double[] result = new double[data.length];
+        Arrays.fill(result, 0.0);
+        int N = data.length;
+        double partialSum = 0;
+        for (int i = 0; i < range - 1; ++i) {
+            partialSum += data[i];
+        }
+        for (int i = range - 1; i < N; ++i) {
+            partialSum += data[i];
+            result[i] = (partialSum / range);
+            partialSum -= data[(i - range + 1)];
+        }
+        smooth = result;
+//        tv_tableValues = "";
+//        updateTable(movingAvg);
     }
 
     void getMovingAverage(ArrayList<Double> data, int range) {

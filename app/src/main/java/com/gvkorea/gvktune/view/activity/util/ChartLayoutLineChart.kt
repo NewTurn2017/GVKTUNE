@@ -14,7 +14,7 @@ class ChartLayoutLineChart(var context: Context, var mLineChart: LineChart) {
     private var xVal = ""
     lateinit var xAxisCompLine: XAxis
 
-    internal fun initLineChartLayout(yAxisMax: Float, yAxisMin: Float) {
+    fun initLineChartLayout(yAxisMax: Float, yAxisMin: Float) {
 
         mLineChart.dragDecelerationFrictionCoef = 0.9f
         mLineChart.setDrawGridBackground(false)

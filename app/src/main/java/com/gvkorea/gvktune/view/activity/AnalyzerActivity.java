@@ -1,12 +1,10 @@
 package com.gvkorea.gvktune.view.activity;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.os.Bundle;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.gvkorea.gvktune.R;
-import com.gvkorea.gvktune.R.layout.*;
 import com.gvkorea.gvktune.view.activity.util.ChartLayoutLineChart;
 
 import android.content.Context;
@@ -18,10 +16,8 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.text.Layout;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -77,14 +73,14 @@ public class AnalyzerActivity extends AppCompatActivity
     private boolean isMeasure = false;
     private boolean isLockViewRange = false;
     volatile boolean bSaveWav = false;
-
+    Button btn_measure;
     TextView tv_table;
-    Button btn_graph;
+    Button btn_graph, mesure;
     LineChart chart;
     LinearLayout lay_Spectrum, lay_Graph;
     Handler handler = new Handler();
 
-    Spinner sp_average;
+    Spinner sp_average, sp_smooth;
     ArrayList<Double> chartValues;
     ChartLayoutLineChart chartlayout;
 
@@ -128,7 +124,13 @@ public class AnalyzerActivity extends AppCompatActivity
 
 
     private void initListener() {
-
+        btn_measure = findViewById(R.id.btn_measure);
+        btn_measure.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTable();
+            }
+        });
         tv_table = findViewById(R.id.tv_table);
         btn_graph = findViewById(R.id.btn_graph);
         btn_graph.setOnClickListener(new OnClickListener() {
@@ -142,6 +144,7 @@ public class AnalyzerActivity extends AppCompatActivity
         lay_Graph = findViewById(R.id.lay_graph);
 
         sp_average = findViewById(R.id.sp_average);
+
         sp_average.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -167,6 +170,34 @@ public class AnalyzerActivity extends AppCompatActivity
 
             }
         });
+
+        sp_smooth = findViewById(R.id.sp_smooth);
+
+        sp_smooth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String value = String.valueOf(parent.getItemIdAtPosition(position));
+                if(value.equals("0")) {
+                    analyzerViews.smooth = 0;
+                }else if(value.equals("1")) {
+                    analyzerViews.smooth = 5;
+
+                }else if(value.equals("2")) {
+                    analyzerViews.smooth = 10;
+                }else if(value.equals("3")) {
+                    analyzerViews.smooth = 50;
+                }else if(value.equals("4")) {
+                    analyzerViews.smooth = 100;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        sp_smooth.setSelection(4);
     }
 
     private void updateChart(int range, String value){
@@ -200,7 +231,7 @@ public class AnalyzerActivity extends AppCompatActivity
                     analyzerViews.graphView.spectrogramPlot.setPause(true);
                     isGraph = true;
                     chartlayout = new ChartLayoutLineChart(getApplicationContext(), chart);
-                    chartlayout.initLineChartLayout$app_debug(100f, -20f);
+                    chartlayout.initLineChartLayout(100f, -20f);
                     chartlayout.initGraph(samplingThread.stft.rmsAvg);
                 }
             }, 1500);
@@ -218,6 +249,37 @@ public class AnalyzerActivity extends AppCompatActivity
 
     }
 
+    private void showTable() {
+        analyzerViews.measure(true);
+        Toast.makeText(getApplicationContext(), "그래프 평균 중...", Toast.LENGTH_SHORT).show();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                analyzerViews.measure(false);
+                Toast.makeText(getApplicationContext(), "총 데이터 ..."+ analyzerViews.rmsSum.size()+ "개", Toast.LENGTH_SHORT).show();
+
+            }
+        }, 1000);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tv_tableValues = "";
+                updateTable(analyzerViews.movingAvg);
+            }
+        }, 1500);
+
+    }
+    String tv_tableValues = "";
+
+    private void updateTable(ArrayList<Double> movingAvg) {
+//        int[] table30Array = new int[]{3, 4, 5, 7, 9, 11, 15, 19, 24, 30, 39, 49, 63, 80, 102, 129
+//                , 165, 209, 266, 338, 430, 546, 694, 882, 1121, 1425, 1810, 2300, 2923, 3715};
+        for (int i = 1; i< movingAvg.size(); i++) {
+            String str = Math.round(i * 5.383301 * 100.0) / 100.0 + " hz: " + Math.round(movingAvg.get(i) * 100.0) / 100.0 + " dB\n";
+            tv_tableValues += str;
+        }
+        tv_table.setText(tv_tableValues);
+    }
 
     /**
      * Run processClick() for views, transferring the state in the textView to our

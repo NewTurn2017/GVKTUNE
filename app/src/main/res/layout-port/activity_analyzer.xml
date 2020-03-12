@@ -224,24 +224,7 @@
                     android:layout_weight="1"
                     android:entries="@array/average_arrays"
                     />
-                <ScrollView
-                    android:padding="5dp"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/tv_table"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:verticalScrollbarPosition="right"/>
-                    </LinearLayout>
-
-                </ScrollView>
 
 
             </LinearLayout>
@@ -250,6 +233,24 @@
     </LinearLayout>
 
 
+    <ScrollView
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_table"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:verticalScrollbarPosition="right"/>
+        </LinearLayout>
+
+    </ScrollView>
 
 
     <LinearLayout
@@ -264,5 +265,19 @@
             android:onClick="showPopupMenu"
             android:text="@string/graph"
             android:textSize="@dimen/button_text_fontsize" />
+
+        <Button
+            android:id="@+id/btn_measure"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_button_height"
+            android:text="측정"
+            android:textSize="@dimen/button_text_fontsize"/>
+        <Spinner
+            android:id="@+id/sp_smooth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/average_arrays"
+            />
     </LinearLayout>
 </LinearLayout>

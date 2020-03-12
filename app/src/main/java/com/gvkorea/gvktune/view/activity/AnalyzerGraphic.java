@@ -375,6 +375,7 @@ public class AnalyzerGraphic extends View {
         if (showMode == PlotMode.SPECTRUM) {
             spectrumPlot.addCalibCurve(analyzerParamCache.micGainDB, null, analyzerParamCache.calibName);
             spectrumPlot.drawSpectrumPlot(c, savedDBSpectrum);
+
         } else {
             spectrogramPlot.drawSpectrogramPlot(c);
         }

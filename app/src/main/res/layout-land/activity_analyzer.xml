@@ -15,14 +15,42 @@
         android:orientation="vertical"
         android:visibility="visible"
         >
-        <view
-            android:id="@+id/plot"
-            android:layout_width="fill_parent"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.32"
-            class="com.gvkorea.gvktune.view.activity.AnalyzerGraphic"
-            custom:cutoffDb="-25"
-            custom:sampleRate="16000" />
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <view
+                android:id="@+id/plot"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                class="com.gvkorea.gvktune.view.activity.AnalyzerGraphic"
+                custom:cutoffDb="-25"
+                custom:sampleRate="16000" />
+
+            <ScrollView
+                android:padding="5dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_table"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:verticalScrollbarPosition="right"/>
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -210,24 +238,7 @@
                 android:entries="@array/average_arrays"
                 />
 
-            <ScrollView
-                android:padding="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/tv_table"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:verticalScrollbarPosition="right"/>
-                </LinearLayout>
-
-            </ScrollView>
 
         </LinearLayout>
 
@@ -245,6 +256,22 @@
             android:onClick="showPopupMenu"
             android:text="@string/graph"
             android:textSize="@dimen/button_text_fontsize" />
+
+        <Button
+            android:id="@+id/btn_measure"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_button_height"
+            android:text="측정"
+            android:textSize="@dimen/button_text_fontsize"/>
+
+        <Spinner
+            android:id="@+id/sp_smooth"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_button_height"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:entries="@array/average_arrays"
+            />
     </LinearLayout>
 
 
