@@ -9,20 +9,20 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.gvkorea.gvktune.MainActivity
-import com.gvkorea.gvktune.MainActivity.Companion.MSG_RSV
-import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH1
-import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH2
-import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CHA
-import com.gvkorea.gvktune.MainActivity.Companion.otherClient
-import com.gvkorea.gvktune.MainActivity.Companion.otherClientNo
-import com.gvkorea.gvktune.MainActivity.Companion.selectedClient
-import com.gvkorea.gvktune.MainActivity.Companion.selectedSpkNo
-import com.gvkorea.gvktune.MainActivity.Companion.sockets
-import com.gvkorea.gvktune.MainActivity.Companion.spk1Client
-import com.gvkorea.gvktune.MainActivity.Companion.spk2Client
-import com.gvkorea.gvktune.MainActivity.Companion.spk3Client
-import com.gvkorea.gvktune.MainActivity.Companion.spk4Client
+import com.gvkorea.gvktune.AnalyzerActivity
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.MSG_RSV
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.isSelected_CH1
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.isSelected_CH2
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.isSelected_CHA
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.otherClient
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.otherClientNo
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.selectedClient
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.selectedSpkNo
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.sockets
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.spk1Client
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.spk2Client
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.spk3Client
+import com.gvkorea.gvktune.AnalyzerActivity.Companion.spk4Client
 import com.gvkorea.gvktune.R
 import com.gvkorea.gvktune.util.Protocol
 import kotlinx.android.synthetic.main.activity_main.*
@@ -31,7 +31,7 @@ import java.net.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainPresenter(val view: MainActivity, val handler: Handler, val pref: SharedPreferences) {
+class MainPresenter(val view: AnalyzerActivity, val handler: Handler, val pref: SharedPreferences) {
 
     private lateinit var tx_buff: ByteArray
     private val protocol = Protocol()
@@ -53,11 +53,11 @@ class MainPresenter(val view: MainActivity, val handler: Handler, val pref: Shar
     }
 
     fun appendText(msg: Message) {
-        view.tv_received.append("${++MainActivity.no}. " + msg.obj as String + "(${getTime()})\n")
+        view.tv_received.append("${++AnalyzerActivity.no}. " + msg.obj as String + "(${getTime()})\n")
         view.scrollView_info.post {
             view.scrollView_info.fullScroll(View.FOCUS_DOWN)
         }
-        if (MainActivity.no % 500 == 0) {
+        if (AnalyzerActivity.no % 500 == 0) {
             view.tv_received.text = ""
         }
 
@@ -70,11 +70,11 @@ class MainPresenter(val view: MainActivity, val handler: Handler, val pref: Shar
     }
 
     fun appendTextQuit(msg: Message) {
-        view.tv_received.append("${++MainActivity.no}. " + msg.obj as String + "(${getTime()})\n")
+        view.tv_received.append("${++AnalyzerActivity.no}. " + msg.obj as String + "(${getTime()})\n")
         view.scrollView_info.post {
             view.scrollView_info.fullScroll(View.FOCUS_DOWN)
         }
-        if (MainActivity.no % 500 == 0) {
+        if (AnalyzerActivity.no % 500 == 0) {
             view.tv_received.text = ""
         }
 

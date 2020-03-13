@@ -4,17 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/background"
+    android:orientation="vertical"
     android:padding="5dp"
-    tools:context=".MainActivity">
+    tools:context=".AnalyzerActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/layout_border"
         android:orientation="horizontal">
-
 
 
         <com.manojbhadane.QButton
@@ -78,6 +77,7 @@
         </RadioGroup>
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -138,72 +138,281 @@
             android:src="@drawable/spk4_off" />
 
 
-
-
     </LinearLayout>
+
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.manojbhadane.QButton
-            android:id="@+id/btn_main"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1.5"
-            android:drawableLeft="@drawable/ic_arrow_back"
-            android:text="Main Menu"
-            android:textColor="@android:color/white"
-            app:qb_backgroundColor="@android:color/holo_purple"
-            app:qb_radius="100"
-            app:qb_strokeColor="@android:color/holo_purple"
-            app:qb_strokeWidth="5" />
-        <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            app:srcCompat="@drawable/gvlogo" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:id="@+id/lay_spectrum"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextClock
-                android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible"
+            >
+            <view
+                android:id="@+id/plot"
+                android:layout_width="fill_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:format12Hour="hh:mm:ss a"
-                android:gravity="center"
-                android:textColor="#173172"
-                android:textStyle="bold"/>
+                android:layout_weight="0.32"
+                class="com.gvkorea.gvktune.analyzer.AnalyzerViews"
+                app:cutoffDb="-25"
+                app:sampleRate="16000" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textview_RMS"
+                    android:layout_width="@dimen/textview_RMS_layout_width"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:lines="2"
+                    android:text="@string/textview_RMS_text"
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/textview_cur"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/textview_RMS"
+                    android:layout_toEndOf="@id/textview_RMS"
+                    android:text="@string/textview_cur_text"
+                    android:typeface="monospace" />
+
+                <TextView
+                    android:id="@+id/textview_peak"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textview_cur"
+                    android:layout_toRightOf="@id/textview_RMS"
+                    android:layout_toEndOf="@id/textview_RMS"
+                    android:text="@string/textview_peak_text"
+                    android:typeface="monospace" />
+            </RelativeLayout>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:id="@+id/textview_rec"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/textview_rec_text"
+                android:typeface="monospace" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="50sp"
                 android:gravity="center"
-                android:text="(주)지브이코리아"
-                android:textColor="#173172"
-                android:textStyle="bold"/>
+                android:orientation="horizontal" >
+
+                <com.gvkorea.gvktune.view.activity.SelectorText
+                    android:id="@+id/button_recording"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:paddingLeft="15dp"
+                    android:paddingStart="15dp"
+                    android:tag="select"
+                    android:text="Mon"
+                    android:textSize="20sp"
+                    app:itemsDisplay="@string/button_recording"
+                    app:items="Mon Rec" />
+
+                <Button
+                    android:id="@+id/button_sample_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_button_height"
+                    android:layout_gravity="center"
+                    android:onClick="showPopupMenu"
+                    android:text="@string/sample_s"
+                    android:textSize="@dimen/button_text_fontsize" />
+
+                <Button
+                    android:id="@+id/button_fftlen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_button_height"
+                    android:layout_gravity="center"
+                    android:onClick="showPopupMenu"
+                    android:text="@string/fftlen"
+                    android:textSize="@dimen/button_text_fontsize" />
+
+                <Button
+                    android:id="@+id/button_average"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_button_height"
+                    android:layout_gravity="center"
+                    android:onClick="showPopupMenu"
+                    android:text="@string/ave"
+                    android:textSize="@dimen/button_text_fontsize" />
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <com.gvkorea.gvktune.view.activity.SelectorText
+                    android:id="@+id/spectrum_spectrogram_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:paddingLeft="15dp"
+                    android:paddingStart="15dp"
+                    android:tag="select"
+                    android:text="1D"
+                    android:textSize="20sp"
+                    app:itemsDisplay="@string/button_spectrum_spectrogram_mode"
+                    app:items="spum spam" />
+
+                <com.gvkorea.gvktune.view.activity.SelectorText
+                    android:id="@+id/dbA"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:paddingLeft="15dp"
+                    android:paddingStart="15dp"
+                    android:tag="select"
+                    android:text="dB"
+                    android:textSize="20sp"
+                    app:itemsDisplay="@string/button_dbA"
+                    app:items="dB dBA" />
+
+                <!--<github.bewantbe.audio_analyzer_for_android.SelectorText-->
+                <!--android:id="@+id/graph_view_mode"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="4dp"-->
+                <!--android:paddingLeft="15dp"-->
+                <!--android:tag="select"-->
+                <!--android:text="scale"-->
+                <!--android:textSize="20sp"-->
+                <!--app:items="cursor scale" />-->
+
+                <com.gvkorea.gvktune.view.activity.SelectorText
+                    android:id="@+id/freq_scaling_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:paddingLeft="15dp"
+                    android:paddingStart="15dp"
+                    android:tag="select"
+                    android:text="linear"
+                    android:textSize="20sp"
+                    app:itemsDisplay="@string/button_freq_scaling_mode"
+                    app:items="linear log note" />
+
+                <com.gvkorea.gvktune.view.activity.SelectorText
+                    android:id="@+id/run"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:paddingLeft="15dp"
+                    android:paddingStart="15dp"
+                    android:tag="select"
+                    android:text="run"
+                    android:textSize="20sp"
+                    app:itemsDisplay="@string/button_run"
+                    app:items="run stop" />
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/lay_graph"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/sp_average"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/average_arrays"
+                        />
+
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <ScrollView
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:verticalScrollbarPosition="right"/>
+            </LinearLayout>
+
+        </ScrollView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_measure"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_button_height"
+                android:text="측정"
+                android:textSize="@dimen/button_text_fontsize"/>
+            <Spinner
+                android:id="@+id/sp_smooth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/average_arrays"
+                />
+        </LinearLayout>
+
     </LinearLayout>
 
-
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_weight="1"
-        android:background="@drawable/layout_border" />
 
     <LinearLayout
         android:layout_width="match_parent"
