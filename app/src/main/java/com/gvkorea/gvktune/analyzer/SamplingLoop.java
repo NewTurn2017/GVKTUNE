@@ -235,7 +235,7 @@ public class SamplingLoop extends Thread {
 //      FPSCounter fpsCounter = new FPSCounter("SamplingLoop::run()");
 
         WavWriter wavWriter = new WavWriter(analyzerParam.sampleRate);
-        boolean bSaveWavLoop = activity.bSaveWav;  // change of bSaveWav during loop will only affect next enter.
+        boolean bSaveWavLoop = activity.getBSaveWav();  // change of bSaveWav during loop will only affect next enter.
         if (bSaveWavLoop) {
             wavWriter.start();
             wavSecRemain = wavWriter.secondsLeft();
@@ -291,12 +291,12 @@ public class SamplingLoop extends Thread {
 //          fpsCounter.inc();
 
                 stft.calculatePeak();
-                activity.maxAmpFreq = stft.maxAmpFreq;
-                activity.maxAmpDB = stft.maxAmpDB;
+                activity.setMaxAmpFreq(stft.maxAmpFreq);
+                activity.setMaxAmpDB(stft.maxAmpDB);
 
                 // get RMS
-                activity.dtRMS = stft.getRMS();
-                activity.dtRMSFromFT = stft.getRMSFromFT();
+                activity.setDtRMS(stft.getRMS());
+                activity.setDtRMSFromFT(stft.getRMSFromFT());
                 stft.getRMSValues();
             }
         }

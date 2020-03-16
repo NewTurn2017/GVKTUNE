@@ -19,14 +19,14 @@ import java.util.Iterator;
 public class CalibrationLoad {
     final static String TAG = "CalibrationLoad";
 
-    double[] freq = new double[0];
-    double[] gain = new double[0];
+    public double[] freq = new double[0];
+    public double[] gain = new double[0];
     double centralFreq = 1000;
     double centralGain = 115.4;
 //    double centralGain = -37.4;
-    String name = null;
+    public String name = null;
 
-    void loadFile(Uri calibUri, Context context) {
+    public void loadFile(Uri calibUri, Context context) {
         String calibPath = calibUri.getPath();
         BufferedReader br;
         InputStream inputStream;

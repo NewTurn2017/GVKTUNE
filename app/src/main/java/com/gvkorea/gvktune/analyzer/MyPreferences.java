@@ -24,7 +24,11 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.util.Log;
 
+import com.gvkorea.gvktune.AnalyzerActivity;
 import com.gvkorea.gvktune.R;
+
+import static com.gvkorea.gvktune.AnalyzerActivity.MYPREFERENCES_MSG_SOURCE_ID;
+import static com.gvkorea.gvktune.AnalyzerActivity.MYPREFERENCES_MSG_SOURCE_NAME;
 
 // I was using an old cell phone -- API level 9 (android 2.3.6),
 // so here use PreferenceActivity instead of PreferenceFragment.
@@ -81,8 +85,8 @@ public class MyPreferences extends PreferenceActivity {
 
         // Get list of default sources
         Intent intent = getIntent();
-        final int[] asid = intent.getIntArrayExtra(AnalyzerActivity.MYPREFERENCES_MSG_SOURCE_ID);
-        final String[] as = intent.getStringArrayExtra(AnalyzerActivity.MYPREFERENCES_MSG_SOURCE_NAME);
+        final int[] asid = intent.getIntArrayExtra(MYPREFERENCES_MSG_SOURCE_ID);
+        final String[] as = intent.getStringArrayExtra(MYPREFERENCES_MSG_SOURCE_NAME);
 
         int nExtraSources = 0;
         for (int id : asid) {

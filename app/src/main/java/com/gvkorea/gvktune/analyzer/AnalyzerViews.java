@@ -57,7 +57,7 @@ import java.util.Arrays;
 
 public class AnalyzerViews {
     final String TAG = "AnalyzerViews";
-    private final AnalyzerActivity activity;
+    final AnalyzerActivity activity;
     public final AnalyzerGraphic graphView;
 
     private float DPRatio;
@@ -74,9 +74,9 @@ public class AnalyzerViews {
     private char[] textPeakChar;  // for text in R.id.textview_peak
     private char[] textRecChar;   // for text in R.id.textview_rec
 
-    PopupWindow popupMenuSampleRate;
-    PopupWindow popupMenuFFTLen;
-    PopupWindow popupMenuAverage;
+    public PopupWindow popupMenuSampleRate;
+    public PopupWindow popupMenuFFTLen;
+    public PopupWindow popupMenuAverage;
     public int smooth = 500;
 
 
@@ -143,12 +143,12 @@ public class AnalyzerViews {
     }
 
     // Will be called by SamplingLoop (in another thread)
-    ArrayList<double[]> rmsSum;
-    ArrayList<Double> movingAvg;
+    public ArrayList<double[]> rmsSum;
+    public ArrayList<Double> movingAvg;
     Boolean isAvgStarted = false;
     Boolean isMeasure = false;
 
-    void measure(Boolean isStarted) {
+    public void measure(Boolean isStarted) {
         if (isStarted) {
             rmsSum = new ArrayList<>();
             movingAvg = new ArrayList<>();
@@ -550,14 +550,14 @@ public class AnalyzerViews {
                 graphView.invalidate();
             // RMS
             if ((viewMask & VIEW_MASK_textview_RMS) != 0)
-                refreshRMSLabel(activity.dtRMSFromFT);
+                refreshRMSLabel(activity.getDtRMSFromFT());
             // peak frequency
             if ((viewMask & VIEW_MASK_textview_peak) != 0)
-                refreshPeakLabel(activity.maxAmpFreq, activity.maxAmpDB);
+                refreshPeakLabel(activity.getMaxAmpFreq(), activity.getMaxAmpDB());
             if ((viewMask & VIEW_MASK_CursorLabel) != 0)
                 refreshCursorLabel();
-            if ((viewMask & VIEW_MASK_RecTimeLable) != 0 && activity.samplingThread != null)
-                refreshRecTimeLable(activity.samplingThread.wavSec, activity.samplingThread.wavSecRemain);
+            if ((viewMask & VIEW_MASK_RecTimeLable) != 0 && activity.getSamplingThread() != null)
+                refreshRecTimeLable(activity.getSamplingThread().wavSec, activity.getSamplingThread().wavSecRemain);
         } else {
             if (! idPaddingInvalidate) {
                 idPaddingInvalidate = true;

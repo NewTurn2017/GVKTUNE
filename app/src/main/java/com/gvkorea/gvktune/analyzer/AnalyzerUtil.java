@@ -273,7 +273,7 @@ public class AnalyzerUtil {
         return true;
     }
 
-    static double[] interpLinear(double[] xFixed, double[] yFixed, double[] xInterp) {
+    public static double[] interpLinear(double[] xFixed, double[] yFixed, double[] xInterp) {
         if (xFixed == null || yFixed == null || xInterp == null) {
             return null;
         }

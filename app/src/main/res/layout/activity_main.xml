@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
     android:orientation="vertical"
     android:padding="5dp"
     tools:context=".AnalyzerActivity">
@@ -80,7 +79,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@drawable/layout_border"
         android:orientation="horizontal">
@@ -95,7 +94,7 @@
             android:layout_marginBottom="2dp"
             android:layout_weight="1"
             android:background="@null"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:src="@drawable/spk1_off" />
 
         <ImageButton
@@ -108,7 +107,7 @@
             android:layout_marginBottom="2dp"
             android:layout_weight="1"
             android:background="@null"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:src="@drawable/spk2_off" />
 
         <ImageButton
@@ -121,7 +120,7 @@
             android:layout_marginBottom="2dp"
             android:layout_weight="1"
             android:background="@null"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:src="@drawable/spk3_off" />
 
         <ImageButton
@@ -134,7 +133,7 @@
             android:layout_marginBottom="2dp"
             android:layout_weight="1"
             android:background="@null"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:src="@drawable/spk4_off" />
 
 
@@ -160,7 +159,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.32"
-                class="com.gvkorea.gvktune.analyzer.AnalyzerViews"
+                class="com.gvkorea.gvktune.analyzer.AnalyzerGraphic"
                 app:cutoffDb="-25"
                 app:sampleRate="16000" />
 
@@ -212,7 +211,7 @@
                 android:gravity="center"
                 android:orientation="horizontal" >
 
-                <com.gvkorea.gvktune.view.activity.SelectorText
+                <com.gvkorea.gvktune.analyzer.SelectorText
                     android:id="@+id/button_recording"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -261,7 +260,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center" >
 
-                <com.gvkorea.gvktune.view.activity.SelectorText
+                <com.gvkorea.gvktune.analyzer.SelectorText
                     android:id="@+id/spectrum_spectrogram_mode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -274,7 +273,7 @@
                     app:itemsDisplay="@string/button_spectrum_spectrogram_mode"
                     app:items="spum spam" />
 
-                <com.gvkorea.gvktune.view.activity.SelectorText
+                <com.gvkorea.gvktune.analyzer.SelectorText
                     android:id="@+id/dbA"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -298,7 +297,7 @@
                 <!--android:textSize="20sp"-->
                 <!--app:items="cursor scale" />-->
 
-                <com.gvkorea.gvktune.view.activity.SelectorText
+                <com.gvkorea.gvktune.analyzer.SelectorText
                     android:id="@+id/freq_scaling_mode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -311,7 +310,7 @@
                     app:itemsDisplay="@string/button_freq_scaling_mode"
                     app:items="linear log note" />
 
-                <com.gvkorea.gvktune.view.activity.SelectorText
+                <com.gvkorea.gvktune.analyzer.SelectorText
                     android:id="@+id/run"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -375,7 +374,8 @@
         <ScrollView
             android:padding="5dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="0.5">
 
             <LinearLayout
                 android:layout_width="match_parent"

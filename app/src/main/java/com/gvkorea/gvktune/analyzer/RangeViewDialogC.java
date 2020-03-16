@@ -175,7 +175,7 @@ public class RangeViewDialogC {
                         SaveViewRange(rr, isLock);
                         if (isLock) {
                             ct.stickToMeasureMode();
-                            ct.viewRangeArray = rr;
+                            ct.setViewRangeArray(rr);
                         } else {
                             ct.stickToMeasureModeCancel();
                         }

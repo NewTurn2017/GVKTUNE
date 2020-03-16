@@ -2,24 +2,23 @@ package com.gvkorea.gvktune
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
-import android.os.PowerManager
+import android.os.*
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import com.gvkorea.gvktune.analyzer.*
 import com.gvkorea.gvktune.listener.ChannelGroupCheckedChangeListener
 import com.gvkorea.gvktune.listener.SpeakerSelectedListener
@@ -93,9 +92,7 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
     //Analyzer
 
 
-    private val MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 1 // just a number
 
-    private val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2
     lateinit var graphInit: Thread
     private var bSamplingPreparation = false
     lateinit var analyzerViews: AnalyzerViews
@@ -112,11 +109,10 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
     var maxAmpFreq = 0.0
     var viewRangeArray: DoubleArray? = null
 
-    private var isMeasure = false
     private var isLockViewRange = false
 
-    @Volatile
     var bSaveWav = false
+
 
     var calibLoad: CalibrationLoad = CalibrationLoad() // data for calibration of spectrum
 
@@ -163,7 +159,7 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
 
         rangeViewDialogC = RangeViewDialogC(this, analyzerViews.graphView)
 
-        mDetector = GestureDetectorCompat(this, AnalyzerGestureListener())
+        mDetector = GestureDetectorCompat(this, AnalyzerGestureListener(analyzerViews))
 
     }
 
@@ -218,15 +214,15 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
                 val value =
                     java.lang.String.valueOf(parent.getItemIdAtPosition(position))
                 if (value == "0") {
-                    analyzerViews!!.smooth = 0
+                    analyzerViews.smooth = 0
                 } else if (value == "1") {
-                    analyzerViews!!.smooth = 5
+                    analyzerViews.smooth = 5
                 } else if (value == "2") {
-                    analyzerViews!!.smooth = 10
+                    analyzerViews.smooth = 10
                 } else if (value == "3") {
-                    analyzerViews!!.smooth = 50
+                    analyzerViews.smooth = 50
                 } else if (value == "4") {
-                    analyzerViews!!.smooth = 100
+                    analyzerViews.smooth = 100
                 }
             }
 
@@ -237,29 +233,27 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
     }
 
     private fun showTable() {
-        tv_tableValues = ""
-        updateTableDoubleArray(analyzerViews!!.graphView.spectrumPlot.peakHold.v_peak)
-        analyzerViews!!.graphView.spectrumPlot.peakHold.drop_speed = 500.0
-        handler.postDelayed(Runnable {
-            analyzerViews!!.graphView.spectrumPlot.peakHold.drop_speed = 0.0
-        }, 2000)
-//        analyzerViews.measure(true);
-//        Toast.makeText(getApplicationContext(), "그래프 평균 중...", Toast.LENGTH_SHORT).show();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                analyzerViews.measure(false);
-//                Toast.makeText(getApplicationContext(), "총 데이터 ..."+ analyzerViews.rmsSum.size()+ "개", Toast.LENGTH_SHORT).show();
-//
-//            }
-//        }, 1000);
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                tv_tableValues = "";
-//                updateTable(analyzerViews.movingAvg);
-//            }
-//        }, 1500);
+//        tv_tableValues = ""
+//        updateTableDoubleArray(analyzerViews.graphView.spectrumPlot.peakHold.v_peak)
+//        analyzerViews.graphView.spectrumPlot.peakHold.drop_speed = 500.0
+//        handler.postDelayed(Runnable {
+//            analyzerViews.graphView.spectrumPlot.peakHold.drop_speed = 0.0
+//        }, 2000)
+        analyzerViews.measure(true);
+        Toast.makeText(applicationContext, "그래프 평균 중...", Toast.LENGTH_SHORT).show();
+        handler.postDelayed({
+            analyzerViews.measure(false);
+            Toast.makeText(
+                getApplicationContext(),
+                "총 데이터 ..." + analyzerViews.rmsSum.size + "개",
+                Toast.LENGTH_SHORT
+            ).show();
+
+        }, 1000)
+        handler.postDelayed({
+            tv_tableValues = ""
+            updateTable(analyzerViews.movingAvg);
+        }, 1500)
     }
 
     var tv_tableValues = ""
@@ -277,6 +271,18 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
         tv_table.text = tv_tableValues
     }
 
+    private fun updateTable(movingAvg: java.util.ArrayList<Double>) {
+//        int[] table30Array = new int[]{3, 4, 5, 7, 9, 11, 15, 19, 24, 30, 39, 49, 63, 80, 102, 129
+//                , 165, 209, 266, 338, 430, 546, 694, 882, 1121, 1425, 1810, 2300, 2923, 3715};
+        for (i in 1 until movingAvg.size) {
+            val str =
+                (Math.round(i * 5.383301 * 100.0) / 100.0).toString() + " hz: " + Math.round(
+                    movingAvg[i] * 100.0
+                ) / 100.0 + " dB\n"
+            tv_tableValues += str
+        }
+        tv_table.text = tv_tableValues
+    }
 
     override fun onResume() {
         super.onResume()
@@ -291,6 +297,48 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
         restartSampling(analyzerParam);
     }
 
+
+    override fun onPause() {
+        Log.d(TAG, "onPause()")
+        bSamplingPreparation = false
+        if (samplingThread != null) {
+            samplingThread!!.finish()
+        }
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        super.onPause()
+    }
+
+
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        Log.d(TAG, "onSaveInstanceState()")
+        savedInstanceState.putDouble("dtRMS", dtRMS)
+        savedInstanceState.putDouble("dtRMSFromFT", dtRMSFromFT)
+        savedInstanceState.putDouble("maxAmpDB", maxAmpDB)
+        savedInstanceState.putDouble("maxAmpFreq", maxAmpFreq)
+        super.onSaveInstanceState(savedInstanceState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        Log.d(TAG, "onRestoreInstanceState()")
+        // will be called after the onStart()
+        super.onRestoreInstanceState(savedInstanceState)
+        dtRMS = savedInstanceState.getDouble("dtRMS")
+        dtRMSFromFT = savedInstanceState.getDouble("dtRMSFromFT")
+        maxAmpDB = savedInstanceState.getDouble("maxAmpDB")
+        maxAmpFreq = savedInstanceState.getDouble("maxAmpFreq")
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.info, menu)
+        return true
+    }
+
+    val REQUEST_AUDIO_GET = 1
+    val REQUEST_CALIB_LOAD = 2
+
+
+
     private fun restartSampling(_analyzerParam: AnalyzerParameters) {
         // Stop previous sampler if any.
         if (samplingThread != null) {
@@ -303,19 +351,19 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
             samplingThread = null
         }
         if (viewRangeArray != null) {
-            analyzerViews!!.graphView.setupAxes(analyzerParam)
-            val rangeDefault = analyzerViews!!.graphView.getViewPhysicalRange()
+            analyzerViews.graphView.setupAxes(analyzerParam)
+            val rangeDefault = analyzerViews.graphView.viewPhysicalRange
             Log.i(
                 TAG,
                 "restartSampling(): setViewRange: " + viewRangeArray!![0]
                     .toString() + " ~ " + viewRangeArray!![1]
             )
-            analyzerViews!!.graphView.setViewRange(viewRangeArray, rangeDefault)
+            analyzerViews.graphView.setViewRange(viewRangeArray, rangeDefault)
             if (!isLockViewRange) viewRangeArray = null // do not conserve
         }
 
         // Set the view for incoming data
-        graphInit = Thread(Runnable { analyzerViews!!.setupView(_analyzerParam) })
+        graphInit = Thread(Runnable { analyzerViews.setupView(_analyzerParam) })
         graphInit!!.start()
 
         // Check and request permissions
@@ -332,7 +380,7 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
     // For preventing infinity loop: onResume() -> requestPermissions() -> onRequestPermissionsResult() -> onResume()
     private val count_permission_request = 0
 
-    fun processClick(v: View): Boolean {
+    fun processClick(v: View?): Boolean {
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
         val editor: SharedPreferences.Editor = sharedPref.edit()
         val value: String
@@ -764,30 +812,7 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
         }
     }
 
-    companion object {
-        var isSelected_CH1 = false
-        var isSelected_CH2 = false
-        var isSelected_CHA = false
-        var no: Int = 0
-        val MSG_RSV = 1
-        val MSG_INFO = 4
-        val MSG_QUIT = 2
-        val MSG_SOCK = 3
-        var selectedClient: Socket? = null
-        var spk1Client: Socket? = null
-        var spk2Client: Socket? = null
-        var spk3Client: Socket? = null
-        var spk4Client: Socket? = null
 
-        var otherClient: ArrayList<Socket?> = ArrayList()
-        lateinit var pref: SharedPreferences
-        var selectedSpkNo = 0
-        var sockets = ArrayList<Socket?>()
-        lateinit var nowFragment: Fragment
-        var otherClientNo = 0
-        val TAG = "MultiSocketServer"
-
-    }
 
 
     // Load preferences for Views
@@ -807,11 +832,10 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
         }
         val isSpam = sharedPref.getBoolean("spectrum_spectrogram_mode", true)
         if (!isSpam) {
-            (R.id.spectrum_spectrogram_mode as SelectorText).nextValue()
+            spectrum_spectrogram_mode.nextValue()
         }
         val axisMode = sharedPref.getString("freq_scaling_mode", "linear")
-        val st = (R.id.freq_scaling_mode) as SelectorText
-        st.value = axisMode
+        freq_scaling_mode.value = axisMode
         Log.i(
             TAG, """loadPreferenceForView():
   sampleRate  = ${analyzerParam.sampleRate}
@@ -953,10 +977,7 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
         }
     }
 
-    private fun isInGraphView(x: Float, y: Float): Boolean {
-        analyzerViews.graphView.getLocationInWindow(windowLocation)
-        return x >= windowLocation[0] && y >= windowLocation[1] && x < windowLocation[0] + analyzerViews.graphView.width && y < windowLocation[1] + analyzerViews.graphView.height
-    }
+
 
 
     // Button processing
@@ -970,7 +991,7 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
      *
      * @author xyy
      */
-    private class AnalyzerGestureListener : GestureDetector.SimpleOnGestureListener() {
+    inner class AnalyzerGestureListener(val analyzerViews: AnalyzerViews) : GestureDetector.SimpleOnGestureListener() {
         override fun onDown(event: MotionEvent?): Boolean {  // enter here when down action happen
             flyingMoveHandler.removeCallbacks(flyingMoveRunnable)
             return true
@@ -1045,22 +1066,31 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
                         graphView.yShift - shiftingComponentY * shiftingPixel / graphView.canvasHeight / graphView.yZoom
                     // Am I need to use runOnUiThread() ?
                     analyzerViews.invalidateGraphView()
-                    flyingMoveHandler.postDelayed(
-                        this,
-                        (1000 * flyDt) as Int.toLong
-                        ()
-                    )
+                    flyingMoveHandler.postDelayed(this, (1000 * flyDt).toLong())
                 }
             }
         }
+
+        fun isInGraphView(x: Float, y: Float): Boolean {
+            analyzerViews.graphView.getLocationInWindow(windowLocation)
+            return x >= windowLocation.get(0) && y >= windowLocation.get(1) && x < windowLocation.get(
+                0
+            ) + analyzerViews.graphView.getWidth() && y < windowLocation.get(1) + analyzerViews.graphView.getHeight()
+        }
+
+
+
     }
 
-    private fun isInGraphView(x: Float, y: Float): Boolean {
+    fun isInGraphView(x: Float, y: Float): Boolean {
         analyzerViews.graphView.getLocationInWindow(windowLocation)
-        return x >= windowLocation[0] && y >= windowLocation[1] && x < windowLocation[0] + analyzerViews.graphView.width && y < windowLocation[1] + analyzerViews.graphView.height
+        return x >= windowLocation.get(0) && y >= windowLocation.get(1) && x < windowLocation.get(
+            0
+        ) + analyzerViews.graphView.getWidth() && y < windowLocation.get(1) + analyzerViews.graphView.getHeight()
     }
 
-    private fun switchMeasureAndScaleMode() {
+
+    fun switchMeasureAndScaleMode() {
         if (isLockViewRange) {
             isMeasure = true
             return
@@ -1112,12 +1142,14 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
      */
     private val INIT = Double.MIN_VALUE
     private var isPinching = false
-    private var xShift0 = INIT, private  var yShift0:kotlin.Double = INIT
-    private var x0 = 0.0, private  var y0:kotlin.Double = 0.0
+    private var xShift0 = INIT
+    private  var yShift0:kotlin.Double = INIT
+    private var x0 = 0.0
+    private  var y0:kotlin.Double = 0.0
     private val windowLocation = IntArray(2)
 
-    private fun scaleEvent(event: MotionEvent) {
-        if (event.getAction() !== MotionEvent.ACTION_MOVE) {
+    private fun scaleEvent(event: MotionEvent?) {
+        if (event?.action !== MotionEvent.ACTION_MOVE) {
             xShift0 = INIT
             yShift0 = INIT
             isPinching = false
@@ -1131,17 +1163,17 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
             2 -> {
                 if (isPinching) {
                     graphView.setShiftScale(
-                        event.getX(0),
-                        event.getY(0),
-                        event.getX(1),
-                        event.getY(1)
+                        event.getX(0).toDouble(),
+                        event.getY(0).toDouble(),
+                        event.getX(1).toDouble(),
+                        event.getY(1).toDouble()
                     )
                 } else {
                     graphView.setShiftScaleBegin(
-                        event.getX(0),
-                        event.getY(0),
-                        event.getX(1),
-                        event.getY(1)
+                        event.getX(0).toDouble(),
+                        event.getY(0).toDouble(),
+                        event.getX(1).toDouble(),
+                        event.getY(1).toDouble()
                     )
                 }
                 isPinching = true
@@ -1173,25 +1205,212 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
                 }
                 isPinching = false
             }
-            else -> Log.i(FragmentActivity.TAG, "Invalid touch count")
+            else -> Log.i(TAG, "Invalid touch count")
         }
     }
 
     override fun onLongClick(v: View?): Boolean {
-
+        vibrate(300)
+        return true
     }
 
     override fun onClick(v: View?) {
-
+        if (processClick(v)) {
+            restartSampling(analyzerParam);
+        }
+        analyzerViews.invalidateGraphView();
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        // get the tag, which is the value we are going to use
 
+        // get the tag, which is the value we are going to use
+        val selectedItemTag: String = view?.getTag().toString()
+        // if tag() is "0" then do not update anything (it is a title)
+        // if tag() is "0" then do not update anything (it is a title)
+        if (selectedItemTag == "0") {
+            return
+        }
+
+        // get the text and set it as the button text
+
+        // get the text and set it as the button text
+        val selectedItemText = (view as TextView).text.toString()
+
+        val buttonId = parent!!.tag.toString().toInt()
+        val buttonView: Button = findViewById<View>(buttonId) as Button
+        buttonView.setText(selectedItemText)
+
+        val b_need_restart_audio: Boolean
+
+        // Save the choosen preference
+
+        // Save the choosen preference
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor: SharedPreferences.Editor = sharedPref.edit()
+
+        // so change of sample rate do not change view range
+
+        // so change of sample rate do not change view range
+        if (!isLockViewRange) {
+            viewRangeArray = analyzerViews.graphView.viewPhysicalRange
+            // if range is align at boundary, extend the range.
+            Log.i(
+                TAG,
+                "set sampling rate:a " + viewRangeArray?.get(0)
+                    .toString() + " ==? " + viewRangeArray?.get(6)
+            )
+            if (viewRangeArray?.get(0) === viewRangeArray?.get(6)) {
+                viewRangeArray?.set(0, 0.0)
+            }
+        }
+
+        // dismiss the pop up
+        when (buttonId) {
+            R.id.button_sample_rate -> {
+                analyzerViews.popupMenuSampleRate?.dismiss()
+                if (!isLockViewRange) {
+                    Log.i(
+                        TAG,
+                        "set sampling rate:b " + viewRangeArray!![1]
+                            .toString() + " ==? " + viewRangeArray!![6 + 1]
+                    )
+                    if (viewRangeArray!![1] === viewRangeArray!![6 + 1]) {
+                        viewRangeArray!![1] = (selectedItemTag.toInt() / 2).toDouble()
+                    }
+                    Log.i(
+                        TAG,
+                        "onItemClick(): viewRangeArray saved. " + viewRangeArray!![0]
+                            .toString() + " ~ " + viewRangeArray!![1]
+                    )
+                }
+                analyzerParam.sampleRate = selectedItemTag.toInt()
+                b_need_restart_audio = true
+                editor.putInt("button_sample_rate", analyzerParam.sampleRate)
+            }
+            R.id.button_fftlen -> {
+                analyzerViews.popupMenuFFTLen.dismiss()
+                analyzerParam.fftLen = selectedItemTag.toInt()
+                analyzerParam.hopLen =
+                    (analyzerParam.fftLen * (1 - analyzerParam.overlapPercent / 100) + 0.5).toInt()
+                b_need_restart_audio = true
+                editor.putInt("button_fftlen", analyzerParam.fftLen)
+                fillFftCalibration(analyzerParam, calibLoad)
+            }
+            R.id.button_average -> {
+                analyzerViews.popupMenuAverage.dismiss()
+                analyzerParam.nFFTAverage = selectedItemTag.toInt()
+                if (analyzerViews.graphView != null) {
+                    analyzerViews.graphView.setTimeMultiplier(analyzerParam.nFFTAverage)
+                }
+                b_need_restart_audio = false
+                editor.putInt("button_average", analyzerParam.nFFTAverage)
+            }
+            else -> {
+                Log.w(TAG, "onItemClick(): no this button")
+                b_need_restart_audio = false
+            }
+        }
+
+        editor.commit()
+
+        if (b_need_restart_audio) {
+            restartSampling(analyzerParam)
+        }
     }
+
+    fun selectFile(requestType: Int) {
+        // https://developer.android.com/guide/components/intents-common.html#Storage
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        if (requestType == REQUEST_AUDIO_GET) {
+            intent.type = "audio/*"
+        } else {
+            intent.type = "*/*"
+        }
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivityForResult(intent, requestType)
+        } else {
+            Log.e(TAG, "No file chooser found!.")
+
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(
+                this, "Please install a File Manager.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+
+    fun fillFftCalibration(
+        _analyzerParam: AnalyzerParameters?,
+        _calibLoad: CalibrationLoad
+    ) {
+        if (_calibLoad.freq == null || _calibLoad.freq.size === 0 || _analyzerParam == null) {
+            return
+        }
+        val freqTick = DoubleArray(_analyzerParam.fftLen / 2 + 1)
+        for (i in freqTick.indices) {
+            freqTick[i] = i.toDouble() / _analyzerParam.fftLen * _analyzerParam.sampleRate
+        }
+        _analyzerParam.micGainDB =
+            AnalyzerUtil.interpLinear(_calibLoad.freq, _calibLoad.gain, freqTick)
+        _analyzerParam.calibName = _calibLoad.name
+//        for (int i = 0; i < _analyzerParam.micGainDB.length; i++) {
+//            Log.i(TAG, "calib: " + freqTick[i] + "Hz : " + _analyzerParam.micGainDB[i]);
+//        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CALIB_LOAD && resultCode == Activity.RESULT_OK) {
+            val uri: Uri = data!!.data
+            calibLoad.loadFile(uri, this)
+            Log.w(TAG, "mime:" + contentResolver.getType(uri))
+            fillFftCalibration(analyzerParam, calibLoad)
+        } else if (requestCode == REQUEST_AUDIO_GET) {
+            Log.w(TAG, "requestCode == REQUEST_AUDIO_GET")
+        }
+    }
+
 
     override fun ready() {
         // put code here for the moment that graph size just changed
         Log.v(TAG, "ready()");
-        analyzerViews?.invalidateGraphView();
+        analyzerViews.invalidateGraphView()
+    }
+
+    companion object {
+        var isMeasure = false
+        @Volatile
+
+        var isSelected_CH1 = false
+        var isSelected_CH2 = false
+        var isSelected_CHA = false
+        var no: Int = 0
+        val MSG_RSV = 1
+        val MSG_INFO = 4
+        val MSG_QUIT = 2
+        val MSG_SOCK = 3
+        var selectedClient: Socket? = null
+        var spk1Client: Socket? = null
+        var spk2Client: Socket? = null
+        var spk3Client: Socket? = null
+        var spk4Client: Socket? = null
+
+        var otherClient: ArrayList<Socket?> = ArrayList()
+        lateinit var pref: SharedPreferences
+        var selectedSpkNo = 0
+        var sockets = ArrayList<Socket?>()
+        lateinit var nowFragment: Fragment
+        var otherClientNo = 0
+        val TAG = "MultiSocketServer"
+        val MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 1 // just a number
+
+        val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2
+
+        const val MYPREFERENCES_MSG_SOURCE_ID = "AnalyzerActivity.SOURCE_ID"
+        const val MYPREFERENCES_MSG_SOURCE_NAME = "AnalyzerActivity.SOURCE_NAME"
     }
 }
