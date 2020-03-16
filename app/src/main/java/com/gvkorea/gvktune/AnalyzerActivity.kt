@@ -350,6 +350,7 @@ class AnalyzerActivity : AppCompatActivity(), View.OnLongClickListener, View.OnC
             }
             samplingThread = null
         }
+
         if (viewRangeArray != null) {
             analyzerViews.graphView.setupAxes(analyzerParam)
             val rangeDefault = analyzerViews.graphView.viewPhysicalRange
