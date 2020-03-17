@@ -10,7 +10,6 @@ import com.gvkorea.gvktune.MainActivity.Companion.preference
 import com.gvkorea.gvktune.MainActivity.Companion.selectedClient
 import com.gvkorea.gvktune.util.Protocol
 import com.gvkorea.gvktune.view.view.rta.RtaFragment
-import com.gvkorea.gvktune.view.view.rta.RtaFragment.Companion.counter
 import com.gvkorea.gvktune.view.view.rta.RtaFragment.Companion.isShow
 import com.gvkorea.gvktune.view.view.rta.RtaFragment.Companion.noiseVolume
 import com.gvkorea.gvktune.view.view.rta.RtaFragment.Companion.targetdB
@@ -49,10 +48,9 @@ import com.gvkorea.gvktune.view.view.rta.util.audio.RecordAudioRta.Companion.fre
 import com.gvkorea.gvktune.view.view.rta.util.audio.RecordAudioRta.Companion.freqSum
 import com.gvkorea.gvktune.view.view.rta.util.audio.RecordAudioRta.Companion.isMeasure
 import com.gvkorea.gvktune.view.view.rta.util.audio.RecordAudioRta.Companion.spldB
+import com.opencsv.CSVWriter
 import kotlinx.android.synthetic.main.fragment_rta.*
-import java.io.DataOutputStream
-import java.io.IOException
-import java.io.OutputStream
+import java.io.*
 
 class RtaPresenter(val view: RtaFragment, val handler: Handler) {
 
@@ -73,6 +71,9 @@ class RtaPresenter(val view: RtaFragment, val handler: Handler) {
 
     private val EQINTERVAL = 50L
     private val ranEQ = IntArray(31)
+
+    private var writer: CSVWriter? = null
+    private var dataCount = 1
 
 
     fun selectedChannal(): Char {
@@ -347,18 +348,73 @@ class RtaPresenter(val view: RtaFragment, val handler: Handler) {
     }
 
     fun average() {
-        counter = 0
         measure(true)
         msg("평균 측정 중...")
         handler.postDelayed({
             measure(false)
-            msg("평균 측정 갯수 $counter 개")
-
-        }, 1100)
+        }, 5100)
         handler.postDelayed({
-            showTable()
-        }, 1300)
+            CVS_Save()
+        }, 5500)
+
     }
+
+
+
+    private fun CVS_Save() {
+        // 파일 생성
+        if (writer == null) {
+            val baseDir = android.os.Environment.getExternalStorageDirectory().absolutePath
+            val filename = "$dataCount.csv"
+            val filePath = baseDir + File.separator + filename
+            try {
+                writer = CSVWriter(FileWriter(filePath, true))
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+            CSV_recordForData()
+        } else {
+            // 파일 생성 하지 않고 기록
+            CSV_recordForData()
+        }
+
+    }
+
+    fun CSV_SaveForData() {
+        try {
+            writer?.close()
+            writer = null
+            msg("데이터 파일을 저장합니다.")
+            dataCount++
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun CSV_recordForData() {
+        val CurEQVal = arrayOfNulls<String>(31)
+        val datafile = arrayOfNulls<String>(62)
+
+
+        for (i in 0..30) {
+            CurEQVal[i] = ranEQ[i].toString()
+        }
+
+        for (i in 0..61) {
+            when {
+                i < 31 -> datafile[i] = CurEQVal[i] //현재 EQ값
+                i < 62 -> datafile[i] = freqSum[i - 31] // 측정값 dB
+            }
+        }
+
+        if (writer != null) {
+            writer!!.writeNext(datafile)
+        }
+    }
+
 
     private fun updateTable() {
         if(freqSum.size > 0){
@@ -378,12 +434,12 @@ class RtaPresenter(val view: RtaFragment, val handler: Handler) {
             view.mChart.visibility = View.GONE
             view.scrollView.visibility = View.VISIBLE
             updateTable()
-            view.btn_table.text = "RTA 보기"
+            view.btn_save.text = "RTA 보기"
             isShow = true
         }else{
             view.mChart.visibility = View.VISIBLE
             view.scrollView.visibility = View.GONE
-            view.btn_table.text = "테이블 보기"
+            view.btn_save.text = "테이블 보기"
             isShow = false
         }
     }

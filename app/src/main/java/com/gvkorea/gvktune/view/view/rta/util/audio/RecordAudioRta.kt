@@ -15,7 +15,6 @@ import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.util.CSVRead
 import com.gvkorea.gvktune.util.fft.RealDoubleFFT
 import com.gvkorea.gvktune.view.view.rta.RtaFragment.Companion.averageCount
-import com.gvkorea.gvktune.view.view.rta.RtaFragment.Companion.counter
 import com.gvkorea.gvktune.view.view.rta.RtaFragment.Companion.isStarted
 import kotlinx.android.synthetic.main.fragment_rta.view.*
 import java.text.DecimalFormat
@@ -431,7 +430,6 @@ class RecordAudioRta(val barChart: BarChart, val view: View) :
                     freq29Sum.add(rmsValues[28])
                     freq30Sum.add(rmsValues[29])
                     freq31Sum.add(rmsValues[30])
-                    counter++
                 }
                 if (avgStart && !isMeasure) {
 

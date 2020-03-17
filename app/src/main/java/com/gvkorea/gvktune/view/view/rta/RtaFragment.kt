@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 
 import com.gvkorea.gvktune.R
 import com.gvkorea.gvktune.view.view.rta.listener.ButtonListener
@@ -47,7 +46,7 @@ class RtaFragment : Fragment() {
         btn_noiseOn.setOnClickListener(ButtonListener(presenter))
         btn_noiseOff.setOnClickListener(ButtonListener(presenter))
         btn_measureAvg.setOnClickListener(ButtonListener(presenter))
-        btn_table.setOnClickListener(ButtonListener(presenter))
+        btn_save.setOnClickListener(ButtonListener(presenter))
     }
 
     private fun init_ChartLayout() {
@@ -85,7 +84,6 @@ class RtaFragment : Fragment() {
 
     companion object {
         var averageCount = 1
-        var counter = 0
         var currentNoise = 0
         var isStarted = false
         var noiseVolume = -40
