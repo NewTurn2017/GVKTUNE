@@ -184,7 +184,7 @@
                     android:layout_height="0dp"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:text="테이블 보기"
+                    android:text="파일저장"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     app:qb_backgroundColor="@android:color/holo_green_light"

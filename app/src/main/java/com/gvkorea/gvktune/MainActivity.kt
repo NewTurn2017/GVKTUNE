@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         preference = getSharedPreferences("pref_calib", Context.MODE_PRIVATE)
         val calibPreference = CalibPresenter()
         calibPreference.loadCalibrate()
-        selectedMicName = preference.getString("selectedMic", "isemic_725tr_calib_90degree_3511903.csv")
+        selectedMicName = preference.getString("selectedMic", "iSEMic725TR-3511903-freefield.csv")
     }
 
     private fun initListener() {
