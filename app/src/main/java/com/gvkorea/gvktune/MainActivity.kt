@@ -20,6 +20,7 @@ import com.gvkorea.gvktune.listener.SpeakerSelectedListener
 import com.gvkorea.gvktune.presenter.MainPresenter
 import com.gvkorea.gvktune.util.replace
 import com.gvkorea.gvktune.view.MainFragment
+import com.gvkorea.gvktune.view.view.calib.presenter.CalibPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.DataInputStream
 import java.io.IOException
@@ -97,6 +98,10 @@ class MainActivity : AppCompatActivity() {
         replace(R.id.fragment_container, mainFragment as Fragment)
 
         initListener()
+        preference = getSharedPreferences("pref_calib", Context.MODE_PRIVATE)
+        val calibPreference = CalibPresenter()
+        calibPreference.loadCalibrate()
+        selectedMicName = preference.getString("selectedMic", "isemic_725tr_calib_90degree_3511903.csv")
     }
 
     private fun initListener() {
@@ -133,8 +138,6 @@ class MainActivity : AppCompatActivity() {
                 presenter
             )
         )
-
-
 
         btn_main.setOnClickListener {
             nowFragment = mainFragment
@@ -510,12 +513,14 @@ class MainActivity : AppCompatActivity() {
 
         var otherClient: ArrayList<Socket?> = ArrayList()
         lateinit var pref: SharedPreferences
-        val PREF_SETUP_KEY = "Settings"
         var selectedSpkNo = 0
         var sockets = ArrayList<Socket?>()
         lateinit var nowFragment: Fragment
         var otherClientNo = 0
         val TAG = "MultiSocketServer"
-
+        var selectedMicName: String? = null
+        lateinit var preference: SharedPreferences
+        var CALIBRATION = 0F
+        var isCalib = false
     }
 }

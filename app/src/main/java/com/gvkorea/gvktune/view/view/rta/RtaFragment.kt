@@ -6,18 +6,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 
 import com.gvkorea.gvktune.R
-import com.gvkorea.gvktune.view.view.rta.listener.SourceCheckChangeListener
-import com.gvkorea.gvktune.view.view.rta.listener.SourceSeekBarChangeListener
-import com.gvkorea.gvktune.view.view.rta.presenter.NoisePresenter
+import com.gvkorea.gvktune.view.view.rta.listener.ButtonListener
+import com.gvkorea.gvktune.view.view.rta.listener.SetVolumeListener
+import com.gvkorea.gvktune.view.view.rta.presenter.RtaPresenter
+import com.gvkorea.gvktune.view.view.rta.util.audio.RecordAudioRta
+import com.gvkorea.gvktune.view.view.rta.util.chart.ChartLayoutBarChartForRTA
 import kotlinx.android.synthetic.main.fragment_rta.*
 
 
 class RtaFragment : Fragment() {
 
-    lateinit var presenter: NoisePresenter
+    lateinit var presenter: RtaPresenter
     val handler = Handler()
+    lateinit var recordAudioRta: RecordAudioRta
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,21 +33,66 @@ class RtaFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter = NoisePresenter(this)
+        presenter = RtaPresenter(this, handler)
         initListener()
+        init_ChartLayout()
+
     }
 
 
     private fun initListener() {
-        rg_SorceSelect.setOnCheckedChangeListener(SourceCheckChangeListener(presenter))
-        sb_source_gain.setOnSeekBarChangeListener(SourceSeekBarChangeListener(presenter))
+        btn_volumeStart.setOnClickListener(SetVolumeListener(presenter))
+        btn_volumeStop.setOnClickListener(SetVolumeListener(presenter))
+        btn_ranEQ.setOnClickListener(ButtonListener(presenter))
+        btn_noiseOn.setOnClickListener(ButtonListener(presenter))
+        btn_noiseOff.setOnClickListener(ButtonListener(presenter))
+        btn_measureAvg.setOnClickListener(ButtonListener(presenter))
+        btn_table.setOnClickListener(ButtonListener(presenter))
     }
 
+    private fun init_ChartLayout() {
+        val chartLayout = ChartLayoutBarChartForRTA(view?.context!!, mChart)
+        chartLayout.initBarChartLayout(110f, 10f)
+    }
 
+    fun recordTaskStart() {
+        handler.postDelayed({
+            if (!isStarted) {
+                isStarted = true
+                mChart.clear()
+                recordAudioRta = RecordAudioRta(mChart, this.view!!)
+                recordAudioRta.execute()
+            }
+        }, 100)
+    }
+
+    fun recordTaskStop() {
+        if (isStarted) {
+            isStarted = false
+            recordAudioRta.cancel(true)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        recordTaskStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        recordTaskStop()
+    }
 
     companion object {
+        var averageCount = 1
+        var counter = 0
         var currentNoise = 0
         var isStarted = false
+        var noiseVolume = -40
+        var targetdB: Double = 75.0
+        var isShow = false
+
+
     }
 
 }

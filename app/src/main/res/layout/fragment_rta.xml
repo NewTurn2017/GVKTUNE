@@ -8,13 +8,44 @@
     android:padding="10dp"
     tools:context=".view.view.rta.RtaFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_light"
+        android:paddingLeft="5dp"
+        android:text="RTA"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
-    <com.github.mikephil.charting.charts.LineChart
+    <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/mChart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_margin="5dp"/>
+        android:layout_margin="5dp"
+        android:visibility="visible"/>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+
 
 
     <LinearLayout
@@ -23,137 +54,143 @@
         android:layout_weight="2"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_green_light"
-            android:paddingLeft="5dp"
-            android:text="NOISE GENERATOR"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="2">
 
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
 
-                <RadioGroup
-                    android:id="@+id/rg_SorceSelect"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"
-                    android:background="@drawable/layout_border">
 
-                    <RadioButton
-                        android:id="@+id/rb_analog_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:checked="true"
-                        android:gravity="start|center_vertical"
-                        android:text="Analog Input"
-                        android:textSize="20sp" />
-
-                    <RadioButton
-                        android:id="@+id/rb_pink"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:text="Pink Generator"
-                        android:textSize="20sp" />
-
-                    <RadioButton
-                        android:id="@+id/rb_white"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:text="White Generator"
-                        android:textSize="20sp" />
-
-                    <RadioButton
-                        android:id="@+id/rb_sweep"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:text="Sweep Signal"
-                        android:textSize="20sp" />
-                </RadioGroup>
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/layout_border"
+                android:layout_weight="3"
                 android:orientation="vertical">
-
                 <TextView
-                    android:id="@+id/tv_source_gain"
+                    android:id="@+id/tv_curSPL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:padding="10dp"
-                    android:text="-40"
-                    android:textAlignment="center" />
+                    android:text="dB"
+                    style="@style/TextAppearance.AppCompat.Display1"
+                    android:gravity="center"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="8"
-                    android:orientation="horizontal"
-                    android:splitMotionEvents="false">
+                    android:layout_weight="1">
 
+                    <com.manojbhadane.QButton
+                        android:id="@+id/btn_volumeStart"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="음압셋팅"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        app:qb_backgroundColor="@android:color/holo_green_light"
+                        app:qb_radius="20"
+                        app:qb_strokeColor="@android:color/holo_green_dark"
+                        app:qb_strokeWidth="10" />
 
-
-                    <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper
-                        android:id="@+id/sb_source_wp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBar
-                            android:id="@+id/sb_source_gain"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/ic_ruler"
-                            android:backgroundTintMode="multiply"
-                            android:max="55"
-                            android:maxHeight="5dp"
-                            android:minHeight="5dp"
-                            android:progress="0"
-                            android:progressDrawable="@drawable/sb_wrapper"
-                            android:splitTrack="false"
-                            android:thumb="@drawable/fader"
-                            app:seekBarRotation="CW270" />
-
-                    </com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper>
-
+                    <com.manojbhadane.QButton
+                        android:id="@+id/btn_volumeStop"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="중지"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        app:qb_backgroundColor="@android:color/holo_green_light"
+                        app:qb_radius="20"
+                        app:qb_strokeColor="@android:color/holo_green_dark"
+                        app:qb_strokeWidth="10" />
 
                 </LinearLayout>
 
 
-                <TextView
+                <com.manojbhadane.QButton
+                    android:id="@+id/btn_ranEQ"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:text="랜덤 EQ"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    app:qb_backgroundColor="@android:color/holo_green_light"
+                    app:qb_radius="20"
+                    app:qb_strokeColor="@android:color/holo_green_dark"
+                    app:qb_strokeWidth="10" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="Level dB"
-                    android:textAlignment="center" />
+                    android:orientation="horizontal">
+                    <com.manojbhadane.QButton
+                        android:id="@+id/btn_noiseOn"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="노이즈On"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        app:qb_backgroundColor="@android:color/holo_green_light"
+                        app:qb_radius="20"
+                        app:qb_strokeColor="@android:color/holo_green_dark"
+                        app:qb_strokeWidth="10" />
+
+                    <com.manojbhadane.QButton
+                        android:id="@+id/btn_noiseOff"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="노이즈Off"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        app:qb_backgroundColor="@android:color/holo_green_light"
+                        app:qb_radius="20"
+                        app:qb_strokeColor="@android:color/holo_green_dark"
+                        app:qb_strokeWidth="10" />
+
+                    <com.manojbhadane.QButton
+                        android:id="@+id/btn_measureAvg"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="평균 측정"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        app:qb_backgroundColor="@android:color/holo_green_light"
+                        app:qb_radius="20"
+                        app:qb_strokeColor="@android:color/holo_green_dark"
+                        app:qb_strokeWidth="10" />
+
+                </LinearLayout>
+
+
+                <com.manojbhadane.QButton
+                    android:id="@+id/btn_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:text="테이블 보기"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    app:qb_backgroundColor="@android:color/holo_green_light"
+                    app:qb_radius="20"
+                    app:qb_strokeColor="@android:color/holo_green_dark"
+                    app:qb_strokeWidth="10" />
             </LinearLayout>
 
         </LinearLayout>
