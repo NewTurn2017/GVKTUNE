@@ -701,11 +701,11 @@ class RecordAudioRta(val barChart: BarChart, val view: View) :
     }
 
     private fun toTransfromTodbfs(toTransform: DoubleArray, i: Int): Double {
-//            val delta: Double = readMicCalib(i)
+            val delta: Double = readMicCalib(i)
 
         return Math.pow(
             10.0,
-            Math.round((20.0 * Math.log10(toTransform[i]) + 50.5 + MainActivity.CALIBRATION) * 100.0) / 100.0 / 10
+            Math.round((20.0 * Math.log10(toTransform[i]) + 50.5 + MainActivity.CALIBRATION + delta) * 100.0) / 100.0 / 10
         ) // calib 수정
 
     }

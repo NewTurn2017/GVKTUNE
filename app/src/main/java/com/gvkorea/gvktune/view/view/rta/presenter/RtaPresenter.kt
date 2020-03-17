@@ -355,6 +355,7 @@ class RtaPresenter(val view: RtaFragment, val handler: Handler) {
         }, 5100)
         handler.postDelayed({
             CVS_Save()
+            msg("측정 완료")
         }, 5500)
 
     }
@@ -410,7 +411,6 @@ class RtaPresenter(val view: RtaFragment, val handler: Handler) {
                 i < 62 -> datafile[i] = freqSum[i - 31] // 측정값 dB
             }
         }
-
         if (writer != null) {
             writer!!.writeNext(datafile)
         }
