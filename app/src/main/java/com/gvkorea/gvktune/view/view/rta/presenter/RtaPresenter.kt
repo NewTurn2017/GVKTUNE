@@ -373,6 +373,7 @@ class RtaPresenter(val view: RtaFragment, val handler: Handler) {
                 e.printStackTrace()
             }
 
+
             CSV_recordForData()
         } else {
             // 파일 생성 하지 않고 기록
