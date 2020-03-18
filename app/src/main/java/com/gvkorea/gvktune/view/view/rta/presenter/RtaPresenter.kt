@@ -9,6 +9,7 @@ import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CHA
 import com.gvkorea.gvktune.MainActivity.Companion.preference
 import com.gvkorea.gvktune.MainActivity.Companion.selectedClient
 import com.gvkorea.gvktune.util.Protocol
+import com.gvkorea.gvktune.util.WaitingDialog
 import com.gvkorea.gvktune.view.view.rta.RtaFragment
 import com.gvkorea.gvktune.view.view.rta.RtaFragment.Companion.isShow
 import com.gvkorea.gvktune.view.view.rta.RtaFragment.Companion.noiseVolume
@@ -349,14 +350,15 @@ class RtaPresenter(val view: RtaFragment, val handler: Handler) {
 
     fun average() {
         measure(true)
-        msg("평균 측정 중...")
+        WaitingDialog(view.context!!).create("평균 측정 중입니다..", 10000)
         handler.postDelayed({
             measure(false)
-        }, 5100)
+        }, 10100)
         handler.postDelayed({
             CVS_Save()
+//            updateTableList()
             msg("측정 완료")
-        }, 5500)
+        }, 10500)
 
     }
 
@@ -427,6 +429,21 @@ class RtaPresenter(val view: RtaFragment, val handler: Handler) {
             view.tv_table.text = str
         } else{
             view.tv_table.text = "데이터가 없습니다."
+        }
+    }
+
+    private fun updateTableList() {
+        if(freqSum.size > 0){
+            var freq = "Freq\n"
+            var dB = "SPL\n"
+            for( i in 0 until 31){
+                freq += hzArrays[i] + "\n"
+                dB += freqSum[i] + "\n"
+            }
+            view.tv_curFreq.text = freq
+            view.tv_curAvg.text = dB
+        } else{
+            msg("데이터가 없습니다.")
         }
     }
 
