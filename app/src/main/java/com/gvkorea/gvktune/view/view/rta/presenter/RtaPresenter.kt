@@ -253,6 +253,7 @@ class RtaPresenter(val view: RtaFragment, val handler: Handler) {
         handler.removeMessages(0)
         view.btn_volumeStart.text = "음압셋팅"
         view.btn_volumeStart.isEnabled = true
+        view.btn_volumeStart.alpha = 1f
     }
     private fun toastMsg(msg: String) {
         Toast.makeText(view.context, msg, Toast.LENGTH_SHORT).show()
@@ -356,7 +357,7 @@ class RtaPresenter(val view: RtaFragment, val handler: Handler) {
         }, 10100)
         handler.postDelayed({
             CVS_Save()
-//            updateTableList()
+            updateTableList()
             msg("측정 완료")
         }, 10500)
 
