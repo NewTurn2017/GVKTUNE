@@ -47,6 +47,7 @@ class RtaFragment : Fragment() {
         btn_noiseOff.setOnClickListener(ButtonListener(presenter))
         btn_measureAvg.setOnClickListener(ButtonListener(presenter))
         btn_save.setOnClickListener(ButtonListener(presenter))
+        btn_resetEQ.setOnClickListener(ButtonListener(presenter))
     }
 
     private fun init_ChartLayout() {

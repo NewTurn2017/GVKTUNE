@@ -243,7 +243,7 @@ class RtaPresenter(val view: RtaFragment, val handler: Handler) {
         }
     }
 
-    private fun eqReset() {
+    fun eqReset() {
         SendPacket_InputGEQ_Reset(selectedChannal())
     }
 

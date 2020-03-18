@@ -113,20 +113,43 @@
 
                 </LinearLayout>
 
-
-                <com.manojbhadane.QButton
-                    android:id="@+id/btn_ranEQ"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:text="랜덤 EQ"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
-                    app:qb_backgroundColor="@android:color/holo_green_light"
-                    app:qb_radius="20"
-                    app:qb_strokeColor="@android:color/holo_green_dark"
-                    app:qb_strokeWidth="10" />
+                    android:orientation="horizontal">
+
+                    <com.manojbhadane.QButton
+                        android:id="@+id/btn_ranEQ"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="랜덤 EQ"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        app:qb_backgroundColor="@android:color/holo_green_light"
+                        app:qb_radius="20"
+                        app:qb_strokeColor="@android:color/holo_green_dark"
+                        app:qb_strokeWidth="10" />
+
+                    <com.manojbhadane.QButton
+                        android:id="@+id/btn_resetEQ"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="EQ리셋"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        app:qb_backgroundColor="@android:color/holo_green_light"
+                        app:qb_radius="20"
+                        app:qb_strokeColor="@android:color/holo_green_dark"
+                        app:qb_strokeWidth="10" />
+
+                </LinearLayout>
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

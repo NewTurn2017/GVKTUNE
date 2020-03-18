@@ -13,6 +13,7 @@ class ButtonListener(val presenter: RtaPresenter): View.OnClickListener {
             R.id.btn_noiseOff -> presenter.noise(presenter.NOISE_OFF, noiseVolume)
             R.id.btn_measureAvg -> presenter.average()
             R.id.btn_save -> presenter.CSV_SaveForData()
+            R.id.btn_resetEQ -> presenter.eqReset()
         }
     }
 }
