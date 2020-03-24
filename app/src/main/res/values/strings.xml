@@ -60,4 +60,8 @@
         <item>PRESET11</item>
     </string-array>
 
+    <string name="title_activity_main">Now Layout</string>
+    <string name="app_description">마이크 버튼을 누르고 1~2초 후 중지하시면 Background Noise가 측정됩니다.</string>
+    <string name="claptitle">잔향시간측정</string>
+
 </resources>

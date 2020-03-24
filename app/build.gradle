@@ -46,6 +46,7 @@ dependencies {
     implementation files('libs/jtransforms-2.4.jar')
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.h6ah4i.android.widget.verticalseekbar:verticalseekbar:1.0.0'
+    implementation 'com.jjoe64:graphview:4.2.2'
 
 
 }
