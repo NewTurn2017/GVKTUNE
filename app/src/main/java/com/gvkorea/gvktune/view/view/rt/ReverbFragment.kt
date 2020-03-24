@@ -1,4 +1,4 @@
-package com.gvkorea.gvktune.view.view.reverb
+package com.gvkorea.gvktune.view.view.rt
 
 import android.animation.*
 import android.annotation.SuppressLint
@@ -8,6 +8,7 @@ import android.graphics.Typeface
 import android.media.AudioFormat
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
@@ -23,6 +24,8 @@ import com.gvkorea.gvktune.view.view.rt.graphview.GraphView
 import com.gvkorea.gvktune.view.view.rt.graphview.GraphView.*
 import com.gvkorea.gvktune.view.view.rt.graphview.GraphViewSeries
 import com.gvkorea.gvktune.view.view.rt.graphview.LineGraphView
+import com.gvkorea.gvktune.view.view.rt.listener.NoiseListener
+import com.gvkorea.gvktune.view.view.rt.presenter.NoisePresenter
 import com.gvkorea.gvktune.view.view.rt.util.*
 import kotlinx.android.synthetic.main.fragment_reverb.*
 import java.math.BigDecimal
@@ -54,6 +57,8 @@ class ReverbFragment : Fragment() {
     private lateinit var customChangingAppearingAnim: Animator
     private lateinit var customChangingDisappearingAnim: Animator
 
+    private lateinit var presenter: NoisePresenter
+    private val handler = Handler()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,6 +66,8 @@ class ReverbFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_reverb, container, false)
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -93,6 +100,10 @@ class ReverbFragment : Fragment() {
             cancelRecord()
             reStart()
         }
+        presenter =
+            NoisePresenter(this, handler)
+        btn_noise.setOnClickListener(NoiseListener(presenter))
+        sp_volume.setSelection(0)
     }
 
     private fun setupCustomAnimations(mTransition: LayoutTransition) {

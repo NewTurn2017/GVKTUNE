@@ -47,17 +47,28 @@
     <string name="preset_save_prompt">Choose a Data</string>
     <string name="toast_crash">문제가 발생했습니다. 문제를 해결할 수있는 보고서가 전송되었습니다.</string>
     <string-array name="preset_save_arrays">
-        <item>PRESET01</item>
-        <item>PRESET02</item>
-        <item>PRESET03</item>
-        <item>PRESET04</item>
-        <item>PRESET05</item>
-        <item>PRESET06</item>
-        <item>PRESET07</item>
-        <item>PRESET08</item>
-        <item>PRESET09</item>
-        <item>PRESET10</item>
-        <item>PRESET11</item>
+    <item>PRESET01</item>
+    <item>PRESET02</item>
+    <item>PRESET03</item>
+    <item>PRESET04</item>
+    <item>PRESET05</item>
+    <item>PRESET06</item>
+    <item>PRESET07</item>
+    <item>PRESET08</item>
+    <item>PRESET09</item>
+    <item>PRESET10</item>
+    <item>PRESET11</item>
+</string-array>
+
+    <string-array name="volume_array">
+        <item>-40</item>
+        <item>-30</item>
+        <item>-25</item>
+        <item>-20</item>
+        <item>-15</item>
+        <item>-10</item>
+        <item>-5</item>
+        <item>0</item>
     </string-array>
 
     <string name="title_activity_main">Now Layout</string>

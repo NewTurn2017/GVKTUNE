@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.view.rt.RTFragment">
+    tools:context="com.gvkorea.gvktune.view.view.rt.ReverbFragment">
 
     <RelativeLayout
         android:id="@+id/header"
@@ -45,20 +45,25 @@
             android:layout_toRightOf="@+id/micButton" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_rt60s"
+    <Button
+        android:id="@+id/btn_noise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="146dp"
-        android:textColor="@color/white" />
+        android:layout_below="@+id/header"
+        android:text="노이즈"/>
+
+    <Spinner
+        android:id="@+id/sp_volume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/volume_array"
+        android:layout_below="@+id/header"
+        android:layout_alignParentRight="true"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header"
+        android:layout_below="@+id/btn_noise"
         android:fillViewport="true">
 
         <com.gvkorea.gvktune.view.view.rt.util.NowLayout
