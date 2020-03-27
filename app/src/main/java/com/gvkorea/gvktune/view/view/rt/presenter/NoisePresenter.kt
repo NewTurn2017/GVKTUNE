@@ -1,11 +1,14 @@
 package com.gvkorea.gvktune.view.view.rt.presenter
 
+import android.content.res.AssetFileDescriptor
+import android.media.MediaPlayer
 import android.os.Handler
 import android.widget.Toast
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH1
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH2
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CHA
 import com.gvkorea.gvktune.MainActivity.Companion.selectedClient
+import com.gvkorea.gvktune.R
 import com.gvkorea.gvktune.util.Protocol
 import com.gvkorea.gvktune.view.view.rt.ReverbFragment
 import kotlinx.android.synthetic.main.fragment_reverb.*
@@ -99,5 +102,13 @@ class NoisePresenter(val view: ReverbFragment, val handler: Handler) {
 
     fun msg(msg: String) {
         Toast.makeText(view.context, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    fun clapPlay() {
+        val afd = view.activity?.assets?.openFd("ir_clap.wav")
+        val play = MediaPlayer()
+        play.setDataSource(afd?.fileDescriptor, afd?.startOffset!!, afd.length)
+        play.prepare()
+        play.start()
     }
 }
