@@ -1,99 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp"
     tools:context="com.gvkorea.gvktune.view.view.rt.ReverbFragment">
 
-    <RelativeLayout
-        android:id="@+id/header"
-        style="@style/nowCardStyle"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_light"
+        android:paddingLeft="5dp"
+        android:text="REVERBERATION TIME(RT60)"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/micButton"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:scaleType="center"
-            android:src="@drawable/mic_red" />
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_noise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="측정"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:qb_backgroundColor="@android:color/holo_green_light"
+            app:qb_radius="20"
+            app:qb_strokeColor="@android:color/holo_green_dark"
+            app:qb_strokeWidth="5" />
 
-        <ImageButton
-            android:id="@+id/cancelButton"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="left"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:gravity="left"
-            android:scaleType="center"
-            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+        <Spinner
+            android:id="@+id/sp_volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/volume_array"/>
 
-        <com.gvkorea.gvktune.view.view.rt.util.MySurfaceView
-            android:id="@+id/waveform"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_toLeftOf="@+id/cancelButton"
-            android:layout_toRightOf="@+id/micButton" />
-    </RelativeLayout>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_noise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/header"
-        android:text="노이즈"/>
-
-    <Spinner
-        android:id="@+id/sp_volume"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:entries="@array/volume_array"
-        android:layout_below="@+id/header"
-        android:layout_alignParentRight="true"/>
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/btn_noise"
-        android:fillViewport="true">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <com.gvkorea.gvktune.view.view.rt.util.NowLayout
-            android:id="@+id/mainLayout"
+        <ImageView
+            android:id="@+id/iv_spectrogram"
+            android:background="@drawable/layout_border_blue"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:layout_margin="5dp"
+            android:layout_weight="1"/>
 
-            <LinearLayout
-                android:id="@+id/infoCard"
-                style="@style/nowCardStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:orientation="vertical">
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/mLineChart"
+            android:background="@drawable/layout_border_blue"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"/>
 
-                <TextView
-                    android:id="@+id/infoHeading"
-                    style="@style/BigText"
-                    android:text="@string/claptitle"
-                    tools:context=".MainActivity" />
 
-                <TextView
-                    android:id="@+id/infoDescription"
-                    style="@style/SmallText"
-                    android:padding="4dp"
-                    android:text="@string/app_description"
-                    tools:context=".MainActivity" />
-            </LinearLayout>
-        </com.gvkorea.gvktune.view.view.rt.util.NowLayout>
-    </ScrollView>
+    </LinearLayout>
 
-</RelativeLayout>
+
+
+</LinearLayout>

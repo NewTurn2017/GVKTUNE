@@ -1,16 +1,26 @@
 package com.gvkorea.gvktune.view.view.rt.presenter
 
-import android.content.res.AssetFileDescriptor
+import android.graphics.Color
 import android.media.MediaPlayer
+import android.net.Uri
+import android.os.Environment.*
 import android.os.Handler
 import android.widget.Toast
+import com.chaquo.python.Python
+import com.chaquo.python.android.AndroidPlatform
+import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH1
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH2
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CHA
+import com.gvkorea.gvktune.MainActivity.Companion.sInstance
 import com.gvkorea.gvktune.MainActivity.Companion.selectedClient
-import com.gvkorea.gvktune.R
+import com.gvkorea.gvktune.R.*
 import com.gvkorea.gvktune.util.Protocol
 import com.gvkorea.gvktune.view.view.rt.ReverbFragment
+import com.gvkorea.gvktune.view.view.rt.ReverbFragment.Companion.chart
+import com.gvkorea.gvktune.view.view.rt.util.GVAudioRecord
+import com.gvkorea.gvktune.view.view.rt.util.GVPath
+import com.gvkorea.gvktune.view.view.rt.util.chart.ChartLayoutLineChart
 import kotlinx.android.synthetic.main.fragment_reverb.*
 import java.io.DataOutputStream
 import java.io.IOException
@@ -26,11 +36,19 @@ class NoisePresenter(val view: ReverbFragment, val handler: Handler) {
     private lateinit var tx_buff: ByteArray
     private lateinit var outputStream: OutputStream
     private lateinit var dataOutputStream: DataOutputStream
+    var audioRecord: GVAudioRecord
+
     private val CHECKINTERVAL = 50L
 
     val CMD_PARA2_CH1 = '1'
     val CMD_PARA2_CH2 = '2'
     val CMD_PARA2_CHA = 'A'
+
+    init {
+        val path =  GVPath()
+        path.checkDownloadFolder()
+        audioRecord = GVAudioRecord(path, this)
+    }
 
     fun selectedChannal(): Char {
         var para2 = 'A'
@@ -50,11 +68,30 @@ class NoisePresenter(val view: ReverbFragment, val handler: Handler) {
         return para2
     }
     fun noise() {
-        val gain = view.sp_volume.selectedItem.toString().toFloat()
-        noiseOn(gain)
+
+        startRecord()
+
         handler.postDelayed({
-            noiseOff()
-        }, 100)
+//            val gain = view.sp_volume.selectedItem.toString().toFloat()
+//            noiseOn(gain)
+            clapPlay()
+        },1000)
+
+//        handler.postDelayed({
+//            noiseOff()
+//        }, 1200)
+    }
+
+    private fun startRecord() {
+        msg("측정을 시작합니다.")
+        audioRecord.startRecord()
+        handler.postDelayed({
+            stopRecord()
+        }, 3000)
+    }
+    fun stopRecord() {
+        msg("잠시만 기다려 주세요...")
+        audioRecord.stopRecord()
     }
 
     private fun noiseOn(gain: Float) {
@@ -102,6 +139,44 @@ class NoisePresenter(val view: ReverbFragment, val handler: Handler) {
 
     fun msg(msg: String) {
         Toast.makeText(view.context, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    fun caculateRT60() {
+        if(!Python.isStarted()){
+            Python.start(AndroidPlatform(view.context))
+        }
+        getExternalStorageDirectory().absolutePath
+            .toString() + "/" + MainActivity.sInstance.resources.getString(
+            string.app_name) + "/"
+        val py = Python.getInstance()
+        val pyf = py.getModule("myscript")
+        val wavPath = getExternalStorageDirectory().absolutePath + "/" + sInstance.resources.getString(string.app_name) + "/rt.wav"
+        val graphPath = getExternalStorageDirectory().absolutePath + "/" + sInstance.resources.getString(string.app_name) + "/graph.png"
+        val obj = pyf.callAttr("rt60", wavPath, graphPath)
+        val arr = pyObjectToArray(obj.toString())
+        view.iv_spectrogram.setImageResource(android.R.drawable.ic_delete)
+        view.iv_spectrogram.setImageURI(Uri.parse(graphPath))
+        view.iv_spectrogram.invalidate()
+        drawLineChart(arr)
+    }
+
+    private fun drawLineChart(arr: FloatArray) {
+        chart.initGraph(arr, "RT60(sec)", Color.BLUE)
+    }
+
+    fun pyObjectToArray(objects: String): FloatArray{
+        val arr2 = objects.split(" ").toMutableList()
+        val rt60Arrays = FloatArray(arr2.size)
+        for(i in arr2.indices){
+            if(i== 0){
+                rt60Arrays[i] = arr2[i].removePrefix("[").toFloat()
+            }else if(i == 6){
+                rt60Arrays[i] = arr2[i].removeSuffix("]").toFloat()
+            }else{
+                rt60Arrays[i] = arr2[i].toFloat()
+            }
+        }
+        return rt60Arrays
     }
 
     fun clapPlay() {

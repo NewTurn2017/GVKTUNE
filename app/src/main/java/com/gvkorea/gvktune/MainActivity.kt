@@ -91,6 +91,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         checkPermission()
         sleepLock()
+        sInstance = this
+
         val PREF_SETUP_KEY = "Settings"
         pref = applicationContext.getSharedPreferences(PREF_SETUP_KEY, Context.MODE_PRIVATE)
         presenter = MainPresenter(this, mHandler, pref)
@@ -522,5 +524,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var preference: SharedPreferences
         var CALIBRATION = 0F
         var isCalib = false
+
+        lateinit var sInstance: MainActivity
     }
 }
