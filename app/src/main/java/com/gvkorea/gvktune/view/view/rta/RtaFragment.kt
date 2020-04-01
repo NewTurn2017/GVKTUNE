@@ -88,7 +88,7 @@ class RtaFragment : Fragment() {
         var currentNoise = 0
         var isStarted = false
         var noiseVolume = -40
-        var targetdB: Double = 85.0
+        var targetdB: Double = 100.0
         var isShow = false
 
 

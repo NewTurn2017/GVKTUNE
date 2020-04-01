@@ -75,7 +75,7 @@ class NoisePresenter(val view: ReverbFragment, val handler: Handler) {
 //            val gain = view.sp_volume.selectedItem.toString().toFloat()
 //            noiseOn(gain)
             clapPlay()
-        },1000)
+        },200)
 
 //        handler.postDelayed({
 //            noiseOff()
