@@ -43,7 +43,7 @@ class ChartLayoutLineChart(val view: Context, var mLineChart: LineChart) {
 
         if (values != null) {
             for (i in 0..6) {
-                valuesArray.add(Entry(i.toFloat(), values[i]*1000))
+                valuesArray.add(Entry(i.toFloat(), values[i]))
             }
         } else {
             for (i in 0..6) {

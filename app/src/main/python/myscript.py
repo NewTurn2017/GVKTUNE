@@ -16,7 +16,7 @@ def rt60(wav, img):
     plt.xlabel('Time(sec)')
 
     spectrum, freqs, t, im = plt.specgram(data, Fs=sample_rate, NFFT=1024, cmap=plt.get_cmap('twilight_shifted_r'))
-    t60 = room.t60_impulse(filePath, octave_bands, 't10')
+    t60 = room.t60_impulse(filePath, octave_bands, 't30')
 
     plt.savefig(img)
     np.set_printoptions(formatter={'float_kind': lambda x: "{0:0.3f}".format(x)})
