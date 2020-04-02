@@ -8,6 +8,7 @@ import android.os.Handler
 import android.widget.Toast
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
+import com.github.mikephil.charting.data.Entry
 import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH1
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH2
@@ -17,7 +18,12 @@ import com.gvkorea.gvktune.MainActivity.Companion.selectedClient
 import com.gvkorea.gvktune.R.*
 import com.gvkorea.gvktune.util.Protocol
 import com.gvkorea.gvktune.view.view.rt.ReverbFragment
+import com.gvkorea.gvktune.view.view.rt.ReverbFragment.Companion.arrList
 import com.gvkorea.gvktune.view.view.rt.ReverbFragment.Companion.chart
+import com.gvkorea.gvktune.view.view.rt.ReverbFragment.Companion.isRepeat
+import com.gvkorea.gvktune.view.view.rt.ReverbFragment.Companion.labelList
+import com.gvkorea.gvktune.view.view.rt.ReverbFragment.Companion.repeatCount
+import com.gvkorea.gvktune.view.view.rt.ReverbFragment.Companion.valuesArrays
 import com.gvkorea.gvktune.view.view.rt.util.GVAudioRecord
 import com.gvkorea.gvktune.view.view.rt.util.GVPath
 import com.gvkorea.gvktune.view.view.rt.util.chart.ChartLayoutLineChart
@@ -67,19 +73,24 @@ class NoisePresenter(val view: ReverbFragment, val handler: Handler) {
 
         return para2
     }
+    fun noiseClap() {
+
+        startRecord()
+        handler.postDelayed({
+            clapPlay()
+        },200)
+    }
+
     fun noise() {
 
         startRecord()
-
         handler.postDelayed({
-//            val gain = view.sp_volume.selectedItem.toString().toFloat()
-//            noiseOn(gain)
-            clapPlay()
+            val gain = view.sp_volume.selectedItem.toString().toFloat()
+            noiseOn(gain)
         },200)
-
-//        handler.postDelayed({
-//            noiseOff()
-//        }, 1200)
+        handler.postDelayed({
+            noiseOff()
+        }, 700)
     }
 
     private fun startRecord() {
@@ -161,7 +172,23 @@ class NoisePresenter(val view: ReverbFragment, val handler: Handler) {
     }
 
     private fun drawLineChart(arr: FloatArray) {
-        chart.initGraph(arr, "RT60(sec)", Color.BLUE)
+        if(isRepeat){
+            if(repeatCount == 0){
+                arrList = ArrayList()
+                valuesArrays = ArrayList()
+                labelList = ArrayList()
+
+            }
+            repeatCount += 1
+            arrList.add(arr)
+            labelList.add("RT60($repeatCount)")
+            chart.initGraphRepeat(arrList, labelList)
+
+        }else{
+            repeatCount = 0
+            chart.initGraph(arr, "RT60(sec)", Color.BLUE)
+
+        }
     }
 
     fun pyObjectToArray(objects: String): FloatArray{

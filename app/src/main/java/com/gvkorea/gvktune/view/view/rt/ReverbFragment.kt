@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.github.mikephil.charting.data.Entry
 
 import com.gvkorea.gvktune.R
+import com.gvkorea.gvktune.view.view.rt.listener.CheckChangeListener
 import com.gvkorea.gvktune.view.view.rt.listener.NoiseListener
 import com.gvkorea.gvktune.view.view.rt.presenter.NoisePresenter
 import com.gvkorea.gvktune.view.view.rt.util.chart.ChartLayoutLineChart
@@ -43,11 +45,18 @@ class ReverbFragment : Fragment() {
 
     private fun initListener() {
         btn_noise.setOnClickListener(NoiseListener(presenter))
+        btn_noiseClap.setOnClickListener(NoiseListener(presenter))
+        cb_repeat.setOnCheckedChangeListener(CheckChangeListener(presenter))
         sp_volume.setSelection(0)
     }
 
     companion object {
         lateinit var chart: ChartLayoutLineChart
+        var isRepeat = false
+        var repeatCount = 0
+        lateinit var arrList: ArrayList<FloatArray?>
+        lateinit var valuesArrays: ArrayList<ArrayList<Entry>>
+        lateinit var labelList: ArrayList<String>
     }
 
 }

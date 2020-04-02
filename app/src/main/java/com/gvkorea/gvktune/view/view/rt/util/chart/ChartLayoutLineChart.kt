@@ -8,6 +8,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.gvkorea.gvktune.view.view.rt.ReverbFragment.Companion.valuesArrays
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ChartLayoutLineChart(val view: Context, var mLineChart: LineChart) {
 
@@ -62,7 +65,6 @@ class ChartLayoutLineChart(val view: Context, var mLineChart: LineChart) {
         lineDataSet.mode = LineDataSet.Mode.LINEAR
 
 
-
         val data: LineData
         data = LineData(lineDataSet)
 
@@ -75,5 +77,47 @@ class ChartLayoutLineChart(val view: Context, var mLineChart: LineChart) {
         mLineChart.invalidate()
 
 
+    }
+
+    fun initGraphRepeat(values: ArrayList<FloatArray?>, label: ArrayList<String>) {
+        var valuesArray: ArrayList<Entry> = ArrayList()
+
+        for (i in values.indices) {
+
+            for (j in 0..6) {
+                valuesArray.add(Entry(j.toFloat(), values[i]!![j]))
+
+            }
+            valuesArrays.add(valuesArray)
+            valuesArray = ArrayList()
+        }
+
+        val data = LineData()
+
+        for (i in values.indices) {
+            val lineDataSet = LineDataSet(valuesArrays[i], label[i])
+            val color = randomColor()
+            lineDataSet.color = color
+            lineDataSet.setDrawCircles(false)
+            lineDataSet.lineWidth = 2f
+            lineDataSet.valueTextColor = color
+            lineDataSet.valueTextSize = 8.0f
+
+            lineDataSet.mode = LineDataSet.Mode.LINEAR
+            data.addDataSet(lineDataSet)
+        }
+
+        xAxis.axisMaximum = data.xMax + 0.4f
+        xAxis.axisMinimum = data.xMin - 0.4f
+
+        mLineChart.data = data
+        mLineChart.data.notifyDataChanged()
+        mLineChart.notifyDataSetChanged()
+        mLineChart.invalidate()
+    }
+
+    private fun randomColor(): Int {
+        val rnd = Random()
+        return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
     }
 }

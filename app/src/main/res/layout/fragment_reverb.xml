@@ -22,12 +22,31 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <CheckBox
+            android:id="@+id/cb_repeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="반복"/>
+
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_noiseClap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="박수"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:qb_backgroundColor="@android:color/holo_green_light"
+            app:qb_radius="20"
+            app:qb_strokeColor="@android:color/holo_green_dark"
+            app:qb_strokeWidth="5" />
+
         <com.manojbhadane.QButton
             android:id="@+id/btn_noise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="측정"
+            android:text="핑크"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             app:qb_backgroundColor="@android:color/holo_green_light"
