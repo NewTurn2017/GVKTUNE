@@ -2,7 +2,7 @@ package com.gvkorea.gvktune.view.view.rta.listener
 
 import android.view.View
 import com.gvkorea.gvktune.R
-import com.gvkorea.gvktune.view.view.rta.RtaFragment.Companion.noiseVolume
+import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.noiseVolume
 import com.gvkorea.gvktune.view.view.rta.presenter.RtaPresenter
 
 class ButtonListener(val presenter: RtaPresenter): View.OnClickListener {

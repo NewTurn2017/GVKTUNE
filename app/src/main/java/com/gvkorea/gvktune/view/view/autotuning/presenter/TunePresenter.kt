@@ -2,7 +2,11 @@ package com.gvkorea.gvktune.view.view.autotuning.presenter
 
 import android.graphics.Color
 import android.os.Handler
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.widget.Toast
+import androidx.core.text.set
 import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH1
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH2
@@ -202,6 +206,7 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
                 msg("튜닝이 완료되었습니다.")
                 tuneStop()
             }else{
+                msg("오차 범위 초과 갯수: $count 반복튜닝 중..")
                 ANN_ClosedLoop_repeat()
             }
         }, 2000)
@@ -254,8 +259,8 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         targetdBs[26] = target
         targetdBs[27] = target
         targetdBs[28] = target
-        targetdBs[29] = target
-        targetdBs[30] = target
+        targetdBs[29] = target + 1
+        targetdBs[30] = target + 2
         return targetdBs
     }
 
@@ -341,12 +346,21 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         if (freqSum.size > 0) {
             var freq = "Freq\n"
             var diff = "Diff\n"
+            val builder = SpannableStringBuilder(diff)
             for (i in 0 until 31) {
                 freq += hzArrays[i] + "\n"
-                diff += "${String.format("%.2f", targetValues!![i] - freqSum[i].toFloat())}\n"
+                if( targetValues!![i] - freqSum[i].toFloat() > 2 ||  targetValues!![i] - freqSum[i].toFloat() < -2){
+                    val str = "${String.format("%.2f", targetValues!![i] - freqSum[i].toFloat())}\n"
+                    val temp = SpannableStringBuilder(str)
+                    temp.setSpan(ForegroundColorSpan(Color.RED), 0, str.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    builder.append(temp)
+                }else{
+                    builder.append("${String.format("%.2f", targetValues!![i] - freqSum[i].toFloat())}\n")
+                }
             }
+
             view.tv_tune_curFreq.text = freq
-            view.tv_tune_diff.text = diff
+            view.tv_tune_diff.text = builder
         } else {
             msg("데이터가 없습니다.")
         }
