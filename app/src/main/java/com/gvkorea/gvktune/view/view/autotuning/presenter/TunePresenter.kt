@@ -2,7 +2,6 @@ package com.gvkorea.gvktune.view.view.autotuning.presenter
 
 import android.graphics.Color
 import android.os.Handler
-import android.util.Log
 import android.widget.Toast
 import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH1
@@ -12,20 +11,14 @@ import com.gvkorea.gvktune.MainActivity.Companion.selectedClient
 import com.gvkorea.gvktune.util.Protocol
 import com.gvkorea.gvktune.util.WaitingDialog
 import com.gvkorea.gvktune.view.view.autotuning.TuneFragment
+import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.barChart
 import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.lineChart
+import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.noiseVolume
 import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.targetValues
 import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.targetdB
+import com.gvkorea.gvktune.view.view.autotuning.util.ann.ANN_Closed
 import com.gvkorea.gvktune.view.view.autotuning.util.ann.ANN_Open
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.avgStart
-import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq1Sum
-import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq2Sum
-import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq3Sum
-import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq4Sum
-import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq5Sum
-import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq6Sum
-import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq7Sum
-import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq8Sum
-import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq9Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq10Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq11Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq12Sum
@@ -36,6 +29,7 @@ import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Compa
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq17Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq18Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq19Sum
+import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq1Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq20Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq21Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq22Sum
@@ -46,8 +40,16 @@ import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Compa
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq27Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq28Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq29Sum
+import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq2Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq30Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq31Sum
+import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq3Sum
+import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq4Sum
+import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq5Sum
+import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq6Sum
+import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq7Sum
+import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq8Sum
+import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freq9Sum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freqSum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.isMeasure
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.spldB
@@ -55,7 +57,6 @@ import kotlinx.android.synthetic.main.fragment_tune.*
 import java.io.DataOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
@@ -75,7 +76,6 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
     val CMD_PARA2_CH1 = '1'
     val CMD_PARA2_CH2 = '2'
     val CMD_PARA2_CHA = 'A'
-    var noiseVolume = -40
 
     fun selectedChannal(): Char {
         var para2 = 'A'
@@ -110,9 +110,10 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         view.btn_tune_start.alpha = 1f
 
     }
+
     fun adjustVolumeStart() {
         val calib = MainActivity.preference.getBoolean("isCalib", false)
-        if(calib){
+        if (calib) {
             view.btn_tune_start.text = "진행중"
             view.btn_tune_start.isEnabled = false
             noiseVolume = -40
@@ -122,7 +123,7 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
             handler.postDelayed({
                 NoiseVolumeControl(noiseVolume)
             }, 500)
-        }else{
+        } else {
             msg("마이크 캘리브레이션이 되지 않았습니다. 캘리브레이션 후 튜닝바랍니다.")
         }
     }
@@ -133,17 +134,17 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         handler.postDelayed({
             if (spldB.toInt() < targetdB) {
                 noiseVolume++
-                if(noiseVolume < 0){
+                if (noiseVolume < 10) {
                     NoiseVolumeControl(noiseVolume)
-                }else{
+                } else {
                     msg("마이크 캘리브레이션을 확인 바랍니다.(초기화 -> 캘리브레이션)")
                     view.btn_tune_start.text = "자동튜닝시작"
                     handler.removeMessages(0)
                     noise(NOISE_OFF, noiseVolume)
                 }
-            }else {
+            } else {
                 msg("읍압 셋팅이 완료되었습니다.")
-                noise(NOISE_OFF, noiseVolume)
+//                noise(NOISE_OFF, noiseVolume)
                 view.btn_tune_start.text = "자동튜닝 중.."
                 view.btn_tune_start.isEnabled = true
                 view.btn_tune_start.alpha = 1f
@@ -153,7 +154,72 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
     }
 
     private fun autoTuning() {
-        openLoop()
+        curEQReset()
+        average()
+        handler.postDelayed({
+            val open = ANN_Open(view.activity?.assets!!, targetValues!!)
+            val eqValues = open.getControlEQ_Open()
+            val eqFloats = floatToInt(eqValues)
+            curEQ = eqFloats
+            SendPacket_EQ_All(selectedChannal(), curEQ)
+        }, 1500)
+
+        handler.postDelayed({
+            average()
+        }, 1700)
+        handler.postDelayed({
+            ANN_ClosedLoop_repeat()
+        }, 3000)
+    }
+
+    private fun curEQReset() {
+        for (i in curEQ.indices) {
+            curEQ[i] = 30
+        }
+    }
+
+    private fun ANN_ClosedLoop_repeat() {
+        ANN_ClosedLoop()
+        val diff = FloatArray(31)
+        var count = 0
+        handler.postDelayed({
+            average()
+        },200)
+        handler.postDelayed({
+            var isCompleted = true
+            for (i in freqSum.indices){
+                diff[i] = freqSum[i].toFloat() - targetValues!![i]
+            }
+            for (i in diff.indices){
+                if (diff[i] > 2 || diff[i] < -2) {
+                    count++
+                }
+            }
+            if (count > 0) {
+                isCompleted = false
+            }
+            if (isCompleted){
+                msg("튜닝이 완료되었습니다.")
+                tuneStop()
+            }else{
+                ANN_ClosedLoop_repeat()
+            }
+        }, 2000)
+    }
+
+    private fun ANN_ClosedLoop() {
+        val curRms = convertStringToFloat(freqSum)
+        val closed = ANN_Closed(curEQ, curRms, targetValues!!, view.activity?.assets!!)
+        curEQ = closed.getControlEQ_Closed()
+        SendPacket_EQ_All(selectedChannal(), curEQ)
+    }
+
+    private fun convertStringToFloat(freqSum: java.util.ArrayList<String>): FloatArray {
+        val curRms = FloatArray(31)
+        for (i in freqSum.indices) {
+            curRms[i] = freqSum[i].toFloat()
+        }
+        return curRms
     }
 
     fun setTarget(targetdB: Int): FloatArray {
@@ -246,19 +312,48 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
 
     }
 
-    fun average(){
+    fun average() {
         measure(true)
         WaitingDialog(view.context!!).create("평균 측정 중입니다..", 1000)
         handler.postDelayed({
             measure(false)
         }, 1100)
         handler.postDelayed({
+            for (i in freqSum.indices) {
+                if (i < 6) {
+                    targetValues!![i] = freqSum[i].toFloat()
+                }
+            }
             lineChart.drawGraph(freqSum, "현재 측정값(dB)", Color.RED)
+            barChart.initGraph(changeEQValues(curEQ))
+            updateTableList()
             msg("측정 완료")
-        }, 1300)    }
+        }, 1300)
+    }
 
-    fun measure(isStart:Boolean){
-        if(isStart){
+    private val hzArrays = arrayOf(
+        "20", "25", "31.5", "40", "50", "63", "80", "100", "125", "160",
+        "200", "250", "315", "400", "500", "630", "800", "1000", "1250", "1600",
+        "2000", "2500", "3150", "4000", "5000", "6300", "8000", "10000", "12500", "16000", "20000"
+    )
+
+    private fun updateTableList() {
+        if (freqSum.size > 0) {
+            var freq = "Freq\n"
+            var diff = "Diff\n"
+            for (i in 0 until 31) {
+                freq += hzArrays[i] + "\n"
+                diff += "${String.format("%.2f", targetValues!![i] - freqSum[i].toFloat())}\n"
+            }
+            view.tv_tune_curFreq.text = freq
+            view.tv_tune_diff.text = diff
+        } else {
+            msg("데이터가 없습니다.")
+        }
+    }
+
+    fun measure(isStart: Boolean) {
+        if (isStart) {
             handler.postDelayed({
                 freq1Sum = ArrayList()
                 freq2Sum = ArrayList()
@@ -295,7 +390,7 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
                 avgStart = true
                 isMeasure = true
             }, 100)
-        }else{
+        } else {
             avgStart = true
             isMeasure = false
         }
@@ -308,23 +403,24 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         curEQ = eqFloats
         SendPacket_EQ_All(selectedChannal(), curEQ)
         handler.postDelayed({
-
-        },200)
+            barChart.initGraph(changeEQValues(curEQ))
+        }, 200)
     }
 
     private fun floatToInt(results: FloatArray): IntArray {
         val resultsToInt = IntArray(31)
         for (i in results.indices) {
-            if(results[i] >= 60){
+            if (results[i] >= 60) {
                 resultsToInt[i] = 60
-            }else if(results[i] <= 0){
+            } else if (results[i] <= 0) {
                 resultsToInt[i] = 0
-            }else{
+            } else {
                 resultsToInt[i] = results[i].roundToInt()
             }
         }
         return resultsToInt
     }
+
 
     private fun SendPacket_EQ_All(para2: Char, eqValues: IntArray) {
         val eq = changeEQValues(eqValues)

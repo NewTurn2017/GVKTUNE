@@ -12,7 +12,6 @@ import com.gvkorea.gvktune.R
 import com.gvkorea.gvktune.view.view.autotuning.listener.TuneButtonListener
 import com.gvkorea.gvktune.view.view.autotuning.presenter.TunePresenter
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune
-import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.spldB
 import com.gvkorea.gvktune.view.view.autotuning.util.chart.ChartLayoutBarChartForEQGraph
 import com.gvkorea.gvktune.view.view.autotuning.util.chart.ChartLayoutLineChartForTune
 import kotlinx.android.synthetic.main.fragment_tune.*
@@ -54,13 +53,14 @@ class TuneFragment : Fragment() {
 
     private fun init_ChartLayout() {
         lineChart = ChartLayoutLineChartForTune(this.context!!, chart_tune_line)
-        targetValues = presenter.setTarget(75)
-        lineChart.initLineChartLayout(100f, 49f)
+        targetValues = presenter.setTarget(targetdB.toInt()-10)
+        lineChart.initLineChartLayout(100f, 20f)
         lineChart.initGraph(targetValues, "Target(dB)", Color.BLUE)
 
         barChart = ChartLayoutBarChartForEQGraph(this.context!!, chart_tune_bar)
         barChart.initLineChartLayout(15f, -15f)
-        barChart.initGraph(null)
+        val curEQ = FloatArray(31)
+        barChart.initGraph(curEQ)
     }
 
     fun recordTaskStart() {
@@ -95,7 +95,7 @@ class TuneFragment : Fragment() {
         var currentNoise = 0
         var isStarted = false
         var noiseVolume = -40
-        var targetdB: Double = 100.0
+        var targetdB: Double = 85.0
         lateinit var lineChart: ChartLayoutLineChartForTune
         lateinit var barChart: ChartLayoutBarChartForEQGraph
         var targetValues:FloatArray? = null

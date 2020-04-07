@@ -91,7 +91,7 @@ class ChartLayoutLineChartForTune(val view: Context, var mLineChart: LineChart) 
 
         if (values != null) {
             for (i in 0..30) {
-                targetArray.add(Entry(i.toFloat(), targetValues!![i].toFloat()))
+                targetArray.add(Entry(i.toFloat(), targetValues!![i]))
                 valuesArray.add(Entry(i.toFloat(), values[i].toFloat()))
             }
         } else {

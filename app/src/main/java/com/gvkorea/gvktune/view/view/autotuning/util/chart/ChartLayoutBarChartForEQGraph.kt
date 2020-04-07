@@ -11,7 +11,6 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ViewPortHandler
 import java.text.DecimalFormat
 
@@ -92,7 +91,7 @@ class ChartLayoutBarChartForEQGraph(var context: Context, var mBarChart: BarChar
     l.form = Legend.LegendForm.LINE
   }
 
-  fun initGraph(values: DoubleArray?) {
+  fun initGraph(values: FloatArray) {
     val curModelValues: ArrayList<BarEntry> = ArrayList()
     val colors = java.util.ArrayList<Int>()
 
@@ -101,7 +100,6 @@ class ChartLayoutBarChartForEQGraph(var context: Context, var mBarChart: BarChar
 
     if (values != null) {
       for (i in 0..30) {
-
         if(values[i] >= 0){
           colors.add(red)
         }else{

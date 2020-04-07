@@ -4,9 +4,9 @@ import android.content.res.AssetManager
 import org.tensorflow.contrib.android.TensorFlowInferenceInterface
 import kotlin.math.roundToInt
 
-class ANN_Closed(var curEQ: IntArray, var curRMS: DoubleArray, var targetValues: IntArray, assets: AssetManager, modelFile: String) {
+class ANN_Closed(var curEQ: IntArray, var curRMS: FloatArray, var targetValues: FloatArray, assets: AssetManager) {
 
-    private val MODEL_FILE_CLOSE = "file:///android_asset/${modelFile}"
+    private val MODEL_FILE_CLOSE = "file:///android_asset/model/optimized_frozen_closed_model_75.pb"
     private var inferenceInterface_close: TensorFlowInferenceInterface = TensorFlowInferenceInterface()
     private val INPUT_SHAPE_CLOSE = intArrayOf(1, 62)
 
@@ -25,9 +25,9 @@ class ANN_Closed(var curEQ: IntArray, var curRMS: DoubleArray, var targetValues:
 
         for (i in input.indices){
             if(i < 31){
-                input[i] = curRMS[i].toFloat()
+                input[i] = curRMS[i]
             }else{
-                input[i] = targetValues[i-31].toFloat()
+                input[i] = targetValues[i-31]
             }
         }
 
