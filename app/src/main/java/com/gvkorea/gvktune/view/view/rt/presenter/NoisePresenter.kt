@@ -8,7 +8,6 @@ import android.os.Handler
 import android.widget.Toast
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
-import com.github.mikephil.charting.data.Entry
 import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH1
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH2
@@ -26,7 +25,6 @@ import com.gvkorea.gvktune.view.view.rt.ReverbFragment.Companion.repeatCount
 import com.gvkorea.gvktune.view.view.rt.ReverbFragment.Companion.valuesArrays
 import com.gvkorea.gvktune.view.view.rt.util.GVAudioRecord
 import com.gvkorea.gvktune.view.view.rt.util.GVPath
-import com.gvkorea.gvktune.view.view.rt.util.chart.ChartLayoutLineChart
 import kotlinx.android.synthetic.main.fragment_reverb.*
 import java.io.DataOutputStream
 import java.io.IOException

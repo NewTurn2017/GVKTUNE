@@ -12,7 +12,7 @@ import com.gvkorea.gvktune.R
 import com.gvkorea.gvktune.view.view.rt.listener.CheckChangeListener
 import com.gvkorea.gvktune.view.view.rt.listener.NoiseListener
 import com.gvkorea.gvktune.view.view.rt.presenter.NoisePresenter
-import com.gvkorea.gvktune.view.view.rt.util.chart.ChartLayoutLineChart
+import com.gvkorea.gvktune.view.view.rt.util.chart.ChartLayoutLineChartForRT
 import kotlinx.android.synthetic.main.fragment_reverb.*
 
 class ReverbFragment : Fragment() {
@@ -39,7 +39,7 @@ class ReverbFragment : Fragment() {
     }
 
     private fun initChartLayout() {
-        chart = ChartLayoutLineChart(this.context!!, mLineChart)
+        chart = ChartLayoutLineChartForRT(this.context!!, mLineChart)
         chart.initLineChartLayout()
     }
 
@@ -51,7 +51,7 @@ class ReverbFragment : Fragment() {
     }
 
     companion object {
-        lateinit var chart: ChartLayoutLineChart
+        lateinit var chart: ChartLayoutLineChartForRT
         var isRepeat = false
         var repeatCount = 0
         lateinit var arrList: ArrayList<FloatArray?>

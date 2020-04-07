@@ -5,8 +5,6 @@ apply plugin: 'com.chaquo.python'        // Add this line
 
 android {
     compileSdkVersion 28
-
-
     defaultConfig {
         applicationId "com.gvkorea.gvktune"
         ndk {
@@ -18,6 +16,9 @@ android {
                     srcDirs = ["src/main/python"]
 
                 }
+                jniLibs.srcDir 'src/main/libs'
+                jni.srcDirs = []           //disable automatic ndk-build call
+                jniLibs.srcDirs = ['libs']
             }
         }
         python {

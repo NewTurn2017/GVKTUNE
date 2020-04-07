@@ -1,14 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp"
     tools:context=".view.view.autotuning.TuneFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_light"
+        android:paddingLeft="5dp"
+        android:text="AUTO TUNNING"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_tune_start"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="자동튜닝시작"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:qb_backgroundColor="@android:color/holo_green_light"
+            app:qb_radius="20"
+            app:qb_strokeColor="@android:color/holo_green_dark"
+            app:qb_strokeWidth="10" />
+
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_tune_stop"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="자동튜닝중지"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:qb_backgroundColor="@android:color/holo_green_light"
+            app:qb_radius="20"
+            app:qb_strokeColor="@android:color/holo_green_dark"
+            app:qb_strokeWidth="10" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_eqreset"
+            android:layout_weight="1"
+            android:text="EQ RESET"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_noiseOn"
+            android:layout_weight="1"
+            android:text="on"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_noiseOff"
+            android:layout_weight="1"
+            android:text="off"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_avg"
+            android:layout_weight="1"
+            android:text="avg"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_open"
+            android:layout_weight="1"
+            android:text="open"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_closed"
+            android:layout_weight="1"
+            android:text="closed"/>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/layout_border_text"
+        android:orientation="horizontal">
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="2dp"
+                    android:stretchColumns="0, 1">
+
+                    <TableRow>
+                        <TextView
+                            android:id="@+id/tv_tune_curFreq"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"/>
+                        <TextView
+                            android:id="@+id/tv_tune_diff"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"/>
+
+                    </TableRow>
+
+                </TableLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_tune_spl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/layout_border_text"
+                android:gravity="center"
+                android:text="음압: 85dB"
+                android:textSize="24sp" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart_tune_line"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:background="@drawable/layout_border_text"/>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart_tune_bar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/layout_border_text"
+                android:padding="5dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".view.view.calib.CalibFragment">
@@ -35,26 +36,36 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-
-            <Button
+            <com.manojbhadane.QButton
                 android:id="@+id/btn_Calib"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_margin="20dp"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="자동설정"
-                android:textSize="22sp" />
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                app:qb_backgroundColor="@android:color/holo_green_light"
+                app:qb_radius="20"
+                app:qb_strokeColor="@android:color/holo_green_dark"
+                app:qb_strokeWidth="10" />
 
-            <Button
+            <com.manojbhadane.QButton
                 android:id="@+id/btn_CalibReset"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_margin="20dp"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="초기화"
-                android:textSize="22sp" />
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                app:qb_backgroundColor="@android:color/holo_green_light"
+                app:qb_radius="20"
+                app:qb_strokeColor="@android:color/holo_green_dark"
+                app:qb_strokeWidth="10" />
+
+
+
         </LinearLayout>
 
     </LinearLayout>
