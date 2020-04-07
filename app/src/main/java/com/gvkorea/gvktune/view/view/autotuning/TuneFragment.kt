@@ -53,7 +53,7 @@ class TuneFragment : Fragment() {
 
     private fun init_ChartLayout() {
         lineChart = ChartLayoutLineChartForTune(this.context!!, chart_tune_line)
-        targetValues = presenter.setTarget(targetdB.toInt()-10)
+        targetValues = presenter.setTarget(targetdB.toInt()-15)
         lineChart.initLineChartLayout(100f, 20f)
         lineChart.initGraph(targetValues, "Target(dB)", Color.BLUE)
 

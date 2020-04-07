@@ -116,7 +116,7 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         if (calib) {
             view.btn_tune_start.text = "진행중"
             view.btn_tune_start.isEnabled = false
-            noiseVolume = -40
+            noiseVolume = -10
             handler.postDelayed({
                 eqReset()
             }, 200)
@@ -166,10 +166,10 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
 
         handler.postDelayed({
             average()
-        }, 1700)
+        }, 2000)
         handler.postDelayed({
             ANN_ClosedLoop_repeat()
-        }, 3000)
+        }, 3500)
     }
 
     private fun curEQReset() {
