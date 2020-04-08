@@ -31,7 +31,7 @@
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"
+            android:screenOrientation="sensorPortrait"
             tools:ignore="LockedOrientationActivity"
             >
             <intent-filter>

@@ -159,6 +159,7 @@
             app:qb_radius="100"
             app:qb_strokeColor="@android:color/holo_purple"
             app:qb_strokeWidth="5" />
+
         <ImageView
             android:layout_width="45dp"
             android:layout_height="45dp"
@@ -173,14 +174,15 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-<!--            <TextClock-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:format12Hour="hh:mm:ss a"-->
-<!--                android:gravity="center"-->
-<!--                android:textColor="#173172"-->
-<!--                android:textStyle="bold"/>-->
+            <TextClock
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:format12Hour="hh:mm:ss a"
+                android:gravity="center"
+                android:textColor="#173172"
+                android:textStyle="bold"/>
+
 
             <TextView
                 android:layout_width="match_parent"

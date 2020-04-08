@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".view.view.rta.RtaFragment">
+    tools:context=".view.view.evaluation.EvalueateFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_green_light"
         android:paddingLeft="5dp"
-        android:text="RTA"
+        android:text="EVALUATION"
         android:textColor="@color/white"
         android:textSize="18sp" />
 
@@ -21,9 +21,9 @@
         android:id="@+id/mChart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_margin="5dp"
-        android:visibility="visible"/>
+        android:layout_weight="1"
+        android:visibility="visible" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -40,7 +40,7 @@
             <TextView
                 android:id="@+id/tv_table"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
 
         </LinearLayout>
@@ -50,7 +50,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:background="@drawable/layout_border_text"
         android:orientation="horizontal">
 
@@ -71,18 +71,20 @@
                     android:stretchColumns="0, 1">
 
                     <TableRow>
+
                         <TextView
                             android:id="@+id/tv_curFreq"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"/>
+                            android:gravity="center" />
+
                         <TextView
                             android:id="@+id/tv_curAvg"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"/>
+                            android:gravity="center" />
 
                     </TableRow>
 
@@ -99,14 +101,10 @@
             android:orientation="vertical">
 
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
-
-
-
 
 
                 <LinearLayout
@@ -114,105 +112,13 @@
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/tv_curSPL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="dB"
-                        style="@style/TextAppearance.AppCompat.Display1"
-                        android:gravity="center"/>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1">
 
-                        <com.manojbhadane.QButton
-                            android:id="@+id/btn_volumeStart"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:text="음압셋팅"
-                            android:textColor="@android:color/white"
-                            android:textSize="20sp"
-                            app:qb_backgroundColor="@android:color/holo_green_light"
-                            app:qb_radius="20"
-                            app:qb_strokeColor="@android:color/holo_green_dark"
-                            app:qb_strokeWidth="10" />
-
-                        <com.manojbhadane.QButton
-                            android:id="@+id/btn_volumeStop"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:text="중지"
-                            android:textColor="@android:color/white"
-                            android:textSize="20sp"
-                            app:qb_backgroundColor="@android:color/holo_green_light"
-                            app:qb_radius="20"
-                            app:qb_strokeColor="@android:color/holo_green_dark"
-                            app:qb_strokeWidth="10" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <com.manojbhadane.QButton
-                            android:id="@+id/btn_ranEQ"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:text="랜덤 EQ"
-                            android:textColor="@android:color/white"
-                            android:textSize="20sp"
-                            app:qb_backgroundColor="@android:color/holo_green_light"
-                            app:qb_radius="20"
-                            app:qb_strokeColor="@android:color/holo_green_dark"
-                            app:qb_strokeWidth="10" />
-
-                        <com.manojbhadane.QButton
-                            android:id="@+id/btn_resetEQ"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:text="EQ리셋"
-                            android:textColor="@android:color/white"
-                            android:textSize="20sp"
-                            app:qb_backgroundColor="@android:color/holo_green_light"
-                            app:qb_radius="20"
-                            app:qb_strokeColor="@android:color/holo_green_dark"
-                            app:qb_strokeWidth="10" />
-                        <com.manojbhadane.QButton
-                            android:id="@+id/btn_save"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:text="파일저장"
-                            android:textColor="@android:color/white"
-                            android:textSize="20sp"
-                            app:qb_backgroundColor="@android:color/holo_green_light"
-                            app:qb_radius="20"
-                            app:qb_strokeColor="@android:color/holo_green_dark"
-                            app:qb_strokeWidth="10" />
-
-                    </LinearLayout>
-
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
                         <com.manojbhadane.QButton
                             android:id="@+id/btn_noiseOn"
                             android:layout_width="0dp"
@@ -241,13 +147,21 @@
                             app:qb_strokeColor="@android:color/holo_green_dark"
                             app:qb_strokeWidth="10" />
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
                         <com.manojbhadane.QButton
                             android:id="@+id/btn_measureAvg"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="5dp"
                             android:layout_weight="1"
-                            android:text="평균 측정"
+                            android:text="Measure Average"
                             android:textColor="@android:color/white"
                             android:textSize="20sp"
                             app:qb_backgroundColor="@android:color/holo_green_light"
@@ -255,8 +169,32 @@
                             app:qb_strokeColor="@android:color/holo_green_dark"
                             app:qb_strokeWidth="10" />
 
+
                     </LinearLayout>
 
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <com.manojbhadane.QButton
+                            android:id="@+id/btn_save"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:text="Export CSV"
+                            android:textColor="@android:color/white"
+                            android:textSize="20sp"
+                            app:qb_backgroundColor="@android:color/holo_green_light"
+                            app:qb_radius="20"
+                            app:qb_strokeColor="@android:color/holo_green_dark"
+                            app:qb_strokeWidth="10" />
+
+
+                    </LinearLayout>
 
 
                 </LinearLayout>
@@ -264,11 +202,9 @@
             </LinearLayout>
 
 
-
         </LinearLayout>
 
     </LinearLayout>
-
 
 
 </LinearLayout>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_purple"
+        android:paddingLeft="5dp"
+        android:text="SET TARGET VOLUME"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp"
+        android:text="타겟 읍압 설정"
+        android:textSize="18sp" />
+
+    <Spinner
+        android:id="@+id/sp_target_volume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:entries="@array/target_volume"
+        android:textAlignment="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.manojbhadane.QButton
+                android:id="@+id/btn_dialog_tune_start"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"
+                android:text="튜닝 시작"
+                android:textColor="@android:color/white"
+                app:qb_backgroundColor="@android:color/holo_purple"
+                app:qb_radius="20"
+                app:qb_strokeColor="@android:color/holo_purple"
+                app:qb_strokeWidth="5" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.manojbhadane.QButton
+                android:id="@+id/btn_dialog_tune_stop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"
+                android:text="취소"
+                android:textColor="@android:color/white"
+                app:qb_backgroundColor="@android:color/holo_purple"
+                app:qb_radius="20"
+                app:qb_strokeColor="@android:color/holo_purple"
+                app:qb_strokeWidth="5" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

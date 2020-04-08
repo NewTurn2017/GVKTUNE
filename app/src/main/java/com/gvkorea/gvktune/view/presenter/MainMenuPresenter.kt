@@ -3,11 +3,6 @@ package com.gvkorea.gvktune.view.presenter
 import android.widget.Toast
 import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.MainActivity.Companion.nowFragment
-import com.gvkorea.gvktune.MainActivity.Companion.otherClient
-import com.gvkorea.gvktune.MainActivity.Companion.spk1Client
-import com.gvkorea.gvktune.MainActivity.Companion.spk2Client
-import com.gvkorea.gvktune.MainActivity.Companion.spk3Client
-import com.gvkorea.gvktune.MainActivity.Companion.spk4Client
 import com.gvkorea.gvktune.R
 import com.gvkorea.gvktune.util.replace
 import com.gvkorea.gvktune.view.MainFragment
@@ -18,8 +13,8 @@ class MainMenuPresenter(val view: MainFragment, val mainActivity: MainActivity) 
         if (isSocketAlive()) {
             when(function) {
                 "rta" -> {
-                    mainActivity.replace(R.id.fragment_container, view.rtaFragment)
-                    nowFragment = view.rtaFragment
+                    mainActivity.replace(R.id.fragment_container, view.evaluateFragment)
+                    nowFragment = view.evaluateFragment
                 }
                 "calib" -> {
                     mainActivity.replace(R.id.fragment_container, view.calibFragment)
@@ -28,10 +23,6 @@ class MainMenuPresenter(val view: MainFragment, val mainActivity: MainActivity) 
                 "reverb" -> {
                     mainActivity.replace(R.id.fragment_container, view.reverbFragment)
                     nowFragment = view.reverbFragment
-                }
-                "model" -> {
-                    mainActivity.replace(R.id.fragment_container, view.modelFragment)
-                    nowFragment = view.modelFragment
                 }
                 "tune" -> {
                     mainActivity.replace(R.id.fragment_container, view.tuneFragment)

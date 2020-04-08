@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context="com.gvkorea.gvktune.view.view.rt.ReverbFragment">
+    tools:context="com.gvkorea.gvktune.view.view.reverberationtime.ReverbFragment">
 
     <TextView
         android:layout_width="match_parent"
@@ -54,6 +54,11 @@
             app:qb_strokeColor="@android:color/holo_green_dark"
             app:qb_strokeWidth="5" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="음압: "/>
+
         <Spinner
             android:id="@+id/sp_volume"
             android:layout_width="wrap_content"
@@ -67,15 +72,37 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/iv_spectrogram"
-            android:background="@drawable/layout_border_blue"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:scaleType="fitXY"
-            android:layout_margin="5dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_reverb"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="RT60\n0\n(sec)"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/layout_border_blue"
+                android:textSize="20sp"
+                android:layout_margin="5dp"
+                android:textColor="@android:color/holo_red_dark"/>
+
+
+            <ImageView
+                android:id="@+id/iv_spectrogram"
+                android:background="@drawable/layout_border_blue"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:layout_margin="5dp"
+                android:layout_weight="4"/>
+
+        </LinearLayout>
+
+
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/mLineChart"

@@ -3,62 +3,6 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="filtertype_prompt">Choose a Data</string>
-    <string-array name="filtertype_arrays">
-        <item>NONE</item>
-        <item>LR12</item>
-        <item>LR24</item>
-        <item>LR36</item>
-        <item>LR48</item>
-        <item>BW12</item>
-        <item>BW24</item>
-        <item>BW36</item>
-        <item>BW48</item>
-        <item>BS12</item>
-        <item>BS24</item>
-        <item>BS36</item>
-        <item>BS48</item>
-    </string-array>
-
-    <string name="q_factor_prompt">Choose a Data</string>
-    <string-array name="q_factor_arrays">
-        <item>0.05</item>
-        <item>0.1</item>
-        <item>0.5</item>
-        <item>1</item>
-        <item>1.5</item>
-        <item>2</item>
-        <item>2.5</item>
-        <item>3</item>
-        <item>3.5</item>
-        <item>4</item>
-        <item>4.5</item>
-        <item>5</item>
-        <item>5.5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>15</item>
-        <item>20</item>
-    </string-array>
-
-    <string name="preset_save_prompt">Choose a Data</string>
-    <string name="toast_crash">문제가 발생했습니다. 문제를 해결할 수있는 보고서가 전송되었습니다.</string>
-    <string-array name="preset_save_arrays">
-    <item>PRESET01</item>
-    <item>PRESET02</item>
-    <item>PRESET03</item>
-    <item>PRESET04</item>
-    <item>PRESET05</item>
-    <item>PRESET06</item>
-    <item>PRESET07</item>
-    <item>PRESET08</item>
-    <item>PRESET09</item>
-    <item>PRESET10</item>
-    <item>PRESET11</item>
-</string-array>
 
     <string-array name="volume_array">
         <item>-40</item>
@@ -71,8 +15,19 @@
         <item>0</item>
     </string-array>
 
-    <string name="title_activity_main">Now Layout</string>
-    <string name="app_description">마이크 버튼을 누르고 1~2초 후 중지하시면 Background Noise가 측정됩니다.</string>
-    <string name="claptitle">잔향시간측정</string>
+    <string-array name="target_volume">
+        <item>70</item>
+        <item>75</item>
+        <item>80</item>
+        <item>85</item>
+        <item>90</item>
+    </string-array>
+
+
+    <string-array name="spkModelArray">
+        <item>GVS-500</item>
+    </string-array>
+
+    <string name="reverb_time_default">Not measured yet</string>
 
 </resources>

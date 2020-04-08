@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".view.view.calib.CalibFragment">
+    tools:context=".view.view.calibration.CalibFragment">
 
     <TextView
         android:layout_width="match_parent"

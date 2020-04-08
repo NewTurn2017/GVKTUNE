@@ -16,6 +16,7 @@ import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH2
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CHA
 import com.gvkorea.gvktune.MainActivity.Companion.otherClient
 import com.gvkorea.gvktune.MainActivity.Companion.otherClientNo
+import com.gvkorea.gvktune.MainActivity.Companion.pref
 import com.gvkorea.gvktune.MainActivity.Companion.selectedClient
 import com.gvkorea.gvktune.MainActivity.Companion.selectedSpkNo
 import com.gvkorea.gvktune.MainActivity.Companion.sockets
@@ -31,7 +32,7 @@ import java.net.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainPresenter(val view: MainActivity, val handler: Handler, val pref: SharedPreferences) {
+class MainPresenter(val view: MainActivity, val handler: Handler) {
 
     private lateinit var tx_buff: ByteArray
     private val protocol = Protocol()

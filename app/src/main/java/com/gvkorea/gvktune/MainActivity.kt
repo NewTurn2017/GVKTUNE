@@ -18,9 +18,10 @@ import androidx.fragment.app.Fragment
 import com.gvkorea.gvktune.listener.ChannelGroupCheckedChangeListener
 import com.gvkorea.gvktune.listener.SpeakerSelectedListener
 import com.gvkorea.gvktune.presenter.MainPresenter
+import com.gvkorea.gvktune.util.PrefSettings
 import com.gvkorea.gvktune.util.replace
 import com.gvkorea.gvktune.view.MainFragment
-import com.gvkorea.gvktune.view.view.calib.presenter.CalibPresenter
+import com.gvkorea.gvktune.view.view.calibration.presenter.CalibPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.DataInputStream
 import java.io.IOException
@@ -56,7 +57,6 @@ class MainActivity : AppCompatActivity() {
             when (msg.what) {
                 MSG_RSV -> {
                     presenter.appendText(msg)
-
                 }
                 MSG_INFO -> {
                     presenter.ipInfoText(msg)
@@ -95,12 +95,13 @@ class MainActivity : AppCompatActivity() {
 
         val PREF_SETUP_KEY = "Settings"
         pref = applicationContext.getSharedPreferences(PREF_SETUP_KEY, Context.MODE_PRIVATE)
-        presenter = MainPresenter(this, mHandler, pref)
+        presenter = MainPresenter(this, mHandler)
         nowFragment = mainFragment
         replace(R.id.fragment_container, mainFragment as Fragment)
 
         initListener()
         preference = getSharedPreferences("pref_calib", Context.MODE_PRIVATE)
+        prefSettings = PrefSettings()
         val calibPreference = CalibPresenter()
         calibPreference.loadCalibrate()
         selectedMicName = preference.getString("selectedMic", "iSEMic725TR-3511903-freefield.csv")
@@ -526,5 +527,9 @@ class MainActivity : AppCompatActivity() {
         var isCalib = false
 
         lateinit var sInstance: MainActivity
+
+        lateinit var prefSettings: PrefSettings
     }
+
+
 }

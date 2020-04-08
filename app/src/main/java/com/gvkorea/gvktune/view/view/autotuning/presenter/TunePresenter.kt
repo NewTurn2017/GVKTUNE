@@ -1,21 +1,26 @@
 package com.gvkorea.gvktune.view.view.autotuning.presenter
 
+import android.app.Dialog
 import android.graphics.Color
 import android.os.Handler
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.view.View
 import android.widget.Toast
-import androidx.core.text.set
 import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH1
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH2
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CHA
+import com.gvkorea.gvktune.MainActivity.Companion.prefSettings
 import com.gvkorea.gvktune.MainActivity.Companion.selectedClient
+import com.gvkorea.gvktune.R
 import com.gvkorea.gvktune.util.Protocol
 import com.gvkorea.gvktune.util.WaitingDialog
 import com.gvkorea.gvktune.view.view.autotuning.TuneFragment
 import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.barChart
+import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.isShowEQ
+import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.isShowTable
 import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.lineChart
 import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.noiseVolume
 import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.targetValues
@@ -57,6 +62,8 @@ import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Compa
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.freqSum
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.isMeasure
 import com.gvkorea.gvktune.view.view.autotuning.util.audio.RecordAudioTune.Companion.spldB
+import kotlinx.android.synthetic.main.dialog_target_volume.*
+import kotlinx.android.synthetic.main.dialog_waiting.*
 import kotlinx.android.synthetic.main.fragment_tune.*
 import java.io.DataOutputStream
 import java.io.IOException
@@ -100,10 +107,28 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         return para2
     }
 
-    fun tuneStart() {
+    private fun tuneStart() {
         adjustVolumeStart()
         view.btn_tune_start.text = "음압셋팅 중.."
         view.btn_tune_stop.isEnabled = true
+    }
+
+    fun setTargetVolumeDialog() {
+        val innerView = View.inflate(view.context, R.layout.dialog_target_volume, null)
+        val dialog = Dialog(view.context!!)
+        dialog.setContentView(innerView)
+        dialog.setCancelable(false)
+        dialog.btn_dialog_tune_start.setOnClickListener {
+            targetdB = dialog.sp_target_volume.selectedItem.toString().toDouble()
+            view.init_lineChart()
+            tuneStart()
+            dialog.dismiss()
+        }
+        dialog.btn_dialog_tune_stop.setOnClickListener {
+
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     fun tuneStop() {
@@ -147,6 +172,7 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
                     noise(NOISE_OFF, noiseVolume)
                 }
             } else {
+                prefSettings.setNoiseVolumePref(noiseVolume.toFloat())
                 msg("읍압 셋팅이 완료되었습니다.")
 //                noise(NOISE_OFF, noiseVolume)
                 view.btn_tune_start.text = "자동튜닝 중.."
@@ -188,13 +214,13 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         var count = 0
         handler.postDelayed({
             average()
-        },200)
+        }, 200)
         handler.postDelayed({
             var isCompleted = true
-            for (i in freqSum.indices){
+            for (i in freqSum.indices) {
                 diff[i] = freqSum[i].toFloat() - targetValues!![i]
             }
-            for (i in diff.indices){
+            for (i in diff.indices) {
                 if (diff[i] > 2 || diff[i] < -2) {
                     count++
                 }
@@ -202,10 +228,10 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
             if (count > 0) {
                 isCompleted = false
             }
-            if (isCompleted){
+            if (isCompleted) {
                 msg("튜닝이 완료되었습니다.")
                 tuneStop()
-            }else{
+            } else {
                 msg("오차 범위 초과 갯수: $count 반복튜닝 중..")
                 ANN_ClosedLoop_repeat()
             }
@@ -345,17 +371,23 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
     private fun updateTableList() {
         if (freqSum.size > 0) {
             var freq = "Freq\n"
-            var diff = "Diff\n"
+            val diff = "Diff\n"
             val builder = SpannableStringBuilder(diff)
             for (i in 0 until 31) {
                 freq += hzArrays[i] + "\n"
-                if( targetValues!![i] - freqSum[i].toFloat() > 2 ||  targetValues!![i] - freqSum[i].toFloat() < -2){
-                    val str = "${String.format("%.2f", targetValues!![i] - freqSum[i].toFloat())}\n"
+                val diffFloat = targetValues!![i] - freqSum[i].toFloat()
+                if (diffFloat > 2 || diffFloat < -2) {
+                    val str = "${String.format("%.2f", diffFloat)}\n"
                     val temp = SpannableStringBuilder(str)
-                    temp.setSpan(ForegroundColorSpan(Color.RED), 0, str.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    temp.setSpan(
+                        ForegroundColorSpan(Color.RED),
+                        0,
+                        str.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                     builder.append(temp)
-                }else{
-                    builder.append("${String.format("%.2f", targetValues!![i] - freqSum[i].toFloat())}\n")
+                } else {
+                    builder.append("${String.format("%.2f", diffFloat)}\n")
                 }
             }
 
@@ -410,16 +442,6 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         }
     }
 
-    fun openLoop() {
-        val open = ANN_Open(view.activity?.assets!!, targetValues!!)
-        val eqValues = open.getControlEQ_Open()
-        val eqFloats = floatToInt(eqValues)
-        curEQ = eqFloats
-        SendPacket_EQ_All(selectedChannal(), curEQ)
-        handler.postDelayed({
-            barChart.initGraph(changeEQValues(curEQ))
-        }, 200)
-    }
 
     private fun floatToInt(results: FloatArray): IntArray {
         val resultsToInt = IntArray(31)
@@ -479,10 +501,6 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         return eqFloatArray
     }
 
-    fun closedLoop() {
-
-    }
-
 
     fun SendPacket_NoiseGenerator(
         para2: Char, data0: Int, data1: Float, data5: Int
@@ -527,5 +545,29 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
 
     fun msg(msg: String) {
         Toast.makeText(view.context, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    fun showTable() {
+        if (isShowTable) {
+            view.btn_showTable.text = "Show Table"
+            view.sc_table.visibility = View.GONE
+            isShowTable = false
+        } else {
+            view.btn_showTable.text = "Close Table"
+            view.sc_table.visibility = View.VISIBLE
+            isShowTable = true
+        }
+    }
+
+    fun showEQ() {
+        if (isShowEQ) {
+            view.btn_showEQ.text = "Show EQ"
+            view.chart_tune_bar.visibility = View.GONE
+            isShowEQ = false
+        } else {
+            view.btn_showEQ.text = "Close EQ"
+            view.chart_tune_bar.visibility = View.VISIBLE
+            isShowEQ = true
+        }
     }
 }

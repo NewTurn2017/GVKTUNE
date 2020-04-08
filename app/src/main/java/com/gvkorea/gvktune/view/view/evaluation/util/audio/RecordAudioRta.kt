@@ -1,4 +1,4 @@
-package com.gvkorea.gvktune.view.view.autotuning.util.audio
+package com.gvkorea.gvktune.view.view.evaluation.util.audio
 
 import android.graphics.Color
 import android.media.AudioFormat
@@ -7,21 +7,26 @@ import android.media.MediaRecorder
 import android.os.AsyncTask
 import android.util.Log
 import android.view.View
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.util.CSVRead
 import com.gvkorea.gvktune.util.fft.RealDoubleFFT
-import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.isStarted
-import kotlinx.android.synthetic.main.fragment_tune.view.*
+import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.averageCount
+import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.isStarted
+import kotlinx.android.synthetic.main.fragment_rta.view.*
 import java.text.DecimalFormat
 import kotlin.math.log10
 import kotlin.math.pow
 
-class RecordAudioTune(val view: View) :
+class RecordAudioRta(val barChart: BarChart, val view: View) :
     AsyncTask<Unit, DoubleArray, Unit>() {
 
+
+    private var valSum = DoubleArray(31)
+    private var toTransFormCount = 0
     private val frequency = 44100
     private val channelConfiguration = AudioFormat.CHANNEL_IN_MONO
     private val audioEncoding = AudioFormat.ENCODING_PCM_16BIT
@@ -30,8 +35,10 @@ class RecordAudioTune(val view: View) :
     private var toTransformAvg = DoubleArray(blockSize)
     private var chartValue = ArrayList<BarEntry>()
     private var barDataSet = BarDataSet(chartValue, null)
-
-    private val calib_data = CSVRead().readCalibCsv(view.context.assets, MainActivity.selectedMicName)
+    lateinit var barValues: ArrayList<BarEntry>
+    private val calib_data =
+        CSVRead().readCalibCsv(view.context.assets, MainActivity.selectedMicName)
+    private var counter1 = 0
 
 
     ////block size = 8192
@@ -134,6 +141,105 @@ class RecordAudioTune(val view: View) :
     private val HIGH_20000HZ = 8191
 
 
+    ////block size = 4096
+
+//    private val INDEX_20HZ      = 3
+//    private val INDEX_25HZ      = 4
+//    private val INDEX_32HZ      = 5
+//    private val INDEX_40HZ      = 7
+//    private val INDEX_50HZ      = 9
+//    private val INDEX_63HZ      = 11
+//    private val INDEX_80HZ      = 14
+//    private val INDEX_100HZ     = 18
+//    private val INDEX_125HZ     = 23
+//    private val INDEX_160HZ     = 29
+//    private val INDEX_200HZ     = 37
+//    private val INDEX_250HZ     = 46
+//    private val INDEX_315HZ     = 58
+//    private val INDEX_400HZ     = 74
+//    private val INDEX_500HZ     = 92
+//    private val INDEX_630HZ     = 117
+//    private val INDEX_800HZ     = 148
+//    private val INDEX_1000HZ    = 185
+//    private val INDEX_1250HZ    = 232
+//    private val INDEX_1600HZ    = 297
+//    private val INDEX_2000HZ    = 371
+//    private val INDEX_2500HZ    = 464
+//    private val INDEX_3150HZ    = 585
+//    private val INDEX_4000HZ    = 743
+//    private val INDEX_5000HZ    = 928
+//    private val INDEX_6300HZ    = 1170
+//    private val INDEX_8000HZ    = 1486
+//    private val INDEX_10000HZ   = 1857
+//    private val INDEX_12500HZ   = 2321
+//    private val INDEX_16000HZ   = 2972
+//    private val INDEX_20000HZ   = 3715
+//
+//
+//    private val LOW_20HZ     = 3
+//    private val LOW_25HZ     = 4
+//    private val LOW_32HZ     = 5
+//    private val LOW_40HZ     = 6
+//    private val LOW_50HZ     = 8
+//    private val LOW_63HZ     = 10
+//    private val LOW_80HZ     = 13
+//    private val LOW_100HZ    = 16
+//    private val LOW_125HZ    = 20
+//    private val LOW_160HZ    = 26
+//    private val LOW_200HZ    = 33
+//    private val LOW_250HZ    = 41
+//    private val LOW_315HZ    = 52
+//    private val LOW_400HZ    = 65
+//    private val LOW_500HZ    = 83
+//    private val LOW_630HZ    = 104
+//    private val LOW_800HZ    = 131
+//    private val LOW_1000HZ   = 165
+//    private val LOW_1250HZ   = 208
+//    private val LOW_1600HZ   = 261
+//    private val LOW_2000HZ   = 330
+//    private val LOW_2500HZ   = 416
+//    private val LOW_3150HZ   = 523
+//    private val LOW_4000HZ   = 659
+//    private val LOW_5000HZ   = 830
+//    private val LOW_6300HZ   = 1043
+//    private val LOW_8000HZ   = 1315
+//    private val LOW_10000HZ  = 1655
+//    private val LOW_12500HZ  = 2080
+//    private val LOW_16000HZ  = 2619
+//    private val LOW_20000HZ  = 3306
+//
+//    private val HIGH_20HZ     = 4
+//    private val HIGH_25HZ     = 5
+//    private val HIGH_32HZ     = 6
+//    private val HIGH_40HZ     = 8
+//    private val HIGH_50HZ     = 10
+//    private val HIGH_63HZ     = 13
+//    private val HIGH_80HZ     = 16
+//    private val HIGH_100HZ    = 20
+//    private val HIGH_125HZ    = 26
+//    private val HIGH_160HZ    = 33
+//    private val HIGH_200HZ    = 41
+//    private val HIGH_250HZ    = 52
+//    private val HIGH_315HZ    = 65
+//    private val HIGH_400HZ    = 83
+//    private val HIGH_500HZ    = 104
+//    private val HIGH_630HZ    = 131
+//    private val HIGH_800HZ    = 165
+//    private val HIGH_1000HZ   = 208
+//    private val HIGH_1250HZ   = 261
+//    private val HIGH_1600HZ   = 330
+//    private val HIGH_2000HZ   = 416
+//    private val HIGH_2500HZ   = 523
+//    private val HIGH_3150HZ   = 659
+//    private val HIGH_4000HZ   = 830
+//    private val HIGH_5000HZ   = 1043
+//    private val HIGH_6300HZ   = 1315
+//    private val HIGH_8000HZ   = 1655
+//    private val HIGH_10000HZ  = 2080
+//    private val HIGH_12500HZ  = 2619
+//    private val HIGH_16000HZ  = 3306
+//    private val HIGH_20000HZ  = 4095
+
 
     override fun doInBackground(vararg p0: Unit?): Unit? {
         try {
@@ -163,6 +269,7 @@ class RecordAudioTune(val view: View) :
                 }
                 transformer.ft(toTransform)
                 publishProgress(toTransform)
+//                counter1++
             }
             audioRecord.stop()
             audioRecord.release()
@@ -175,6 +282,8 @@ class RecordAudioTune(val view: View) :
     override fun onProgressUpdate(vararg values: DoubleArray) {
 
         chartValue = ArrayList()
+        barValues = ArrayList()
+//
         for (i in 0 until blockSize) {
             if (values[0][i] < 0) {
                 toTransformAvg[i] = -values[0][i]
@@ -187,6 +296,7 @@ class RecordAudioTune(val view: View) :
 
         for (i in 1 until toTransformAvg.size) {
 
+//            toTransformAvg[i] = abs(values[0][i])
             if (i == INDEX_20HZ) {
                 freq_value_31(i, toTransformAvg, arrayNum)
                 arrayNum++
@@ -283,9 +393,6 @@ class RecordAudioTune(val view: View) :
             }
 
             if (arrayNum == 31) {
-                spldB = Math.round(calculate_SPL(rmsValues) * 10) / 10.0
-                view.tv_tune_spl.text = "$spldB dB"
-                view.sb_volume.progress = spldB.toInt()
 
                 if (avgStart && isMeasure) {
 
@@ -362,7 +469,43 @@ class RecordAudioTune(val view: View) :
             }
 
         }
+        if (barChart.data != null && barChart.data.dataSetCount > 0) {
+            if (toTransFormCount < averageCount) {
+                for (i in rmsValues.indices) {
+                    valSum[i] += rmsValues[i]
+                }
+                toTransFormCount++
 
+            } else {
+
+                for (i in rmsValues.indices) {
+                    valSum[i] /= averageCount.toDouble()
+                    barValues.add(BarEntry(i.toFloat(), valSum[i].toFloat()))
+                }
+                barDataSet.values = barValues
+                barDataSet.setDrawValues(true)
+                barDataSet.valueTextColor = Color.RED
+                barDataSet.valueTextSize = 8.0f
+                barChart.data.notifyDataChanged()
+
+                barChart.notifyDataSetChanged()
+
+                barChart.invalidate()
+                toTransFormCount = 0
+                valSum = DoubleArray(31)
+            }
+        } else {
+
+            barDataSet = BarDataSet(barValues, "RMS")
+            barDataSet.setDrawIcons(false)
+            barDataSet.setGradientColor(Color.GREEN, Color.RED)
+            barDataSet.setDrawValues(false)
+            barDataSet.formLineWidth = 1f
+            val data = BarData(barDataSet)
+            // set data
+            barChart.data = data
+            barChart.invalidate()
+        }
     }
 
     private fun calculate_SPL(rmsValues: DoubleArray): Double {
@@ -607,8 +750,6 @@ class RecordAudioTune(val view: View) :
         var freq30Sum = ArrayList<Double>()
         var freq31Sum = ArrayList<Double>()
         var freqSum = ArrayList<String>()
-
-
     }
 
 

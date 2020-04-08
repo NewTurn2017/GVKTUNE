@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.gvkorea.gvktune.MainActivity
 
 import com.gvkorea.gvktune.R
 import com.gvkorea.gvktune.view.view.autotuning.listener.TuneButtonListener
@@ -38,25 +39,32 @@ class TuneFragment : Fragment() {
             )
         initListener()
         init_ChartLayout()
+        tv_reverb_time.text = MainActivity.prefSettings.getReverbTimePref() + " sec"
     }
 
     private fun initListener() {
         btn_tune_start.setOnClickListener(TuneButtonListener(presenter))
         btn_tune_stop.setOnClickListener(TuneButtonListener(presenter))
-        btn_eqreset.setOnClickListener(TuneButtonListener(presenter))
-        btn_noiseOn.setOnClickListener(TuneButtonListener(presenter))
-        btn_noiseOff.setOnClickListener(TuneButtonListener(presenter))
-        btn_avg.setOnClickListener(TuneButtonListener(presenter))
-        btn_open.setOnClickListener(TuneButtonListener(presenter))
-        btn_closed.setOnClickListener(TuneButtonListener(presenter))
+        btn_showTable.setOnClickListener(TuneButtonListener(presenter))
+        btn_showEQ.setOnClickListener(TuneButtonListener(presenter))
+
     }
 
     private fun init_ChartLayout() {
+        init_lineChart()
+        init_barChart()
+    }
+
+
+
+    fun init_lineChart() {
         lineChart = ChartLayoutLineChartForTune(this.context!!, chart_tune_line)
         targetValues = presenter.setTarget(targetdB.toInt()-15)
         lineChart.initLineChartLayout(100f, 20f)
         lineChart.initGraph(targetValues, "Target(dB)", Color.BLUE)
+    }
 
+    fun init_barChart(){
         barChart = ChartLayoutBarChartForEQGraph(this.context!!, chart_tune_bar)
         barChart.initLineChartLayout(15f, -15f)
         val curEQ = FloatArray(31)
@@ -99,7 +107,8 @@ class TuneFragment : Fragment() {
         lateinit var lineChart: ChartLayoutLineChartForTune
         lateinit var barChart: ChartLayoutBarChartForEQGraph
         var targetValues:FloatArray? = null
-
+        var isShowTable = false
+        var isShowEQ = false
     }
 
 }

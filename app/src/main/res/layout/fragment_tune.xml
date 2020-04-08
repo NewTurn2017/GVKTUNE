@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".view.view.autotuning.TuneFragment">
@@ -34,7 +34,7 @@
             app:qb_backgroundColor="@android:color/holo_green_light"
             app:qb_radius="20"
             app:qb_strokeColor="@android:color/holo_green_dark"
-            app:qb_strokeWidth="10" />
+            app:qb_strokeWidth="5" />
 
         <com.manojbhadane.QButton
             android:id="@+id/btn_tune_stop"
@@ -48,7 +48,67 @@
             app:qb_backgroundColor="@android:color/holo_green_light"
             app:qb_radius="20"
             app:qb_strokeColor="@android:color/holo_green_dark"
-            app:qb_strokeWidth="10" />
+            app:qb_strokeWidth="5" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Speaker Model"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=":"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/sp_spkModel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:entries="@array/spkModelArray" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Reverberation Time"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=":"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_reverb_time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/reverb_time_default"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -56,55 +116,37 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_showTable"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_eqreset"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="EQ RESET"/>
-        <Button
+            android:text="Show Table"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:qb_backgroundColor="@android:color/holo_blue_bright"
+            app:qb_radius="20"
+            app:qb_strokeColor="@android:color/holo_blue_dark"
+            app:qb_strokeWidth="5" />
+
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_showEQ"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_noiseOn"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="on"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_noiseOff"
-            android:layout_weight="1"
-            android:text="off"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_avg"
-            android:layout_weight="1"
-            android:text="avg"/>
+            android:text="Show EQ"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:qb_backgroundColor="@android:color/holo_blue_bright"
+            app:qb_radius="20"
+            app:qb_strokeColor="@android:color/holo_blue_dark"
+            app:qb_strokeWidth="5" />
 
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_open"
-            android:layout_weight="1"
-            android:text="open"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_closed"
-            android:layout_weight="1"
-            android:text="closed"/>
-
-
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -114,8 +156,10 @@
         android:orientation="horizontal">
 
         <ScrollView
+            android:id="@+id/sc_table"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:visibility="gone"
             android:layout_weight="1">
 
             <LinearLayout
@@ -130,18 +174,20 @@
                     android:stretchColumns="0, 1">
 
                     <TableRow>
+
                         <TextView
                             android:id="@+id/tv_tune_curFreq"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"/>
+                            android:gravity="center" />
+
                         <TextView
                             android:id="@+id/tv_tune_diff"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"/>
+                            android:gravity="center" />
 
                     </TableRow>
 
@@ -157,22 +203,55 @@
             android:layout_weight="4"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_tune_spl"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/layout_border_text"
-                android:gravity="center"
-                android:text="음압: 85dB"
-                android:textSize="24sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center"
+                    android:text="SPL"
+                    android:textSize="18sp" />
+
+                <SeekBar
+                    android:id="@+id/sb_volume"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:max="100"
+                    android:min="0"
+                    android:layout_margin="2dp"
+                    android:maxHeight="18dp"
+                    android:minHeight="18dp"
+                    android:clickable="false"
+                    android:thumb="@null"
+                    android:progressDrawable="@drawable/sb_drawable"/>
+
+
+                <TextView
+                    android:id="@+id/tv_tune_spl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="85dB"
+                    android:layout_marginRight="5dp"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart_tune_line"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:padding="5dp"
-                android:background="@drawable/layout_border_text"/>
+                android:background="@drawable/layout_border_text"
+                android:padding="5dp" />
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chart_tune_bar"
@@ -180,11 +259,10 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/layout_border_text"
-                android:padding="5dp" />
+                android:padding="5dp"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
-
-
 
 
 </LinearLayout>
