@@ -24,16 +24,21 @@
 
         <CheckBox
             android:id="@+id/cb_repeat"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="10sp"
             android:layout_height="wrap_content"
-            android:text="반복"/>
+            android:text="Append Graph"/>
 
         <com.manojbhadane.QButton
             android:id="@+id/btn_noiseClap"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="박수"
+            android:layout_weight="1"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             app:qb_backgroundColor="@android:color/holo_green_light"
@@ -43,9 +48,10 @@
 
         <com.manojbhadane.QButton
             android:id="@+id/btn_noise"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:layout_weight="1"
             android:text="핑크"
             android:textColor="@android:color/white"
             android:textSize="20sp"
@@ -61,8 +67,9 @@
 
         <Spinner
             android:id="@+id/sp_volume"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1.3"
             android:entries="@array/volume_array"/>
 
     </LinearLayout>

@@ -8,6 +8,7 @@ import android.os.AsyncTask
 import android.util.Log
 import android.view.View
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -16,12 +17,12 @@ import com.gvkorea.gvktune.util.CSVRead
 import com.gvkorea.gvktune.util.fft.RealDoubleFFT
 import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.averageCount
 import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.isStarted
-import kotlinx.android.synthetic.main.fragment_rta.view.*
+import kotlinx.android.synthetic.main.fragment_eval.view.*
 import java.text.DecimalFormat
 import kotlin.math.log10
 import kotlin.math.pow
 
-class RecordAudioRta(val barChart: BarChart, val view: View) :
+class RecordAudioRta(val view: View) :
     AsyncTask<Unit, DoubleArray, Unit>() {
 
 
@@ -281,8 +282,8 @@ class RecordAudioRta(val barChart: BarChart, val view: View) :
 
     override fun onProgressUpdate(vararg values: DoubleArray) {
 
-        chartValue = ArrayList()
-        barValues = ArrayList()
+//        chartValue = ArrayList()
+//        barValues = ArrayList()
 //
         for (i in 0 until blockSize) {
             if (values[0][i] < 0) {
@@ -469,43 +470,45 @@ class RecordAudioRta(val barChart: BarChart, val view: View) :
             }
 
         }
-        if (barChart.data != null && barChart.data.dataSetCount > 0) {
-            if (toTransFormCount < averageCount) {
-                for (i in rmsValues.indices) {
-                    valSum[i] += rmsValues[i]
-                }
-                toTransFormCount++
 
-            } else {
-
-                for (i in rmsValues.indices) {
-                    valSum[i] /= averageCount.toDouble()
-                    barValues.add(BarEntry(i.toFloat(), valSum[i].toFloat()))
-                }
-                barDataSet.values = barValues
-                barDataSet.setDrawValues(true)
-                barDataSet.valueTextColor = Color.RED
-                barDataSet.valueTextSize = 8.0f
-                barChart.data.notifyDataChanged()
-
-                barChart.notifyDataSetChanged()
-
-                barChart.invalidate()
-                toTransFormCount = 0
-                valSum = DoubleArray(31)
-            }
-        } else {
-
-            barDataSet = BarDataSet(barValues, "RMS")
-            barDataSet.setDrawIcons(false)
-            barDataSet.setGradientColor(Color.GREEN, Color.RED)
-            barDataSet.setDrawValues(false)
-            barDataSet.formLineWidth = 1f
-            val data = BarData(barDataSet)
-            // set data
-            barChart.data = data
-            barChart.invalidate()
-        }
+        //31band bar chart RTA
+//        if (barChart.data != null && barChart.data.dataSetCount > 0) {
+//            if (toTransFormCount < averageCount) {
+//                for (i in rmsValues.indices) {
+//                    valSum[i] += rmsValues[i]
+//                }
+//                toTransFormCount++
+//
+//            } else {
+//
+//                for (i in rmsValues.indices) {
+//                    valSum[i] /= averageCount.toDouble()
+//                    barValues.add(BarEntry(i.toFloat(), valSum[i].toFloat()))
+//                }
+//                barDataSet.values = barValues
+//                barDataSet.setDrawValues(true)
+//                barDataSet.valueTextColor = Color.RED
+//                barDataSet.valueTextSize = 8.0f
+//                barChart.data.notifyDataChanged()
+//
+//                barChart.notifyDataSetChanged()
+//
+//                barChart.invalidate()
+//                toTransFormCount = 0
+//                valSum = DoubleArray(31)
+//            }
+//        } else {
+//
+//            barDataSet = BarDataSet(barValues, "RMS")
+//            barDataSet.setDrawIcons(false)
+//            barDataSet.setGradientColor(Color.GREEN, Color.RED)
+//            barDataSet.setDrawValues(false)
+//            barDataSet.formLineWidth = 1f
+//            val data = BarData(barDataSet)
+//            // set data
+//            barChart.data = data
+//            barChart.invalidate()
+//        }
     }
 
     private fun calculate_SPL(rmsValues: DoubleArray): Double {

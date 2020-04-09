@@ -28,6 +28,13 @@
         <item>GVS-500</item>
     </string-array>
 
+    <string-array name="avgTime_array">
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+
     <string name="reverb_time_default">Not measured yet</string>
 
 </resources>

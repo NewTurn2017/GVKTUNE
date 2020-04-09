@@ -2,10 +2,9 @@ package com.gvkorea.gvktune.view.view.evaluation.listener
 
 import android.view.View
 import com.gvkorea.gvktune.R
-import com.gvkorea.gvktune.view.view.autotuning.TuneFragment.Companion.noiseVolume
-import com.gvkorea.gvktune.view.view.evaluation.presenter.RtaPresenter
+import com.gvkorea.gvktune.view.view.evaluation.presenter.EvalPresenter
 
-class ButtonListener(val presenter: RtaPresenter): View.OnClickListener {
+class ButtonListener(val presenter: EvalPresenter): View.OnClickListener {
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.btn_noiseOn -> presenter.noise(presenter.PINK)

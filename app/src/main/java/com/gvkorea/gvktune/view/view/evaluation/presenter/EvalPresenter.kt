@@ -1,5 +1,6 @@
 package com.gvkorea.gvktune.view.view.evaluation.presenter
 
+import android.graphics.Color
 import android.os.Handler
 import android.widget.Toast
 import com.gvkorea.gvktune.MainActivity.Companion.isSelected_CH1
@@ -10,6 +11,13 @@ import com.gvkorea.gvktune.MainActivity.Companion.selectedClient
 import com.gvkorea.gvktune.util.Protocol
 import com.gvkorea.gvktune.util.WaitingDialog
 import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment
+import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.arrEvalList
+import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.averageTime
+import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.chart
+import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.isEvalRepeat
+import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.labelEvalList
+import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.repeatEvalCount
+import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.valuesEvalArrays
 import com.gvkorea.gvktune.view.view.evaluation.util.audio.RecordAudioRta.Companion.avgStart
 import com.gvkorea.gvktune.view.view.evaluation.util.audio.RecordAudioRta.Companion.freq1Sum
 import com.gvkorea.gvktune.view.view.evaluation.util.audio.RecordAudioRta.Companion.freq2Sum
@@ -45,10 +53,12 @@ import com.gvkorea.gvktune.view.view.evaluation.util.audio.RecordAudioRta.Compan
 import com.gvkorea.gvktune.view.view.evaluation.util.audio.RecordAudioRta.Companion.freqSum
 import com.gvkorea.gvktune.view.view.evaluation.util.audio.RecordAudioRta.Companion.isMeasure
 import com.opencsv.CSVWriter
-import kotlinx.android.synthetic.main.fragment_rta.*
+import kotlinx.android.synthetic.main.fragment_eval.*
 import java.io.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-class RtaPresenter(val view: EvalueateFragment, val handler: Handler) {
+class EvalPresenter(val view: EvalueateFragment, val handler: Handler) {
 
     private val protocol = Protocol()
 
@@ -153,12 +163,6 @@ class RtaPresenter(val view: EvalueateFragment, val handler: Handler) {
         Toast.makeText(view.context, msg, Toast.LENGTH_SHORT).show()
     }
 
-
-
-
-
-
-
     fun measure(isStart:Boolean){
         if(isStart){
             handler.postDelayed({
@@ -204,7 +208,7 @@ class RtaPresenter(val view: EvalueateFragment, val handler: Handler) {
     }
 
 
-
+    // For Test
     private fun changeRandomEQToFloatArray(ranEQ: IntArray): FloatArray {
         val ranEQFloatArray = FloatArray(ranEQ.size)
         for (i in ranEQ.indices) {
@@ -213,25 +217,55 @@ class RtaPresenter(val view: EvalueateFragment, val handler: Handler) {
         return ranEQFloatArray
     }
 
+
     fun average() {
         measure(true)
-        WaitingDialog(view.context!!).create("평균 측정 중입니다..", 10000)
+        WaitingDialog(view.context!!).create("평균 측정 중입니다..", averageTime.toLong())
         handler.postDelayed({
             measure(false)
-        }, 10100)
+        }, averageTime.toLong()+100)
         handler.postDelayed({
             CVS_Save()
             updateTableList()
-            msg("측정 완료")
-        }, 10500)
+            drawLineChart()
 
+        }, averageTime.toLong()+500)
+
+    }
+
+    private fun drawLineChart() {
+        if(isEvalRepeat){
+            if(repeatEvalCount == 0){
+                arrEvalList = ArrayList()
+                valuesEvalArrays = ArrayList()
+                labelEvalList = ArrayList()
+
+            }
+            repeatEvalCount += 1
+            arrEvalList.add(freqSum)
+            labelEvalList.add("$repeatEvalCount")
+            chart.initGraphRepeat(arrEvalList, labelEvalList)
+
+        }else{
+            repeatEvalCount = 0
+            chart.initGraph(freqSum, "Avg.", Color.BLUE)
+
+        }
     }
 
     private fun CVS_Save() {
         // 파일 생성
         if (writer == null) {
             val baseDir = android.os.Environment.getExternalStorageDirectory().absolutePath
-            val filename = "$dataCount.csv"
+            val date = LocalDateTime.now()
+            val time = LocalDateTime.now()
+            val formatter_date = DateTimeFormatter.ofPattern("yyMMdd")
+            val formatter_time = DateTimeFormatter.ofPattern("HHmmss")
+            val formatted_date = date.format(formatter_date)
+            val formatted_time = date.format(formatter_time)
+
+
+            val filename = "${formatted_date}_${formatted_time}_$dataCount.csv"
             val filePath = baseDir + File.separator + filename
             try {
                 writer = CSVWriter(FileWriter(filePath, true))
@@ -262,19 +296,10 @@ class RtaPresenter(val view: EvalueateFragment, val handler: Handler) {
     }
 
     private fun CSV_recordForData() {
-        val CurEQVal = arrayOfNulls<String>(31)
-        val datafile = arrayOfNulls<String>(62)
-
+        val datafile = arrayOfNulls<String>(31)
 
         for (i in 0..30) {
-            CurEQVal[i] = ranEQ[i].toString()
-        }
-
-        for (i in 0..61) {
-            when {
-                i < 31 -> datafile[i] = CurEQVal[i] //현재 EQ값
-                i < 62 -> datafile[i] = freqSum[i - 31] // 측정값 dB
-            }
+            datafile[i] = freqSum[i]
         }
         if (writer != null) {
             writer!!.writeNext(datafile)
@@ -282,32 +307,27 @@ class RtaPresenter(val view: EvalueateFragment, val handler: Handler) {
     }
 
 
-    private fun updateTable() {
-        if(freqSum.size > 0){
-            var str = String.format("%-20s%-20s", "Hz", "dBSPL") + "\n"
-            for( i in 0 until 31){
-                str += String.format("%-20s%-20s", hzArrays[i], freqSum[i]) + "\n"
-                str += "----------------------------------------------\n"
-            }
-            view.tv_table.text = str
-        } else{
-            view.tv_table.text = "데이터가 없습니다."
-        }
-    }
 
     private fun updateTableList() {
         if(freqSum.size > 0){
-            var freq = "Freq\n"
             var dB = "SPL\n"
             for( i in 0 until 31){
-                freq += hzArrays[i] + "\n"
                 dB += freqSum[i] + "\n"
             }
-            view.tv_curFreq.text = freq
             view.tv_curAvg.text = dB
         } else{
             msg("데이터가 없습니다.")
         }
+    }
+
+    fun initTableList() {
+        var freq = "Freq\n"
+        val dB = "SPL\n"
+        for( i in 0 until 31){
+            freq += hzArrays[i] + "\n"
+        }
+        view.tv_curFreq.text = freq
+        view.tv_curAvg.text = dB
     }
 
 

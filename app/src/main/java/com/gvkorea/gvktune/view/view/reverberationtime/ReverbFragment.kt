@@ -46,7 +46,7 @@ class ReverbFragment : Fragment() {
     private fun initListener() {
         btn_noise.setOnClickListener(NoiseListener(presenter))
         btn_noiseClap.setOnClickListener(NoiseListener(presenter))
-        cb_repeat.setOnCheckedChangeListener(CheckChangeListener(presenter))
+        cb_repeat.setOnCheckedChangeListener(CheckChangeListener())
         sp_volume.setSelection(0)
     }
 

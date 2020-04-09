@@ -17,13 +17,44 @@
         android:textColor="@color/white"
         android:textSize="18sp" />
 
-    <com.github.mikephil.charting.charts.BarChart
+    <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/mChart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="5dp"
         android:layout_weight="1"
         android:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/cb_eval_repeat"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:text="Append Graph"/>
+
+        <TextView
+            android:id="@+id/tv_noiseVolume"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textStyle="bold"
+            android:text="NOISE VOLUME : "
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            />
+    </LinearLayout>
+
+
+
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -155,13 +186,40 @@
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/background_green"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Avg. Time"
+                                android:textColor="@color/white"
+                                android:textStyle="bold" />
+
+                            <Spinner
+                                android:id="@+id/sp_avgTime"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:entries="@array/avgTime_array"
+                                android:textAlignment="center"/>
+
+                        </LinearLayout>
+
                         <com.manojbhadane.QButton
                             android:id="@+id/btn_measureAvg"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="5dp"
                             android:layout_weight="1"
-                            android:text="Measure Average"
+                            android:text="Measure\nAverage"
                             android:textColor="@android:color/white"
                             android:textSize="20sp"
                             app:qb_backgroundColor="@android:color/holo_green_light"
