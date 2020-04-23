@@ -99,6 +99,7 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
                 para2 = CMD_PARA2_CH2
             }
             isSelected_CHA -> {
+
                 para2 = CMD_PARA2_CHA
             }
         }
@@ -145,7 +146,7 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         if (calib) {
             view.btn_tune_start.text = "진행중"
             view.btn_tune_start.isEnabled = false
-            noiseVolume = -10
+            noiseVolume = -35
             handler.postDelayed({
                 eqReset()
             }, 200)
@@ -256,13 +257,13 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
     fun setTarget(targetdB: Int): FloatArray {
         val target = targetdB.toFloat()
         val targetdBs = FloatArray(31)
-        targetdBs[0] = target - 15
-        targetdBs[1] = target - 13
-        targetdBs[2] = target - 11
-        targetdBs[3] = target - 9
-        targetdBs[4] = target - 7
-        targetdBs[5] = target - 5
-        targetdBs[6] = target - 3
+        targetdBs[0] = target - 36
+        targetdBs[1] = target - 34
+        targetdBs[2] = target - 27
+        targetdBs[3] = target - 16
+        targetdBs[4] = target - 8
+        targetdBs[5] = target - 3
+        targetdBs[6] = target - 1
         targetdBs[7] = target
         targetdBs[8] = target
         targetdBs[9] = target
@@ -285,8 +286,8 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
         targetdBs[26] = target
         targetdBs[27] = target
         targetdBs[28] = target
-        targetdBs[29] = target + 1
-        targetdBs[30] = target + 2
+        targetdBs[29] = target
+        targetdBs[30] = target
         return targetdBs
     }
 
@@ -350,11 +351,11 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
             measure(false)
         }, 1100)
         handler.postDelayed({
-            for (i in freqSum.indices) {
-                if (i < 6) {
-                    targetValues!![i] = freqSum[i].toFloat()
-                }
-            }
+//            for (i in freqSum.indices) {
+//                if (i < 6) {
+//                    targetValues!![i] = freqSum[i].toFloat()
+//                }
+//            }
             lineChart.drawGraph(freqSum, "현재 측정값(dB)", Color.RED)
             barChart.initGraph(changeEQValues(curEQ))
             updateTableList()
