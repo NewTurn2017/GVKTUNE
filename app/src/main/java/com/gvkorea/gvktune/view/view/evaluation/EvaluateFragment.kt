@@ -22,7 +22,7 @@ import com.gvkorea.gvktune.view.view.evaluation.util.chart.ChartLayoutLineChartF
 import kotlinx.android.synthetic.main.fragment_eval.*
 
 
-class EvalueateFragment : Fragment() {
+class EvaluateFragment : Fragment() {
 
     lateinit var presenter: EvalPresenter
     val handler = Handler()

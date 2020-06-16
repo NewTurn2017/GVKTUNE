@@ -3,12 +3,12 @@ package com.gvkorea.gvktune.view.view.reverberationtime.util
 import android.media.AudioRecord
 import android.media.AudioTrack
 import android.media.MediaRecorder
-import com.gvkorea.gvktune.view.view.reverberationtime.presenter.NoisePresenter
+import com.gvkorea.gvktune.view.view.reverberationtime.presenter.ReverbPresenter
 import java.io.*
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-class GVAudioRecord(val mPath: GVPath, val presenter: NoisePresenter) {
+class GVAudioRecord(val mPath: GVPath, val presenter: ReverbPresenter) {
 
     private val mAudioSource = MediaRecorder.AudioSource.VOICE_RECOGNITION
     private val mSampleRate = 44100

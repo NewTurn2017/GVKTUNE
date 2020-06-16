@@ -6,18 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.mikephil.charting.data.Entry
-
 import com.gvkorea.gvktune.R
-import com.gvkorea.gvktune.view.view.reverberationtime.listener.CheckChangeListener
-import com.gvkorea.gvktune.view.view.reverberationtime.listener.NoiseListener
-import com.gvkorea.gvktune.view.view.reverberationtime.presenter.NoisePresenter
-import com.gvkorea.gvktune.view.view.reverberationtime.util.chart.ChartLayoutLineChartForRT
+import com.gvkorea.gvktune.view.view.reverberationtime.listener.ReverbListener
+import com.gvkorea.gvktune.view.view.reverberationtime.presenter.ReverbPresenter
 import kotlinx.android.synthetic.main.fragment_reverb.*
 
 class ReverbFragment : Fragment() {
 
-    private lateinit var presenter: NoisePresenter
+    private lateinit var presenter: ReverbPresenter
     private val handler = Handler()
 
     override fun onCreateView(
@@ -28,35 +24,22 @@ class ReverbFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_reverb, container, false)
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter = NoisePresenter(this, handler)
+        presenter = ReverbPresenter(this, handler)
         initListener()
-        initChartLayout()
     }
 
-    private fun initChartLayout() {
-        chart = ChartLayoutLineChartForRT(this.context!!, mLineChart)
-        chart.initLineChartLayout()
-    }
+
 
     private fun initListener() {
-        btn_noise.setOnClickListener(NoiseListener(presenter))
-        btn_noiseClap.setOnClickListener(NoiseListener(presenter))
-        cb_repeat.setOnCheckedChangeListener(CheckChangeListener())
-        sp_volume.setSelection(0)
+        btn_noiseClap.setOnClickListener(ReverbListener(presenter))
+        btn_testReset.setOnClickListener(ReverbListener(presenter))
     }
 
     companion object {
-        lateinit var chart: ChartLayoutLineChartForRT
-        var isRepeat = false
-        var repeatCount = 0
-        lateinit var arrList: ArrayList<FloatArray?>
-        lateinit var valuesArrays: ArrayList<ArrayList<Entry>>
-        lateinit var labelList: ArrayList<String>
+        var reverbCount = 0
     }
 
 }

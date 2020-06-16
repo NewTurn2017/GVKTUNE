@@ -8,7 +8,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.valuesEvalArrays
+import com.gvkorea.gvktune.view.view.evaluation.EvaluateFragment.Companion.valuesEvalArrays
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -85,7 +85,7 @@ class ChartLayoutLineChartForAverage(val view: Context, var mLineChart: LineChar
 
     fun initGraphRepeat(values: ArrayList<ArrayList<String>>, label: ArrayList<String>) {
         var valuesArray: ArrayList<Entry> = ArrayList()
-
+        valuesEvalArrays = ArrayList()
         for (i in values.indices) {
 
             for (j in 0..30) {

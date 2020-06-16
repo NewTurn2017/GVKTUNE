@@ -10,14 +10,13 @@ import com.gvkorea.gvktune.MainActivity.Companion.prefSettings
 import com.gvkorea.gvktune.MainActivity.Companion.selectedClient
 import com.gvkorea.gvktune.util.Protocol
 import com.gvkorea.gvktune.util.WaitingDialog
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.arrEvalList
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.averageTime
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.chart
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.isEvalRepeat
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.labelEvalList
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.repeatEvalCount
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.valuesEvalArrays
+import com.gvkorea.gvktune.view.view.evaluation.EvaluateFragment
+import com.gvkorea.gvktune.view.view.evaluation.EvaluateFragment.Companion.arrEvalList
+import com.gvkorea.gvktune.view.view.evaluation.EvaluateFragment.Companion.averageTime
+import com.gvkorea.gvktune.view.view.evaluation.EvaluateFragment.Companion.chart
+import com.gvkorea.gvktune.view.view.evaluation.EvaluateFragment.Companion.isEvalRepeat
+import com.gvkorea.gvktune.view.view.evaluation.EvaluateFragment.Companion.labelEvalList
+import com.gvkorea.gvktune.view.view.evaluation.EvaluateFragment.Companion.repeatEvalCount
 import com.gvkorea.gvktune.view.view.evaluation.util.audio.RecordAudioRta.Companion.avgStart
 import com.gvkorea.gvktune.view.view.evaluation.util.audio.RecordAudioRta.Companion.freq1Sum
 import com.gvkorea.gvktune.view.view.evaluation.util.audio.RecordAudioRta.Companion.freq2Sum
@@ -58,7 +57,7 @@ import java.io.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class EvalPresenter(val view: EvalueateFragment, val handler: Handler) {
+class EvalPresenter(val view: EvaluateFragment, val handler: Handler) {
 
     private val protocol = Protocol()
 
@@ -237,9 +236,7 @@ class EvalPresenter(val view: EvalueateFragment, val handler: Handler) {
         if(isEvalRepeat){
             if(repeatEvalCount == 0){
                 arrEvalList = ArrayList()
-                valuesEvalArrays = ArrayList()
                 labelEvalList = ArrayList()
-
             }
             repeatEvalCount += 1
             arrEvalList.add(freqSum)

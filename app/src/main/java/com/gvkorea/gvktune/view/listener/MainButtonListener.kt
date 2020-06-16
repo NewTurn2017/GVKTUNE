@@ -9,8 +9,10 @@ class MainButtonListener(val presenter: MainMenuPresenter): View.OnClickListener
         when(v?.id){
             R.id.btn_calib -> presenter.selectFunction("calib")
             R.id.btn_reverb -> presenter.selectFunction("reverb")
-            R.id.btn_tune -> presenter.selectFunction("tune")
+//            R.id.btn_tune -> presenter.selectFunction("tune")
+            R.id.btn_tune -> presenter.launchTuneApp()
             R.id.btn_evaluate -> presenter.selectFunction("rta")
+            R.id.btn_dataMining -> presenter.selectFunction("data")
         }
     }
 }

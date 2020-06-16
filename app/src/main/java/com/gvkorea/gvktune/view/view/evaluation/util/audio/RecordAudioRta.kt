@@ -1,23 +1,17 @@
 package com.gvkorea.gvktune.view.view.evaluation.util.audio
 
-import android.graphics.Color
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.os.AsyncTask
 import android.util.Log
 import android.view.View
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.util.CSVRead
 import com.gvkorea.gvktune.util.fft.RealDoubleFFT
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.averageCount
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment.Companion.isStarted
-import kotlinx.android.synthetic.main.fragment_eval.view.*
+import com.gvkorea.gvktune.view.view.evaluation.EvaluateFragment.Companion.isStarted
 import java.text.DecimalFormat
 import kotlin.math.log10
 import kotlin.math.pow

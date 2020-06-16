@@ -29,7 +29,7 @@ class RecordAudioCalib(val view: CalibFragment, var barChart: BarChart) : AsyncT
     private val calib_data = CSVRead().readCalibCsv(view.context?.assets!!, MainActivity.selectedMicName)
 
     private val INDEX_1000HZ    = 371
-    private val LOW_1000HZ   = 330
+    private val LOW_1000HZ    = 330
     private val HIGH_1000HZ   = 417
 
     override fun doInBackground(vararg p0: Unit?): Unit? {

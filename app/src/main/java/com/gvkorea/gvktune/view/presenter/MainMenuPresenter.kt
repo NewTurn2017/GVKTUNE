@@ -1,5 +1,6 @@
 package com.gvkorea.gvktune.view.presenter
 
+import android.content.Intent
 import android.widget.Toast
 import com.gvkorea.gvktune.MainActivity
 import com.gvkorea.gvktune.MainActivity.Companion.nowFragment
@@ -28,6 +29,10 @@ class MainMenuPresenter(val view: MainFragment, val mainActivity: MainActivity) 
                     mainActivity.replace(R.id.fragment_container, view.tuneFragment)
                     nowFragment = view.tuneFragment
                 }
+                "data" -> {
+                    mainActivity.replace(R.id.fragment_container, view.dataFragment)
+                    nowFragment = view.dataFragment
+                }
 
             }
         } else {
@@ -46,5 +51,15 @@ class MainMenuPresenter(val view: MainFragment, val mainActivity: MainActivity) 
 
     private fun msg(msg: String) {
         Toast.makeText(view.context, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    fun launchTuneApp() {
+//        view.activity?.moveTaskToBack(true)
+//        view.activity?.finishAndRemoveTask()
+//        android.os.Process.killProcess(android.os.Process.myPid())
+        view.mainActivity.disconnect()
+        val intent = view.activity?.packageManager?.getLaunchIntentForPackage("com.gvkorea.gvs1000_dsp")
+        intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        view.activity?.startActivity(intent)
     }
 }

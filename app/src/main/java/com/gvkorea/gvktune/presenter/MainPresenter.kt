@@ -130,7 +130,7 @@ class MainPresenter(val view: MainActivity, val handler: Handler) {
 
     fun findDeviceName(infoArray: List<String>): String {
         var hexStr = ""
-        for (i in 23..infoArray.size) {
+        for (i in 25..infoArray.size) {
             if (infoArray[i] != "0x00") {
                 hexStr += infoArray[i].substring(2, 4)
             } else {
@@ -300,5 +300,16 @@ class MainPresenter(val view: MainActivity, val handler: Handler) {
         sockets.add(spk3Client)
         sockets.add(spk4Client)
 
+    }
+
+
+    fun hexStringToInt(hexString: String): Int {
+        return hexString.substring(2, 4).toInt()
+    }
+
+    fun finish() {
+        view.moveTaskToBack(true)
+        view.finishAndRemoveTask()
+        android.os.Process.killProcess(android.os.Process.myPid())
     }
 }

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    android:orientation="vertical"
+    tools:context=".view.view.data.DataFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_start"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="수집시작"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/button_text_size"
+            app:qb_backgroundColor="@android:color/holo_green_light"
+            app:qb_radius="20"
+            app:qb_strokeColor="@android:color/holo_green_dark"
+            app:qb_strokeWidth="5" />
+
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_stop"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="중지"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/button_text_size"
+            app:qb_backgroundColor="@android:color/holo_green_light"
+            app:qb_radius="20"
+            app:qb_strokeColor="@android:color/holo_green_dark"
+            app:qb_strokeWidth="5" />
+
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_noise_on"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="노이즈 ON"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/button_text_size"
+            app:qb_backgroundColor="@android:color/holo_green_light"
+            app:qb_radius="20"
+            app:qb_strokeColor="@android:color/holo_green_dark"
+            app:qb_strokeWidth="5" />
+
+        <com.manojbhadane.QButton
+            android:id="@+id/btn_noise_off"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="노이즈 OFF"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/button_text_size"
+            app:qb_backgroundColor="@android:color/holo_green_light"
+            app:qb_radius="20"
+            app:qb_strokeColor="@android:color/holo_green_dark"
+            app:qb_strokeWidth="5" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/layout_border_blue"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:padding="3dp">
+
+            <com.manojbhadane.QButton
+                android:id="@+id/btn_RTA"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="STOP"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/button_text_size"
+                app:qb_backgroundColor="@android:color/holo_green_light"
+                app:qb_radius="20"
+                app:qb_strokeColor="@android:color/holo_green_dark"
+                app:qb_strokeWidth="5" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="SPL(dB)"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_curSPL"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+
+
+        <com.github.mikephil.charting.charts.BarChart
+
+            android:id="@+id/mChart_RMS"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:layout_weight="2"
+            android:background="@drawable/layout_border_blue"
+            android:visibility="visible">
+
+        </com.github.mikephil.charting.charts.BarChart>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:layout_margin="5dp"
+            android:background="@drawable/layout_border_blue"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/button_text_size"
+                    android:text="잔향 시간 : "/>
+
+                <TextView
+                    android:id="@+id/tv_reverbTime"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@android:color/holo_red_light"
+                    android:textSize="@dimen/button_text_size"
+                    android:text="Not measured yet"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/button_text_size"
+                    android:text="스피커설정 : "/>
+
+                <Spinner
+                    android:id="@+id/sp_dataSpkModel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/button_text_size"
+                    android:text="음압 설정 : "/>
+
+                <Spinner
+                    android:id="@+id/sp_dataSpkVolume"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:entries="@array/target_volume"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/lay_reserv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/layout_border_blue"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/setReserv"
+                    android:textColor="@color/black"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <com.manojbhadane.QButton
+                        android:id="@+id/btn_setDate"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="날짜 선택"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/button_text_size"
+                        app:qb_backgroundColor="@android:color/holo_green_light"
+                        app:qb_radius="20"
+                        app:qb_strokeColor="@android:color/holo_green_dark"
+                        app:qb_strokeWidth="5" />
+
+                    <com.manojbhadane.QButton
+                        android:id="@+id/btn_setTime"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:text="시간 설정"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/button_text_size"
+                        app:qb_backgroundColor="@android:color/holo_green_light"
+                        app:qb_radius="20"
+                        app:qb_strokeColor="@android:color/holo_green_dark"
+                        app:qb_strokeWidth="5" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text=" 예약날짜 : "
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/button_text_size" />
+
+                        <TextView
+                            android:id="@+id/tv_reservDate"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/button_text_size" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text=" 예약시간 : "
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/button_text_size" />
+
+                        <TextView
+                            android:id="@+id/tv_reservTime"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/button_text_size" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <com.manojbhadane.QButton
+                    android:id="@+id/btn_reservStart"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:text="예약 수집 시작"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/button_text_size"
+                    app:qb_backgroundColor="@android:color/holo_green_light"
+                    app:qb_radius="20"
+                    app:qb_strokeColor="@android:color/holo_green_dark"
+                    app:qb_strokeWidth="5" />
+            </LinearLayout>
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/lay_timer"
+                layout="@layout/timer_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                 />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun disconnect() {
+    fun disconnect() {
 
         val t = Thread(Runnable {
             if (loop) {
@@ -266,6 +266,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
@@ -297,7 +299,7 @@ class MainActivity : AppCompatActivity() {
             mFlag = true
             mHandlerBackPress?.sendEmptyMessageDelayed(0, (1000 * 2).toLong())
         } else {
-            super.onBackPressed()
+            presenter.finish()
         }
     }
 
@@ -425,9 +427,11 @@ class MainActivity : AppCompatActivity() {
                         if (msg.contains("0x52 0x43 0x64 0x00")) {
                             val infoArray = msg.split(" ")
                             val spkNo = presenter.hexToAscii(infoArray)
-                            if(spkNo.length > 1){
+                            val firmwareMajorVersion = presenter.hexStringToInt(infoArray[23])
+                            val firmwareMinorVersion = presenter.hexStringToInt(infoArray[24])
+                            if (spkNo.length > 1) {
                                 curSpkNo = "0"
-                            }else{
+                            } else {
                                 curSpkNo = spkNo
                             }
 

@@ -99,8 +99,6 @@ class TuneFragment : Fragment() {
     }
 
     companion object {
-        var averageCount = 1
-        var currentNoise = 0
         var isStarted = false
         var noiseVolume = -40
         var targetdB: Double = 85.0

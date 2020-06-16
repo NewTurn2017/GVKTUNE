@@ -187,6 +187,8 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
     private fun autoTuning() {
         curEQReset()
         average()
+
+        //todo:  open loop는 일단 삭제 예정(모델 만들어지면 재 가동)
         handler.postDelayed({
             val open = ANN_Open(view.activity?.assets!!, targetValues!!)
             val eqValues = open.getControlEQ_Open()
@@ -346,7 +348,9 @@ class TunePresenter(val view: TuneFragment, val handler: Handler) {
 
     fun average() {
         measure(true)
-        WaitingDialog(view.context!!).create("평균 측정 중입니다..", 1000)
+        handler.post {
+            WaitingDialog(view.context!!).create("평균 측정 중입니다..", 1000)
+        }
         handler.postDelayed({
             measure(false)
         }, 1100)

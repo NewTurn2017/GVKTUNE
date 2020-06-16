@@ -12,8 +12,9 @@ import com.gvkorea.gvktune.view.listener.MainButtonListener
 import com.gvkorea.gvktune.view.view.autotuning.TuneFragment
 import com.gvkorea.gvktune.view.view.calibration.CalibFragment
 import com.gvkorea.gvktune.view.presenter.MainMenuPresenter
+import com.gvkorea.gvktune.view.view.data.DataFragment
 import com.gvkorea.gvktune.view.view.reverberationtime.ReverbFragment
-import com.gvkorea.gvktune.view.view.evaluation.EvalueateFragment
+import com.gvkorea.gvktune.view.view.evaluation.EvaluateFragment
 import kotlinx.android.synthetic.main.fragment_main.*
 
 
@@ -24,7 +25,8 @@ class MainFragment(val mainActivity: MainActivity) : Fragment() {
     val calibFragment: CalibFragment by lazy { CalibFragment() }
     val reverbFragment: ReverbFragment by lazy { ReverbFragment() }
     val tuneFragment: TuneFragment by lazy { TuneFragment() }
-    val evaluateFragment: EvalueateFragment by lazy { EvalueateFragment() }
+    val evaluateFragment: EvaluateFragment by lazy { EvaluateFragment() }
+    val dataFragment: DataFragment by lazy { DataFragment() }
 
 
     override fun onCreateView(
@@ -46,5 +48,6 @@ class MainFragment(val mainActivity: MainActivity) : Fragment() {
         btn_calib.setOnClickListener(MainButtonListener(presenter))
         btn_reverb.setOnClickListener(MainButtonListener(presenter))
         btn_tune.setOnClickListener(MainButtonListener(presenter))
+        btn_dataMining.setOnClickListener(MainButtonListener(presenter))
     }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GVK TUNE</string>
+    <string name="app_name">GVK DATA</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -37,5 +37,7 @@
     </string-array>
 
     <string name="reverb_time_default">Not measured yet</string>
+    <string name="setReserv"><![CDATA[<예약 설정>]]></string>
+
 
 </resources>

@@ -23,7 +23,7 @@ class PrefSettings {
         editor.apply()
     }
 
-    fun getReverbTimePref(): String{
+    fun getReverbTimePref(): String?{
         return pref.getString(REVERB_TIME, "Not measured yet")
     }
 

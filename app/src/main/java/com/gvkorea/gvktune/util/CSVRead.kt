@@ -8,57 +8,7 @@ import java.io.*
 class CSVRead {
 
     var s: Array<String>? = null
-    fun readCsv(spkNo: Int): MutableList<Array<String>> {
-        val data = mutableListOf<Array<String>>()
-        val baseDir = android.os.Environment.getExternalStorageDirectory().absolutePath + "/gvkorea"
-        val folder = File(baseDir)
-        if (!folder.exists()) {
-            folder.mkdir()
-        }
-        val filename = "Spk${spkNo}_tunedEQ" + ".csv"
-        val filePath = baseDir + File.separator + filename
-        try {
-            val reader = CSVReader(FileReader(filePath) as Reader)
-            s = reader.readNext()
-            if (s != null) {
-                data.add(s!!)
-            }
 
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        return data
-    }
-
-    fun readSettingCsv(): MutableList<Array<String>> {
-        val data = mutableListOf<Array<String>>()
-        val baseDir = android.os.Environment.getExternalStorageDirectory().absolutePath + "/gvkorea"
-        val folder = File(baseDir)
-        if (!folder.exists()) {
-            folder.mkdir()
-        }
-        val filename = "settings.csv"
-        val filePath = baseDir + File.separator + filename
-        try {
-            val reader = CSVReader(FileReader(filePath))
-            while (reader.readNext().let { s = it; it != null }) {
-                if (s != null) {
-                    data.add(s!!)
-                }
-            }
-
-
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        return data
-    }
 
     fun readCalibCsv(am: AssetManager, filename: String?): MutableList<Array<String>> {
         copyAssets("calibration", am, filename)

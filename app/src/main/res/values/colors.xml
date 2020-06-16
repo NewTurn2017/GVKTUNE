@@ -8,6 +8,7 @@
     <color name="white">#ffffff</color>
     <color name="magenta">#FFFF00FF</color>
     <color name="black">#222222</color>
-
+    <color name="click_pressed">#353535</color>
+    <color name="click_default">#7e7e7e</color>
 
 </resources>
