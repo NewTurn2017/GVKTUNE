@@ -90,7 +90,6 @@ class ReverbPresenter(val view: ReverbFragment, val handler: Handler) {
     fun stopRecord() {
         msg("잠시만 기다려 주세요...")
         audioRecord.stopRecord()
-        eqReset()
     }
 
 
@@ -162,6 +161,8 @@ class ReverbPresenter(val view: ReverbFragment, val handler: Handler) {
         reverbCount = 0
         rt60Arrays = ArrayList()
         handler.removeMessages(0)
+        eqReset()
+
     }
 
     fun eqReset() {

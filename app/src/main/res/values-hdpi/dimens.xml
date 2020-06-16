@@ -3,4 +3,7 @@
     <dimen name="info_height">100dp</dimen>
     <dimen name="infoTextSize">10sp</dimen>
     <dimen name="ipInfoTextSize">12sp</dimen>
+    <dimen name="button_text_size">18sp</dimen>
+    <dimen name="timer_progress_size">190dp</dimen>
+
 </resources>
