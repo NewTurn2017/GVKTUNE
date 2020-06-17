@@ -40,8 +40,8 @@ android {
         versionCode 1
         versionName "1.0"
         python {
-            buildPython "C:/Users/hyuni/Anaconda3/envs/tf-gpu/python.exe"
-//            buildPython "C:/Users/GV-TEST/Anaconda3/envs/tf-gpu/python.exe"
+//            buildPython "C:/Users/hyuni/Anaconda3/envs/tf-gpu/python.exe"
+            buildPython "C:/Users/GV-TEST/Anaconda3/envs/tf-gpu/python.exe"
         }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
